@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="ValueObjects\Capitulo\" />
+    <Folder Include="ValueObjects\Categoria\" />
+    <Folder Include="ValueObjects\Final\" />
+    <Folder Include="ValueObjects\Historia\" />
+    <Folder Include="ValueObjects\Intermedio\" />
+    <Folder Include="ValueObjects\Usuario\" />
+  </ItemGroup>
+
+</Project>

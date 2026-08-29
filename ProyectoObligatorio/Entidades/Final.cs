@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ProyectoObligatorio.Entidades
 {
-    internal class Final
+    public class Final
     {
     }
 }

@@ -4,7 +4,12 @@ using System.Text;
 
 namespace Dominio.Excepciones
 {
-    internal class UsuarioException
+    public class UsuarioException : Exception
     {
+        public UsuarioException() { }
+        public UsuarioException(string message) : base(message) { }
+        public UsuarioException(string? message, Exception? innerException) : base(message, innerException)
+        {
+        }
     }
 }

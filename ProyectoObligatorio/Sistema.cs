@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LogicaAplicacion
+namespace Dominio
 {
     public class Sistema
     {

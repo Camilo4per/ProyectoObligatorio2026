@@ -1,9 +1,8 @@
-﻿using ProyectoObligatorio.InterfacesDelDominio;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LogicaAplicacion.Entidades
+namespace Dominio.Entidades
 {
     public abstract class Capitulo
     {

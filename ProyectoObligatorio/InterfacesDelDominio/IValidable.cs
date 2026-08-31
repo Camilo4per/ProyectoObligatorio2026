@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LogicaAplicacion.InterfacesDelDominio
+namespace Dominio.InterfacesDelDominio
 {
     internal interface IValidable
     {

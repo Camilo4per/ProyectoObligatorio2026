@@ -1,3 +1,4 @@
 <Solution>
-  <Project Path="ProyectoObligatorio/ProyectoObligatorio.csproj" />
+  <Project Path="DTOs/DTOs.csproj" Id="e2760b0d-e69d-4087-bdb9-e94a08c8beac" />
+  <Project Path="ProyectoObligatorio/Dominio.csproj" />
 </Solution>

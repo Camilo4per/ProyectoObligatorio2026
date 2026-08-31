@@ -7,12 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Excepciones\" />
     <Folder Include="ValueObjects\Capitulo\" />
     <Folder Include="ValueObjects\Categoria\" />
     <Folder Include="ValueObjects\Final\" />
     <Folder Include="ValueObjects\Historia\" />
     <Folder Include="ValueObjects\Intermedio\" />
     <Folder Include="ValueObjects\Usuario\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DTOs\DTOs.csproj" />
   </ItemGroup>
 
 </Project>

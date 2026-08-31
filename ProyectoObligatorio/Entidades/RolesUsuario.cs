@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProyectoObligatorio.Entidades
+namespace LogicaAplicacion.Entidades
 {
     public enum RolesUsuario
     {

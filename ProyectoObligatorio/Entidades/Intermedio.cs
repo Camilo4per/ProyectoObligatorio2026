@@ -2,9 +2,19 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProyectoObligatorio.Entidades
+namespace LogicaAplicacion.Entidades
 {
-    public class Intermedio
+    public class Intermedio : Capitulo
     {
+        public List<Opcion> Opciones
+        {
+            get { return new List<Opcion>(Opciones); }
+            private set;
+        }
+
+        public Intermedio(string titulo, string texto, List<Opcion> opciones) : base(titulo, texto)
+        {
+            Opciones = opciones;
+        }
     }
 }

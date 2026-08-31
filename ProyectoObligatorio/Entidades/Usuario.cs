@@ -1,16 +1,27 @@
-﻿using System;
+﻿using ProyectoObligatorio.InterfacesDelDominio;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ProyectoObligatorio.Entidades
+namespace LogicaAplicacion.Entidades
 {
-    public class Usuario
+    public class Usuario : IValidable
     {
-        private int id;
-        private string nombreCompleto;
-        private string email;
-        private string nombreUsuario;
-        private string password;
-        private RolesUsuario rol;
+        public int Id { get; }
+        public string NombreCompleto { get; set; }
+        public string Email { get; set; }
+        public string NombreUsuario { get; set; }
+        public string Password { get; set; }
+        public RolesUsuario Rol { get; set; }
+
+        public Usuario(string nombreCompleto, string email, string nombreUsuario, string password, RolesUsuario rol)
+        {
+            NombreCompleto = nombreCompleto;
+            Email = email;
+            NombreUsuario = nombreUsuario;
+            Password = password;
+            Rol = rol;
+        }
+
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace DTOs.DTOs
 {
-    public class UsuariosDTO
+    public class UsuarioDTO
     {
 
     }

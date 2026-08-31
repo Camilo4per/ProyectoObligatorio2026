@@ -4,7 +4,13 @@ using System.Text;
 
 namespace ProyectoObligatorio.Entidades
 {
-    internal class Usuario
+    public class Usuario
     {
+        private int id;
+        private string nombreCompleto;
+        private string email;
+        private string nombreUsuario;
+        private string password;
+        private RolesUsuario rol;
     }
 }

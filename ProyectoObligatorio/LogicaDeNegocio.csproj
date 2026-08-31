@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Excepciones\" />
     <Folder Include="ValueObjects\Capitulo\" />
     <Folder Include="ValueObjects\Categoria\" />
     <Folder Include="ValueObjects\Final\" />

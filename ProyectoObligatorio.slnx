@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="DTOs/DTOs.csproj" Id="e2760b0d-e69d-4087-bdb9-e94a08c8beac" />
+  <Project Path="LogicaAplicacion/LogicaAplicacion.csproj" Id="22add05b-08a6-499f-bb0b-6caf4a1e23bf" />
   <Project Path="ProyectoObligatorio/Dominio.csproj" />
 </Solution>

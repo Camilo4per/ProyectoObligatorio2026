@@ -6,7 +6,7 @@ namespace Dominio.ValueObjects.Usuario
 {
     public sealed record Email
     {
-        public string Value { get; set; }
+        public string Value { get; init; }
 
         public Email(string text)
         {

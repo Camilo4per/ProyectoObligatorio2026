@@ -6,7 +6,7 @@ namespace Dominio.ValueObjects.Usuario
 {
     public sealed record Password
     {
-        public string Value { get; set; }
+        public string Value { get; init; }
 
         public Password(string textoplano)
         {

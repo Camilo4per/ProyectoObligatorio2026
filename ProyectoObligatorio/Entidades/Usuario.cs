@@ -16,21 +16,8 @@ namespace Dominio.Entidades
         public RolesUsuario Rol { get; set; }
 
         // Value Objects
-        public Email Email { get; set; }
-        public Password Password { get; set; }
+        public Email Email { get; init; }
+        public Password Password { get; init; }
 
-
-        public Usuario(string nombreCompleto, string email, string nombreUsuario, string password, RolesUsuario rol)
-        {
-            NombreCompleto = nombreCompleto;
-            Email = email;
-            NombreUsuario = nombreUsuario;
-            Password = password;
-            Rol = rol;
-        }
-        public void Validar()
-        {
-            if (string.IsNullOrEmpty(Email)) { throw new UsuarioException("Email no puede ser vacio"); }
-        }
     }
 }

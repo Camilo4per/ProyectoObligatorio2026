@@ -8,17 +8,6 @@ namespace Dominio
 {
     public class Sistema
     {
-        public static Sistema Instancia
-        {
-            get
-            {
-                if (_instancia == null)
-                {
-                    _instancia = new Sistema();
-                }
-                return _instancia;
-            }
-        }
         public List<Entidades.Categoria> Categorias 
         { 
             get { return new List<Entidades.Categoria>(Categorias); } 

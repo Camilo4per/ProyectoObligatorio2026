@@ -11,7 +11,6 @@ namespace Dominio.Entidades
     {
         public int Id { get; }
         public string NombreCompleto { get; set; }
-        
         public string NombreUsuario { get; set; }
         public RolesUsuario Rol { get; set; }
 

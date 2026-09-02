@@ -11,4 +11,9 @@
     <ProjectReference Include="..\ProyectoObligatorio\Dominio.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CasosDeUso\Usuario\" />
+    <Folder Include="InterfacesDeCasoDeUso\Usuario\" />
+  </ItemGroup>
+
 </Project>

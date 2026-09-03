@@ -8,7 +8,6 @@ namespace Dominio.Entidades
 {
     public class Opcion : IValidable
     {
-        
         public Capitulo CapDestino { get; set; }
 
         // Value Objects

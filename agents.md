@@ -31,7 +31,7 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
    - Interfaces de casos de uso (stubs vacíos): `IAgregarUsuario`, `IEncontrarTodosLosUsuarios`, `IObtenerUsuarioPorId`
 
 4. **LogicaAccesoDatos** (`LogicaAccesoDatos/`)
-   - RepositorioEnMemoria: `RepositorioUsuarios` (parcialmente implementado)
+   - RepositorioEnMemoria: `RepositorioUsuarios`, `RepositorioHistorias`, `RepositorioCategorias`, `RepositorioOpciones`, `RepositorioIntermedios`, `RepositorioFinales` (parcialmente implementados)
 
 ## Estructura de Archivos
 
@@ -77,6 +77,11 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
 |---------|-------------|
 | `InterfaceDeRepositorio/IRepository.cs` | Interfaz genérica: Add, Update, Remove(int id), FindById → T, FindAll → List<T> |
 | `InterfaceDeRepositorio/IRepositorioUsuarios.cs` | Extiende IRepository<Usuario>, agrega ExisteUsuario |
+| `InterfaceDeRepositorio/IRepositorioHistorias.cs` | Extiende IRepository<Historia>, agrega ExisteHistoria |
+| `InterfaceDeRepositorio/IRepositorioCategorias.cs` | Extiende IRepository<Categoria>, agrega ExisteCategoria |
+| `InterfaceDeRepositorio/IRepositorioOpciones.cs` | Extiende IRepository<Opcion>, agrega ExisteOpcion |
+| `InterfaceDeRepositorio/IRepositorioIntermedios.cs` | Extiende IRepository<Intermedio>, agrega ExisteIntermedio |
+| `InterfaceDeRepositorio/IRepositorioFinales.cs` | Extiende IRepository<Final>, agrega ExisteFinal |
 
 ### Dominio - Implementación IValidable
 | Entidad | Estado de Validar() |
@@ -117,6 +122,11 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
 | Archivo | Descripción |
 |---------|-------------|
 | `RepositorioEnMemoria/RepositorioUsuarios.cs` | Implementa IRepositorioUsuarios. Add, ExisteUsuario, FindById, FindAll funcionan. Update y Remove lanzan NotImplementedException |
+| `RepositorioEnMemoria/RepositorioHistorias.cs` | Implementa IRepositorioHistorias. Add, ExisteHistoria, FindById, FindAll funcionan. Update y Remove lanzan NotImplementedException |
+| `RepositorioEnMemoria/RepositorioCategorias.cs` | Implementa IRepositorioCategorias. Add, ExisteCategoria, FindById, FindAll funcionan. Update y Remove lanzan NotImplementedException |
+| `RepositorioEnMemoria/RepositorioOpciones.cs` | Implementa IRepositorioOpciones. Add, FindById, FindAll funcionan. Update y Remove lanzan NotImplementedException. Opcion no tiene Id, se indexa por posición. ExisteOpcion está vacía (la misma opción puede repetirse en distintos intermedios, la pertenencia se valida por intermedio) |
+| `RepositorioEnMemoria/RepositorioIntermedios.cs` | Implementa IRepositorioIntermedios. Add, ExisteIntermedio, FindById, FindAll funcionan. Update y Remove lanzan NotImplementedException |
+| `RepositorioEnMemoria/RepositorioFinales.cs` | Implementa IRepositorioFinales. Add, ExisteFinal, FindById, FindAll funcionan. Update y Remove lanzan NotImplementedException |
 
 ## Estado de Implementación
 
@@ -124,16 +134,15 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
 - [x] Entidades de dominio (Usuario, Historia, Capitulo, Intermedio, Final, Opcion, Categoria)
 - [x] ValueObjects con validación (Email, Password, NombreCompleto, Titulo, Sinopsis, Texto, Nombre, CantLlegaron)
 - [x] Excepciones por entidad
-- [x] Interfaces de repositorio (IRepository<T>, IRepositorioUsuarios)
+- [x] Interfaces de repositorio (IRepository<T> + IRepositorioUsuarios/Historias/Categorias/Opciones/Intermedios/Finales)
 - [x] DTOs para Usuario, Historia, Capitulo, Categoria, Intermedio, Final y Opcion
 - [x] Mappers FromDTO para todas las entidades anteriores
-- [x] Repositorio en memoria (parcial: Add, Existe, Get, GetAll)
+- [x] Repositorios en memoria (parcial: Add, Existe, FindById, FindAll funcionan; Update y Remove lanzan NotImplementedException)
 
 ### Pendiente
 - [ ] Implementar casos de uso (stubs vacíos)
-- [ ] Completar RepositorioUsuarios (Update, Remove)
+- [ ] Completar repositorios en memoria (Update y Remove lanzan NotImplementedException)
 - [ ] Agregar más casos de uso (ModificarUsuario, EliminarUsuario, etc.)
-- [ ] Agregar más repositorios (Historia, Capitulo, etc.)
 - [ ] Implementar lógica en `IValidable.Validar()` por entidad (solo Usuario tiene implementación parcial)
 - [ ] Agregar persistencia (base de datos)
 - [ ] Implementar casos de uso para Historia/Capitulo/Opción

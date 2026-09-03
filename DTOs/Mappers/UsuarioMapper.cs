@@ -1,4 +1,5 @@
 ﻿using Dominio.Entidades;
+using Dominio.ValueObjects.Usuario;
 using DTOs.DTOs;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,7 @@ namespace DTOs.Mappers
         {
             return new Usuario
             {
-                Id = dto.Id,
-                NombreCompleto = dto.NombreCompleto,
+                NombreCompleto = new NombreCompleto(dto.Nombre, dto.Apellido),
                 NombreUsuario = dto.NombreUsuario,
                 Rol = dto.Rol,
                 Email = new Email(dto.Email),

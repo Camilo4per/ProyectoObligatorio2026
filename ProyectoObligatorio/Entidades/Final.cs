@@ -7,6 +7,8 @@ namespace Dominio.Entidades
     public class Final : Capitulo
     {
         public int CantLlegaron { get; set; }
+
+        public Final() { }
         public Final(string titulo, string texto, int cantLlegaron) : base(titulo, texto)
         {
             CantLlegaron = cantLlegaron;

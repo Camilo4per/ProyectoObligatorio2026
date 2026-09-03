@@ -9,6 +9,7 @@ namespace Dominio.Entidades
         public string Texto { get; set; }
         public Capitulo CapDestino { get; set; }
 
+        public Opcion() { }
         public Opcion(string texto, Capitulo capDestino)
         {
             Texto = texto;

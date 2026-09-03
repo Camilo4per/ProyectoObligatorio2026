@@ -17,6 +17,5 @@ namespace Dominio.Entidades
         // Value Objects
         public Email Email { get; init; }
         public Password Password { get; init; }
-
     }
 }

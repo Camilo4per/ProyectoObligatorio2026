@@ -12,6 +12,7 @@ namespace Dominio.Entidades
             private set;
         }
 
+        public Intermedio() { }
         public Intermedio(string titulo, string texto, List<Opcion> opciones) : base(titulo, texto)
         {
             Opciones = opciones;

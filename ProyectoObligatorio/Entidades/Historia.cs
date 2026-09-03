@@ -6,5 +6,6 @@ namespace Dominio.Entidades
 {
     public class Historia
     {
+
     }
 }

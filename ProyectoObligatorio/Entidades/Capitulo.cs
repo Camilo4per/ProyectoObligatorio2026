@@ -10,6 +10,7 @@ namespace Dominio.Entidades
         public string Titulo { get; set; }
         public string Texto { get; set; }
         
+        public Capitulo() { }
         public Capitulo(string titulo, string texto)
         {
             Titulo = titulo;

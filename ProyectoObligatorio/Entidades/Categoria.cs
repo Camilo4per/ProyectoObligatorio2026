@@ -9,6 +9,7 @@ namespace Dominio.Entidades
         public int Id { get; }
         public string Nombre { get; set; }
 
+        public Categoria() { }
         public Categoria(string nombre)
         {
             Nombre = nombre;

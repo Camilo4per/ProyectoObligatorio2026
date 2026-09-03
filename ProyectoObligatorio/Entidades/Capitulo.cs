@@ -1,20 +1,19 @@
-﻿using System;
+﻿using Dominio.InterfacesDelDominio;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Dominio.Entidades
 {
-    public abstract class Capitulo
+    public abstract class Capitulo : IValidable
     {
         public int Id { get; }
         public string Titulo { get; set; }
         public string Texto { get; set; }
-        
-        public Capitulo() { }
-        public Capitulo(string titulo, string texto)
+
+        public void Validar()
         {
-            Titulo = titulo;
-            Texto = texto;
+            throw new NotImplementedException();
         }
     }
 }

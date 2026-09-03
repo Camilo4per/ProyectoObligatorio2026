@@ -1,18 +1,20 @@
-﻿using System;
+﻿using Dominio.InterfacesDelDominio;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Dominio.Entidades
 {
-    public class Categoria
+    public class Categoria : IValidable
     {
         public int Id { get; }
         public string Nombre { get; set; }
 
-        public Categoria() { }
-        public Categoria(string nombre)
+        // Value Objects
+
+        public void Validar()
         {
-            Nombre = nombre;
+            throw new NotImplementedException();
         }
     }
 }

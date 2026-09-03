@@ -13,6 +13,7 @@ namespace DTOs.Mappers
         {
             return new Usuario
             {
+                Id = dto.Id,
                 NombreCompleto = new NombreCompleto(dto.Nombre, dto.Apellido),
                 NombreUsuario = dto.NombreUsuario,
                 Rol = dto.Rol,

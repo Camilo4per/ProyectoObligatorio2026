@@ -9,7 +9,7 @@ namespace Dominio.Entidades
 {
     public class Usuario : IValidable
     {
-        public int Id { get; }
+        public int Id { get; set; }
         public string NombreUsuario { get; set; }
         public RolesUsuario Rol { get; set; }
 

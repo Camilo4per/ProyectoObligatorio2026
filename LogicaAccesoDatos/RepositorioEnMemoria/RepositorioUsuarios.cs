@@ -1,5 +1,6 @@
 ﻿using Dominio.Entidades;
 using Dominio.Excepciones;
+using Dominio.InterfaceDeRepositorio;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace LogicaAccesoDatos.RepositorioEnMemoria
 {
-    public class RepositorioUsuarios
+    public class RepositorioUsuarios : IRepositorioUsuarios
     {
         private static List<Usuario> usuarios = new List<Usuario>();
 
@@ -15,15 +16,15 @@ namespace LogicaAccesoDatos.RepositorioEnMemoria
         {
             if (nuevo == null) { throw new UsuarioException("El usuario esta vacio"); }
             nuevo.Validar();
-            UsuarioUnico(nuevo);
-            RepositorioUsuarios.usuarios.Add(nuevo);
+            ExisteUsuario(nuevo);
+            usuarios.Add(nuevo);
         }
 
-        public void UsuarioUnico(Usuario usuario)
+        public void ExisteUsuario(Usuario aVerificar)
         {
             foreach (Usuario item in usuarios)
             {
-                if (item.Email == usuario.Email)
+                if (item.Email == aVerificar.Email)
                 {
                     throw new UsuarioException("Usuario ya existente");
                 }

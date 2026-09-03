@@ -16,10 +16,11 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
 1. **Dominio** (`ProyectoObligatorio/`)
    - Entidades: `Usuario`, `Historia`, `Capitulo` (abstract), `Intermedio`, `Final`, `Opcion`, `Categoria`
    - Enums: `EstadoHistoria` (Borrador, Publicada), `RolesUsuario` (Administrador, Usuario)
-   - ValueObjects: `Email`, `Password`, `NombreCompleto`, `Titulo`, `Sinopsis`
+   - ValueObjects: `Email`, `Password`, `NombreCompleto`, `Titulo`, `Sinopsis`, `Texto`, `Nombre`, `CantLlegaron`
    - Excepciones: `UsuarioException`, `CapituloException`, `CategoriaException`, `FinalException`, `HistoriaException`, `IntermedioException`, `OpcionException`
    - Interfaces: `IValidable` (internal)
    - InterfaceDeRepositorio: `IRepository<T>`, `IRepositorioUsuarios`
+   - Varias entidades implementan `IValidable` (Intermedio, Historia, etc.), aunque sus `Validar()` aún lanzan `NotImplementedException`
 
 2. **DTOs** (`DTOs/`)
    - DTOs: `UsuarioDTO`, `HistoriaDTO`
@@ -55,6 +56,10 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
 | `ValueObjects/Usuario/NombreCompleto.cs` | Record con Nombre y Apellido. ToString combina ambos |
 | `ValueObjects/Historia/Titulo.cs` | Record con validación de longitud (3-100 chars) |
 | `ValueObjects/Historia/Sinopsis.cs` | Record con validación de longitud (10-500 chars) |
+| `ValueObjects/Capitulo/Titulo.cs` | Record con validación de longitud (3-100 chars). Propio del contexto Capitulo (no reutiliza el de Historia) |
+| `ValueObjects/Capitulo/Texto.cs` | Record con validación de longitud (3-2000 chars). Usado por Capitulo y Opcion |
+| `ValueObjects/Categoria/Nombre.cs` | Record con validación de longitud (3-50 chars) |
+| `ValueObjects/Final/CantLlegaron.cs` | Record con validación no negativa (>= 0) |
 
 ### Dominio - Excepciones
 | Archivo | Descripción |
@@ -70,16 +75,33 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
 ### Dominio - Repositorios
 | Archivo | Descripción |
 |---------|-------------|
-| `InterfaceDeRepositorio/IRepository.cs` | Interfaz genérica: Add, Update, Remove, FindById |
+| `InterfaceDeRepositorio/IRepository.cs` | Interfaz genérica: Add, Update, Remove(int id), FindById → T, FindAll → List<T> |
 | `InterfaceDeRepositorio/IRepositorioUsuarios.cs` | Extiende IRepository<Usuario>, agrega ExisteUsuario |
+
+### Dominio - Implementación IValidable
+| Entidad | Estado de Validar() |
+|---------|--------------------|
+| `Usuario` | Implementada (valida NombreUsuario) |
+| `Intermedio` | Lanza `NotImplementedException` |
+| `Historia` | Llama ToString() de ValueObjects (validación indirecta) |
 
 ### DTOs
 | Archivo | Descripción |
 |---------|-------------|
 | `DTOs/DTOs/UsuarioDTO.cs` | Transferencia de datos con Nombre y Apellido separados |
 | `DTOs/DTOs/HistoriaDTO.cs` | Transferencia de datos con Titulo y Sinopsis como strings |
+| `DTOs/DTOs/CapituloDTO.cs` | Transferencia de datos base del capítulo (Titulo, Texto) |
+| `DTOs/DTOs/CategoriaDTO.cs` | Transferencia de datos de categoría (Nombre) |
+| `DTOs/DTOs/IntermedioDTO.cs` | Transferencia de datos de capítulo intermedio (Titulo, Texto, Opciones) |
+| `DTOs/DTOs/FinalDTO.cs` | Transferencia de datos de capítulo final (Titulo, Texto, CantLlegaron) |
+| `DTOs/DTOs/OpcionDTO.cs` | Transferencia de datos de opción (Texto, CapDestino) |
 | `DTOs/Mappers/UsuarioMapper.cs` | Conversión DTO → Entidad (FromDTO) |
 | `DTOs/Mappers/HistoriaMapper.cs` | Conversión DTO → Entidad (FromDTO) |
+| `DTOs/Mappers/CapituloMapper.cs` | Conversión CapituloDTO → Capitulo (FromDTO). Como Capitulo es abstracto, materializa `new Intermedio` |
+| `DTOs/Mappers/CategoriaMapper.cs` | Conversión DTO → Entidad (FromDTO) |
+| `DTOs/Mappers/IntermedioMapper.cs` | Conversión DTO → Entidad (FromDTO) |
+| `DTOs/Mappers/FinalMapper.cs` | Conversión DTO → Entidad (FromDTO) |
+| `DTOs/Mappers/OpcionMapper.cs` | Conversión DTO → Entidad (FromDTO). Reutiliza CapituloMapper.FromDTO para CapDestino |
 
 ### LogicaAplicacion
 | Archivo | Descripción |
@@ -94,34 +116,38 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
 ### LogicaAccesoDatos
 | Archivo | Descripción |
 |---------|-------------|
-| `RepositorioEnMemoria/RepositorioUsuarios.cs` | Implementación parcial: Add, Existe, Get, GetAll funcionan. Update y Delete lanzan NotImplementedException. NO implementa IRepositorioUsuarios |
+| `RepositorioEnMemoria/RepositorioUsuarios.cs` | Implementa IRepositorioUsuarios. Add, ExisteUsuario, FindById, FindAll funcionan. Update y Remove lanzan NotImplementedException |
 
 ## Estado de Implementación
 
 ### Completado
 - [x] Entidades de dominio (Usuario, Historia, Capitulo, Intermedio, Final, Opcion, Categoria)
-- [x] ValueObjects con validación (Email, Password, NombreCompleto, Titulo, Sinopsis)
+- [x] ValueObjects con validación (Email, Password, NombreCompleto, Titulo, Sinopsis, Texto, Nombre, CantLlegaron)
 - [x] Excepciones por entidad
 - [x] Interfaces de repositorio (IRepository<T>, IRepositorioUsuarios)
-- [x] DTOs para Usuario e Historia
-- [x] Mappers FromDTO para Usuario e Historia
+- [x] DTOs para Usuario, Historia, Capitulo, Categoria, Intermedio, Final y Opcion
+- [x] Mappers FromDTO para todas las entidades anteriores
 - [x] Repositorio en memoria (parcial: Add, Existe, Get, GetAll)
 
 ### Pendiente
 - [ ] Implementar casos de uso (stubs vacíos)
-- [ ] Completar RepositorioUsuarios (Update, Delete)
-- [ ] Hacer que RepositorioUsuarios implemente IRepositorioUsuarios
+- [ ] Completar RepositorioUsuarios (Update, Remove)
 - [ ] Agregar más casos de uso (ModificarUsuario, EliminarUsuario, etc.)
 - [ ] Agregar más repositorios (Historia, Capitulo, etc.)
 - [ ] Implementar lógica en `IValidable.Validar()` por entidad (solo Usuario tiene implementación parcial)
 - [ ] Agregar persistencia (base de datos)
 - [ ] Implementar casos de uso para Historia/Capitulo/Opción
-- [ ] Agregar ToDTO en los Mappers (actualmente solo tienen FromDTO)
 
 ## Notas Importantes
 
-### Bug conocido
-- `Intermedio.cs:11` - El getter de `Opciones` llama a `new List<Opcion>(Opciones)` creando recursión infinita (StackOverflowException). Debería ser un campo privado backing.
+### Patrón de DTOs y Mappers
+- Los DTOs se crean por entidad (no por ValueObject individual), siguiendo el ejemplo de `HistoriaDTO`/`HistoriaMapper`.
+- Cada DTO expone las propiedades como tipos simples (string/int) y el Mapper (`FromDTO`) las convierte en ValueObjects al construir la entidad.
+- Los ValueObjects de `Capitulo` (`Titulo`, `Texto`) y `Categoria` (`Nombre`) se representan dentro de sus DTOs de entidad correspondientes.
+
+### Decisiones de diseño
+- `CapituloMapper.FromDTO` materializa `new Intermedio` porque `Capitulo` es abstracto (no se puede instanciar). Esto implica que un `CapituloDTO` genérico siempre se convierte en `Intermedio`; para crear un `Final` debe usarse `FinalMapper`.
+- `OpcionMapper` reutiliza `CapituloMapper.FromDTO` para el `CapDestino`.
 
 ### Configuración
 - Target Framework: `net10.0`

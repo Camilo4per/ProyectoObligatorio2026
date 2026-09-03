@@ -7,7 +7,7 @@ using System.Text;
 
 namespace LogicaAccesoDatos.RepositorioEnMemoria
 {
-    public class RepositorioOpciones : IRepositorioOpciones
+    public class RepositorioOpcion : IRepositorioOpcion
     {
         private static List<Opcion> opciones = new List<Opcion>();
 

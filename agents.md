@@ -144,8 +144,8 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
 - [ ] Completar repositorios en memoria (Update y Remove lanzan NotImplementedException)
 - [ ] Agregar más casos de uso (ModificarUsuario, EliminarUsuario, etc.)
 - [ ] Implementar lógica en `IValidable.Validar()` por entidad (solo Usuario tiene implementación parcial)
-- [ ] Agregar persistencia (base de datos)
 - [ ] Implementar casos de uso para Historia/Capitulo/Opción
+- [ ] Agregar los `IValidable` al UML
 
 ## Notas Importantes
 

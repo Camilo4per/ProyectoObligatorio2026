@@ -1,9 +1,6 @@
 using Dominio.Entidades;
 using Dominio.Excepciones;
 using Dominio.InterfaceDeRepositorio;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace LogicaAccesoDatos.RepositorioEnMemoria
 {

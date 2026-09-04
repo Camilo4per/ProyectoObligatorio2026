@@ -1,8 +1,5 @@
 ﻿using Dominio.InterfacesDelDominio;
 using Dominio.ValueObjects.Capitulo;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Dominio.Entidades
 {

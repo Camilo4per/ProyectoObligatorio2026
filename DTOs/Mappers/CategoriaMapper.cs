@@ -1,9 +1,6 @@
 using Dominio.Entidades;
 using Dominio.ValueObjects.Categoria;
 using DTOs.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DTOs.Mappers
 {

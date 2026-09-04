@@ -1,9 +1,6 @@
 ﻿using Dominio.Excepciones;
 using Dominio.InterfacesDelDominio;
 using Dominio.ValueObjects.Usuario;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Dominio.Entidades
 {

@@ -156,6 +156,8 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
 - [x] Casos de uso de Usuarios (AgregarUsuarioCU, EncontrarTodosUsuariosCU, ObtenerUsuarioPorIdCU)
 - [x] Repositorios en memoria (parcial: Add, Existe, FindById, FindAll funcionan; Update y Remove lanzan NotImplementedException)
 - [x] DTOs sin referencias a entidades de dominio (`HistoriaDTO.Categorias` → `List<CategoriaDTO>`, `HistoriaDTO.Capitulo` → `CapituloDTO`, `IntermedioDTO.Opciones` → `List<OpcionDTO>`; mappers convierten los anidados)
+- [x] Limpieza de `using` redundantes (55 archivos; ImplicitUsings habilitado)
+- [x] Quitar referencia `ValueObjects\Intermedio` inexistente en `ProyectoObligatorio/Dominio.csproj`
 
 ### Pendiente
 - [ ] Implementar lógica en `IValidable.Validar()` por entidad (solo Usuario tiene implementación; el resto lanza `NotImplementedException`). **Desbloquea el `Add()` de Historia/Categoria/Intermedio/Final/Opcion**
@@ -173,8 +175,6 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
 - [ ] Registrar DI de casos de uso en `Presentacion/Program.cs` (`IAgregarUsuario`, `IEncontrarTodosUsuarios`, `IObtenerUsuarioPorId`)
 - [ ] Crear `HomeController` (existe `Views/Home/Index.cshtml` sin controlador)
 - [ ] Crear vistas y acciones para Usuario/Historia/Categoria/Capitulo (30+ acciones stub con `return View()` sin vistas)
-- [ ] Quitar referencia `ValueObjects\Intermedio` inexistente en `ProyectoObligatorio/ProyectoObligatorio.csproj`
-- [ ] Limpiar `using` redundantes (ImplicitUsings habilitado)
 - [ ] Agregar los `IValidable` al UML
 
 ## Notas Importantes

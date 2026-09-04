@@ -20,6 +20,8 @@ namespace LogicaAccesoDatos.RepositorioEnMemoria
 
         public void ExisteOpcion(Opcion aVerificar)
         {
+            if (aVerificar == null) { throw new OpcionException("La opcion esta vacia"); }
+            if (!opciones.Contains(aVerificar)) { throw new OpcionException("La opcion no existe"); }
         }
 
         public Opcion FindById(int id)

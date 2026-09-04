@@ -15,7 +15,7 @@ namespace DTOs.Mappers
             {
                 Titulo = new Titulo(dto.Titulo),
                 Texto = new Texto(dto.Texto),
-                Opciones = dto.Opciones
+                Opciones = dto.Opciones.Select(OpcionMapper.FromDTO).ToList()
             };
         }
     }

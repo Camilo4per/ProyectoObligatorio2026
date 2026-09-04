@@ -4,11 +4,13 @@
 Proyecto de facultad utilizando arquitectura DDD (Domain-Driven Design). El sistema gestiona usuarios, historias interactivas y capítulos con opciones de destino.
 
 ## Arquitectura Actual
-El proyecto sigue una arquitectura en 3 capas con separación por proyectos:
+El proyecto sigue una arquitectura en capas con separación por proyectos (5 proyectos):
 
 ```
 Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de Uso)
                                               ←→ LogicaAccesoDatos (Repositorios)
+                                                      ↓
+                                              Presentacion (Controladores MVC)
 ```
 
 ### Capas:
@@ -19,19 +21,24 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
    - ValueObjects: `Email`, `Password`, `NombreCompleto`, `Titulo`, `Sinopsis`, `Texto`, `Nombre`, `CantLlegaron`
    - Excepciones: `UsuarioException`, `CapituloException`, `CategoriaException`, `FinalException`, `HistoriaException`, `IntermedioException`, `OpcionException`
    - Interfaces: `IValidable` (internal)
-   - InterfaceDeRepositorio: `IRepository<T>`, `IRepositorioUsuarios`
-   - Varias entidades implementan `IValidable` (Intermedio, Historia, etc.), aunque sus `Validar()` aún lanzan `NotImplementedException`
+   - InterfaceDeRepositorio: `IRepository<T>`, `IRepositorioUsuarios`, `IRepositorioHistorias`, `IRepositorioCategorias`, `IRepositorioOpcion`, `IRepositorioIntermedios`, `IRepositorioFinales`
 
 2. **DTOs** (`DTOs/`)
-   - DTOs: `UsuarioDTO`, `HistoriaDTO`
-   - Mappers: `UsuarioMapper`, `HistoriaMapper`
+   - DTOs (7): `UsuarioDTO`, `HistoriaDTO`, `CapituloDTO`, `CategoriaDTO`, `IntermedioDTO`, `FinalDTO`, `OpcionDTO`
+   - Mappers (7): `UsuarioMapper`, `HistoriaMapper`, `CapituloMapper`, `CategoriaMapper`, `IntermedioMapper`, `FinalMapper`, `OpcionMapper`
 
 3. **LogicaAplicacion** (`LogicaAplicacion/`)
-   - Casos de uso (stubs vacíos): `AgregarUsuarioCU`, `EncontrarTodosLosUsuariosCU`, `ObtenerUsuarioPorIdCU`
-   - Interfaces de casos de uso (stubs vacíos): `IAgregarUsuario`, `IEncontrarTodosLosUsuarios`, `IObtenerUsuarioPorId`
+   - Casos de uso de Usuarios (implementados): `AgregarUsuarioCU`, `EncontrarTodosUsuariosCU`, `ObtenerUsuarioPorIdCU`
+   - Interfaces de casos de uso: `IAgregarUsuario`, `IEncontrarTodosUsuarios`, `IObtenerUsuarioPorId`
+   - Nota: dar de alta CU en `Presentacion/Program.cs` (DI)
 
 4. **LogicaAccesoDatos** (`LogicaAccesoDatos/`)
-   - RepositorioEnMemoria: `RepositorioUsuarios`, `RepositorioHistorias`, `RepositorioCategorias`, `RepositorioOpciones`, `RepositorioIntermedios`, `RepositorioFinales` (parcialmente implementados)
+   - RepositorioEnMemoria: `RepositorioUsuarios`, `RepositorioHistorias`, `RepositorioCategorias`, `RepositorioOpcion`, `RepositorioIntermedios`, `RepositorioFinales` (parcialmente implementados)
+
+5. **Presentacion** (`Presentacion/`) - capa MVC (ASP.NET Core)
+   - Controllers: `UsuarioController`, `HistoriaController`, `CategoriaController`, `CapituloController` (todos con acciones stub)
+   - **No existe HomeController** (la vista `Views/Home/Index.cshtml` no tiene controlador)
+   - DI incompleta en `Program.cs` (solo registra `IRepositorioUsuarios`; los casos de uso no están registrados)
 
 ## Estructura de Archivos
 
@@ -79,7 +86,7 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
 | `InterfaceDeRepositorio/IRepositorioUsuarios.cs` | Extiende IRepository<Usuario>, agrega ExisteUsuario |
 | `InterfaceDeRepositorio/IRepositorioHistorias.cs` | Extiende IRepository<Historia>, agrega ExisteHistoria |
 | `InterfaceDeRepositorio/IRepositorioCategorias.cs` | Extiende IRepository<Categoria>, agrega ExisteCategoria |
-| `InterfaceDeRepositorio/IRepositorioOpciones.cs` | Extiende IRepository<Opcion>, agrega ExisteOpcion |
+| `InterfaceDeRepositorio/IRepositorioOpcion.cs` | Extiende IRepository<Opcion>, agrega ExisteOpcion |
 | `InterfaceDeRepositorio/IRepositorioIntermedios.cs` | Extiende IRepository<Intermedio>, agrega ExisteIntermedio |
 | `InterfaceDeRepositorio/IRepositorioFinales.cs` | Extiende IRepository<Final>, agrega ExisteFinal |
 
@@ -87,8 +94,14 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
 | Entidad | Estado de Validar() |
 |---------|--------------------|
 | `Usuario` | Implementada (valida NombreUsuario) |
-| `Intermedio` | Lanza `NotImplementedException` |
-| `Historia` | Llama ToString() de ValueObjects (validación indirecta) |
+| `Capitulo` | Lanza `NotImplementedException` (abstract, base de Intermedio/Final) |
+| `Intermedio` | Lanza `NotImplementedException`. Oculta el miembro heredado (warning CS0108) |
+| `Final` | Lanza `NotImplementedException`. Oculta el miembro heredado (warning CS0108) |
+| `Opcion` | Lanza `NotImplementedException` |
+| `Categoria` | Lanza `NotImplementedException` |
+| `Historia` | Lanza `NotImplementedException` |
+
+> **Impacto crítico:** solo `Usuario.Validar()` está implementada. Los `Add()` de los repositorios de Historia, Categoria, Intermedio, Final y Opcion llaman a `Validar()`, por lo que **cualquier alta de esas entidades lanza `NotImplementedException` y falla en runtime**.
 
 ### DTOs
 | Archivo | Descripción |
@@ -111,12 +124,12 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
 ### LogicaAplicacion
 | Archivo | Descripción |
 |---------|-------------|
-| `CasosDeUso/Usuarios/AgregarUsuarioCU.cs` | Stub vacío |
-| `CasosDeUso/Usuarios/EncontrarTodosLosUsuariosCU.cs` | Stub vacío |
-| `CasosDeUso/Usuarios/ObtenerUsuarioPorIdCU.cs` | Stub vacío |
-| `InterfacesDeCasoDeUso/Usuarios/IAgregarUsuario.cs` | Stub vacío |
-| `InterfacesDeCasoDeUso/Usuarios/IEncontrarTodosLosUsuarios.cs` | Stub vacío |
-| `InterfacesDeCasoDeUso/Usuarios/IObtenerUsuarioPorId.cs` | Stub vacío |
+| `CasosDeUso/Usuarios/AgregarUsuarioCU.cs` | Implementado (Add + UsuarioMapper.FromDTO) |
+| `CasosDeUso/Usuarios/EncontrarTodosLosUsuariosCU.cs` | Implementado (FindAll + ToDTO). Clase real: `EncontrarTodosUsuariosCU` |
+| `CasosDeUso/Usuarios/ObtenerUsuarioPorIdCU.cs` | Implementado (FindById + ToDTO) |
+| `InterfacesDeCasoDeUso/Usuarios/IAgregarUsuario.cs` | Interfaz: void Ejecutar(UsuarioDTO) |
+| `InterfacesDeCasoDeUso/Usuarios/IEncontrarTodosLosUsuarios.cs` | Interfaz: List<UsuarioDTO> Ejecutar(). Interfaz real: `IEncontrarTodosUsuarios` |
+| `InterfacesDeCasoDeUso/Usuarios/IObtenerUsuarioPorId.cs` | Interfaz: UsuarioDTO Ejecutar(int id) |
 
 ### LogicaAccesoDatos
 | Archivo | Descripción |
@@ -124,9 +137,11 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
 | `RepositorioEnMemoria/RepositorioUsuarios.cs` | Implementa IRepositorioUsuarios. Add, ExisteUsuario, FindById, FindAll funcionan. Update y Remove lanzan NotImplementedException |
 | `RepositorioEnMemoria/RepositorioHistorias.cs` | Implementa IRepositorioHistorias. Add, ExisteHistoria, FindById, FindAll funcionan. Update y Remove lanzan NotImplementedException |
 | `RepositorioEnMemoria/RepositorioCategorias.cs` | Implementa IRepositorioCategorias. Add, ExisteCategoria, FindById, FindAll funcionan. Update y Remove lanzan NotImplementedException |
-| `RepositorioEnMemoria/RepositorioOpciones.cs` | Implementa IRepositorioOpciones. Add, FindById, FindAll funcionan. Update y Remove lanzan NotImplementedException. Opcion no tiene Id, se indexa por posición. ExisteOpcion está vacía (la misma opción puede repetirse en distintos intermedios, la pertenencia se valida por intermedio) |
+| `RepositorioEnMemoria/RepositorioOpcion.cs` | Implementa IRepositorioOpcion. Add, FindById, FindAll funcionan. Update y Remove lanzan NotImplementedException. Opcion no tiene Id, se indexa por posición. ExisteOpcion está vacía (la misma opción puede repetirse en distintos intermedios, la pertenencia se valida por intermedio) |
 | `RepositorioEnMemoria/RepositorioIntermedios.cs` | Implementa IRepositorioIntermedios. Add, ExisteIntermedio, FindById, FindAll funcionan. Update y Remove lanzan NotImplementedException |
 | `RepositorioEnMemoria/RepositorioFinales.cs` | Implementa IRepositorioFinales. Add, ExisteFinal, FindById, FindAll funcionan. Update y Remove lanzan NotImplementedException |
+
+> **Impacto en Add():** aunque los métodos `Add` existen codificados, los de Historia/Categoria/Intermedio/Final/Opcion llaman a `Validar()` (que lanza `NotImplementedException`), por lo que **en runtime fallan al añadir**. Solo `RepositorioUsuarios.Add()` funciona de punta a punta.
 
 ## Estado de Implementación
 
@@ -134,17 +149,32 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
 - [x] Entidades de dominio (Usuario, Historia, Capitulo, Intermedio, Final, Opcion, Categoria)
 - [x] ValueObjects con validación (Email, Password, NombreCompleto, Titulo, Sinopsis, Texto, Nombre, CantLlegaron)
 - [x] Excepciones por entidad
-- [x] Interfaces de repositorio (IRepository<T> + IRepositorioUsuarios/Historias/Categorias/Opciones/Intermedios/Finales)
+- [x] Interfaces de repositorio (IRepository<T> + IRepositorioUsuarios/Historias/Categorias/Opcion/Intermedios/Finales)
 - [x] DTOs para Usuario, Historia, Capitulo, Categoria, Intermedio, Final y Opcion
 - [x] Mappers FromDTO para todas las entidades anteriores
+- [x] UsuarioMapper.ToDTO (entidad → DTO)
+- [x] Casos de uso de Usuarios (AgregarUsuarioCU, EncontrarTodosUsuariosCU, ObtenerUsuarioPorIdCU)
 - [x] Repositorios en memoria (parcial: Add, Existe, FindById, FindAll funcionan; Update y Remove lanzan NotImplementedException)
+- [x] DTOs sin referencias a entidades de dominio (`HistoriaDTO.Categorias` → `List<CategoriaDTO>`, `HistoriaDTO.Capitulo` → `CapituloDTO`, `IntermedioDTO.Opciones` → `List<OpcionDTO>`; mappers convierten los anidados)
 
 ### Pendiente
-- [ ] Implementar casos de uso (stubs vacíos)
-- [ ] Completar repositorios en memoria (Update y Remove lanzan NotImplementedException)
+- [ ] Implementar lógica en `IValidable.Validar()` por entidad (solo Usuario tiene implementación; el resto lanza `NotImplementedException`). **Desbloquea el `Add()` de Historia/Categoria/Intermedio/Final/Opcion**
+- [ ] Completar repositorios en memoria: `Update` y `Remove` de los 6 repositorios
+- [ ] Implementar `ExisteOpcion` en `RepositorioOpcion` (método vacío)
 - [ ] Agregar más casos de uso (ModificarUsuario, EliminarUsuario, etc.)
-- [ ] Implementar lógica en `IValidable.Validar()` por entidad (solo Usuario tiene implementación parcial)
-- [ ] Implementar casos de uso para Historia/Capitulo/Opción
+- [ ] Implementar casos de uso para Historia/Capitulo/Opción/Categoría
+- [ ] Corregir `Validar()` de `Intermedio`/`Final` (ocultan miembro heredado → CS0108). Hacer `virtual` en `Capitulo` y `override` en hijos
+- [ ] Corregir CS8618 (34 warnings): inicializar propiedades no-nullable con `required`/constructores o hacerlas nullable
+- [ ] Eliminar referencias a entidades de dominio en DTOs (PENDIENTE PARCIAL: ya se cambiaron `Categorias`/`Capitulo`/`Opciones` a DTOs y los mappers convierten; por decisión se MANTIENEN los enums de dominio `EstadoHistoria` en `HistoriaDTO` y `RolesUsuario` en `UsuarioDTO`)
+- [ ] Copiar `Id` en `CapituloMapper`/`IntermedioMapper`/`FinalMapper` (los mappers no trasladan el Id del DTO)
+- [ ] No exponer `Password.Value` en `UsuarioMapper.ToDTO` (fallo de seguridad)
+- [ ] Revisar modelo de `Opcion` (sin Id pero `IRepository<Opcion>` exige `FindById(int)`; `RepositorioOpcion.FindById` usa el id como índice de lista)
+- [ ] Revisar semántica de métodos `Existe*` (declarados `void`, lanzan excepción si existe; no devuelven `bool`)
+- [ ] Registrar DI de casos de uso en `Presentacion/Program.cs` (`IAgregarUsuario`, `IEncontrarTodosUsuarios`, `IObtenerUsuarioPorId`)
+- [ ] Crear `HomeController` (existe `Views/Home/Index.cshtml` sin controlador)
+- [ ] Crear vistas y acciones para Usuario/Historia/Categoria/Capitulo (30+ acciones stub con `return View()` sin vistas)
+- [ ] Quitar referencia `ValueObjects\Intermedio` inexistente en `ProyectoObligatorio/ProyectoObligatorio.csproj`
+- [ ] Limpiar `using` redundantes (ImplicitUsings habilitado)
 - [ ] Agregar los `IValidable` al UML
 
 ## Notas Importantes
@@ -157,10 +187,13 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
 ### Decisiones de diseño
 - `CapituloMapper.FromDTO` materializa `new Intermedio` porque `Capitulo` es abstracto (no se puede instanciar). Esto implica que un `CapituloDTO` genérico siempre se convierte en `Intermedio`; para crear un `Final` debe usarse `FinalMapper`.
 - `OpcionMapper` reutiliza `CapituloMapper.FromDTO` para el `CapDestino`.
+- `OpcionDTO.CapDestino` ya es de tipo `CapituloDTO` (correcto; antes referenciaba la entidad `Capitulo` y rompía `OpcionMapper`).
+- `UsuarioMapper.ToDTO` expone `Password.Value` en texto plano: **fallo de seguridad pendiente** (no exponer el password en el DTO de salida).
+- Los DTOs usan tipos DTO para los anidados de entidades (`Categorias`, `Capitulo`, `Opciones`), pero **mantienen los enums de dominio** (`EstadoHistoria`, `RolesUsuario`) por decisión, ya que el proyecto `DTOs` referencia `Dominio`.
 
 ### Configuración
 - Target Framework: `net10.0`
-- Nullable: enabled
+- Nullable: enabled (34 warnings CS8618 por propiedades sin inicializar)
 - ImplicitUsings: enabled
 
 ### Referencias entre proyectos
@@ -172,8 +205,10 @@ Dominio (base)
   │     └── LogicaAplicacion (referencia DTOs + Dominio)
   │
   └── LogicaAccesoDatos (referencia Dominio)
+          ↑
+          └── Presentacion (referencia Dominio + DTOs + LogicaAplicacion + LogicaAccesoDatos)
 ```
 
 ---
-*Última actualización: 03/09/2026*
+*Última actualización: 04/09/2026*
 *Este archivo se mantiene actualizado a medida que se implementan nuevas funcionalidades.*

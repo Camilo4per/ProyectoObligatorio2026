@@ -7,7 +7,7 @@ using System.Text;
 
 namespace DTOs.Mappers
 {
-    public class UsuarioMapper
+public class UsuarioMapper
     {
         public static Usuario FromDTO(UsuarioDTO dto)
         {
@@ -19,6 +19,20 @@ namespace DTOs.Mappers
                 Rol = dto.Rol,
                 Email = new Email(dto.Email),
                 Password = new Password(dto.Password)
+            };
+        }
+
+        public static UsuarioDTO ToDTO(Usuario usuario)
+        {
+            return new UsuarioDTO
+            {
+                Id = usuario.Id,
+                Nombre = usuario.NombreCompleto.Nombre,
+                Apellido = usuario.NombreCompleto.Apellido,
+                NombreUsuario = usuario.NombreUsuario,
+                Rol = usuario.Rol,
+                Email = usuario.Email.Value,
+                Password = usuario.Password.Value
             };
         }
     }

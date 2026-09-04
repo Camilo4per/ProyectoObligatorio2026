@@ -2,5 +2,6 @@
   <Project Path="DTOs/DTOs.csproj" Id="e2760b0d-e69d-4087-bdb9-e94a08c8beac" />
   <Project Path="LogicaAccesoDatos/LogicaAccesoDatos.csproj" Id="c6df455d-bde9-4a17-bf02-c06b00ea86f8" />
   <Project Path="LogicaAplicacion/LogicaAplicacion.csproj" Id="22add05b-08a6-499f-bb0b-6caf4a1e23bf" />
+  <Project Path="Presentacion/Presentacion.csproj" Id="5c412805-22ab-4054-88fa-243b7f2c1fa9" />
   <Project Path="ProyectoObligatorio/Dominio.csproj" />
 </Solution>

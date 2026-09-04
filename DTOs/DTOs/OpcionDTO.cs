@@ -9,6 +9,6 @@ namespace DTOs.DTOs
     {
         public int Id { get; set; }
         public string Texto { get; set; }
-        public Capitulo CapDestino { get; set; }
+        public CapituloDTO CapDestino { get; set; }
     }
 }

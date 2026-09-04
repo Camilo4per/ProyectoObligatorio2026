@@ -8,7 +8,7 @@ namespace Dominio.Entidades
 {
     public abstract class Capitulo : IValidable
     {
-        public int Id { get; }
+        public int Id { get; set; }
 
         // Value Objects
         public Titulo Titulo { get; set; }

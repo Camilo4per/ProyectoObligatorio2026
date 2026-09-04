@@ -1,10 +1,12 @@
-﻿using System;
+﻿using DTOs.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LogicaAplicacion.InterfacesDeCasoDeUso.Usuario
+namespace LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios
 {
-    internal interface IAgregarUsuario
+    public interface IAgregarUsuario
     {
+        public void Ejecutar(UsuarioDTO dto);
     }
 }

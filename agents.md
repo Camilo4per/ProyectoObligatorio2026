@@ -111,12 +111,12 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
 ### LogicaAplicacion
 | Archivo | Descripción |
 |---------|-------------|
-| `CasosDeUso/Usuario/AgregarUsuarioCU.cs` | Stub vacío |
-| `CasosDeUso/Usuario/EncontrarTodosLosUsuariosCU.cs` | Stub vacío |
-| `CasosDeUso/Usuario/ObtenerUsuarioPorIdCU.cs` | Stub vacío |
-| `InterfacesDeCasoDeUso/Usuario/IAgregarUsuario.cs` | Stub vacío |
-| `InterfacesDeCasoDeUso/Usuario/IEncontrarTodosLosUsuarios.cs` | Stub vacío |
-| `InterfacesDeCasoDeUso/Usuario/IObtenerUsuarioPorId.cs` | Stub vacío |
+| `CasosDeUso/Usuarios/AgregarUsuarioCU.cs` | Stub vacío |
+| `CasosDeUso/Usuarios/EncontrarTodosLosUsuariosCU.cs` | Stub vacío |
+| `CasosDeUso/Usuarios/ObtenerUsuarioPorIdCU.cs` | Stub vacío |
+| `InterfacesDeCasoDeUso/Usuarios/IAgregarUsuario.cs` | Stub vacío |
+| `InterfacesDeCasoDeUso/Usuarios/IEncontrarTodosLosUsuarios.cs` | Stub vacío |
+| `InterfacesDeCasoDeUso/Usuarios/IObtenerUsuarioPorId.cs` | Stub vacío |
 
 ### LogicaAccesoDatos
 | Archivo | Descripción |

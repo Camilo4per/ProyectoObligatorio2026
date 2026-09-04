@@ -8,7 +8,7 @@ namespace Dominio.Entidades
 {
     public class Historia : IValidable
     {
-        public int Id { get; }
+        public int Id { get; set; }
         public List<Categoria> Categorias { get; set; }
         public Capitulo Capitulo { get; set; }
         public EstadoHistoria Estado { get; set; }

@@ -1,10 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Dominio.InterfaceDeRepositorio;
+using DTOs.DTOs;
+using DTOs.Mappers;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
+using Dominio.Entidades;
 
-namespace LogicaAplicacion.CasosDeUso.Usuario
+namespace LogicaAplicacion.CasosDeUso.Usuarios
 {
-    internal class EncontrarTodosLosUsuariosCU
+    public class EncontrarTodosUsuariosCU : IEncontrarTodosUsuarios
     {
+        private IRepositorioUsuarios repositorio;
+        public EncontrarTodosUsuariosCU(IRepositorioUsuarios repo)
+        {
+            repositorio = repo;
+        }
+
+        public List<UsuarioDTO> Ejecutar()
+        {
+            List<Usuario> usuarios = repositorio.FindAll();
+            List<UsuarioDTO> aRetornar = new List<UsuarioDTO>();
+            foreach (Usuario usuario in usuarios)
+            {
+                aRetornar.Add(UsuarioMapper.ToDTO(usuario));
+            }
+            return aRetornar;
+        }
     }
 }

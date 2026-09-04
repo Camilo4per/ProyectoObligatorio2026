@@ -1,10 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Dominio.InterfaceDeRepositorio;
+using DTOs.DTOs;
+using DTOs.Mappers;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
 
-namespace LogicaAplicacion.CasosDeUso.Usuario
+namespace LogicaAplicacion.CasosDeUso.Usuarios
 {
-    internal class AgregarUsuarioCU
+    public class AgregarUsuarioCU : IAgregarUsuario
     {
+        private IRepositorioUsuarios repositorio;
+        public AgregarUsuarioCU(IRepositorioUsuarios repo)
+        {
+            repositorio = repo;
+        }
+        public void Ejecutar(UsuarioDTO dto)
+        {
+            repositorio.Add(UsuarioMapper.FromDTO(dto));
+        }
     }
 }

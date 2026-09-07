@@ -14,8 +14,8 @@ namespace DTOs.Mappers
                 Titulo = new Titulo(dto.Titulo),
                 Sinopsis = new Sinopsis(dto.Sinopsis),
                 Categorias = dto.Categorias.Select(CategoriaMapper.FromDTO).ToList(),
-                Capitulo = CapituloMapper.FromDTO(dto.Capitulo),
-                Estado = dto.Estado
+                Capitulo = CapituloMapper.FromIntermedioDTO(dto.Capitulo),
+                Estado = (EstadoHistoria) dto.Estado
             };
         }
     }

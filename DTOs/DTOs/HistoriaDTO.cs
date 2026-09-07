@@ -9,6 +9,6 @@ namespace DTOs.DTOs
         public string Sinopsis { get; set; }
         public List<CategoriaDTO> Categorias { get; set; }
         public CapituloDTO Capitulo { get; set; }
-        public EstadoHistoria Estado { get; set; }
+        public int Estado { get; set; }
     }
 }

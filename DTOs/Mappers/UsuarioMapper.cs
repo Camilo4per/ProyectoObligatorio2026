@@ -13,7 +13,7 @@ public class UsuarioMapper
                 Id = dto.Id,
                 NombreCompleto = new NombreCompleto(dto.Nombre, dto.Apellido),
                 NombreUsuario = dto.NombreUsuario,
-                Rol = dto.Rol,
+                Rol = (RolesUsuario) dto.Rol,
                 Email = new Email(dto.Email),
                 Password = new Password(dto.Password)
             };
@@ -27,7 +27,7 @@ public class UsuarioMapper
                 Nombre = usuario.NombreCompleto.Nombre,
                 Apellido = usuario.NombreCompleto.Apellido,
                 NombreUsuario = usuario.NombreUsuario,
-                Rol = usuario.Rol,
+                Rol = (int) usuario.Rol,
                 Email = usuario.Email.Value,
                 Password = usuario.Password.Value
             };

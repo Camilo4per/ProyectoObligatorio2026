@@ -6,12 +6,21 @@ namespace DTOs.Mappers
 {
     public class OpcionMapper
     {
-        public static Opcion FromDTO(OpcionDTO dto)
+        public static Opcion FromToIntermedioDTO(OpcionDTO dto)
         {
             return new Opcion
             {
                 Texto = new Texto(dto.Texto),
-                CapDestino = CapituloMapper.FromDTO(dto.CapDestino)
+                CapDestino = CapituloMapper.FromIntermedioDTO(dto.CapDestino)
+            };
+        }
+
+        public static Opcion FromToFinalDTO(OpcionDTO dto)
+        {
+            return new Opcion
+            {
+                Texto = new Texto(dto.Texto),
+                CapDestino = CapituloMapper.FromFinalDTO(dto.CapDestino)
             };
         }
     }

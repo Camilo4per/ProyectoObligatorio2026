@@ -1,24 +1,32 @@
 ﻿
+using Dominio.Excepciones;
+using Dominio.InterfacesDelDominio;
+
 namespace Dominio.ValueObjects.Usuario
 {
-    public sealed record Password
+    public sealed record Password : IValidable
     {
         public string Value { get; init; }
 
-        public Password(string textoplano)
+        public Password(string value)
         {
-            if (string.IsNullOrWhiteSpace(textoplano))
-                throw new ArgumentException("Password requerido", nameof(textoplano));
+            Value = value;
+        }
 
-            if (textoplano.Length < 8)
-                throw new ArgumentException("Password debe tener al menos 8 caracteres", nameof(textoplano));
+        public void Validar()
+        {
+            if (string.IsNullOrWhiteSpace(Value))
+                throw new UsuarioException("Password requerido");
+
+            if (Value.Length < 8)
+                throw new UsuarioException("Password debe tener al menos 8 caracteres");
 
             bool hasLower = false;
             bool hasUpper = false;
             bool hasDigit = false;
             bool hasSpecial = false;
 
-            foreach (char ch in textoplano)
+            foreach (char ch in Value)
             {
                 if (char.IsLower(ch)) hasLower = true;
                 else if (char.IsUpper(ch)) hasUpper = true;
@@ -29,15 +37,17 @@ namespace Dominio.ValueObjects.Usuario
             }
 
             if (!(hasLower && hasUpper && hasDigit && hasSpecial))
-                throw new ArgumentException("Password debe contener al menos una minúscula, una mayúscula, un número y un carácter especial", nameof(textoplano));
-
-            Value = textoplano;
+            {
+                throw new UsuarioException("Password debe contener al menos una minúscula, una mayúscula, un número y un carácter especial");
+            }
         }
 
         // Verifica igualdad simple (sin hash por ahora)
-        public bool Verify(string textoplano) => Value == textoplano;
+        public bool Verify(string value) => value == Value;
 
         // No revelar el valor en ToString
         public override string ToString() => "••••••••";
+
+        
     }
 }

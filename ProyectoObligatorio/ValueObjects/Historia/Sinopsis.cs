@@ -1,22 +1,27 @@
+using Dominio.Excepciones;
+using Dominio.InterfacesDelDominio;
 
 namespace Dominio.ValueObjects.Historia
 {
-    public sealed record Sinopsis
+    public sealed record Sinopsis : IValidable
     {
         public string Valor { get; init; }
 
         public Sinopsis(string texto)
         {
-            if (string.IsNullOrWhiteSpace(texto))
-                throw new ArgumentException("Sinopsis requerida", nameof(texto));
-
-            if (texto.Length < 10)
-                throw new ArgumentException("Sinopsis debe tener al menos 10 caracteres", nameof(texto));
-
-            if (texto.Length > 500)
-                throw new ArgumentException("Sinopsis no puede exceder los 500 caracteres", nameof(texto));
-
             Valor = texto;
+        }
+
+        public void Validar()
+        {
+            if (string.IsNullOrWhiteSpace(Valor))
+                throw new HistoriaException("Sinopsis requerida");
+
+            if (Valor.Length < 10)
+                throw new HistoriaException("Sinopsis debe tener al menos 10 caracteres");
+
+            if (Valor.Length > 500)
+                throw new HistoriaException("Sinopsis no puede exceder los 500 caracteres");
         }
 
         public override string ToString() => Valor;

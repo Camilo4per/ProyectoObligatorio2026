@@ -1,21 +1,26 @@
-﻿
+﻿using Dominio.Excepciones;
+using Dominio.InterfacesDelDominio;
+
 namespace Dominio.ValueObjects.Usuario
 {
-    public sealed record NombreCompleto
+    public sealed record NombreCompleto : IValidable
     {
         public string Nombre { get; init; }
         public string Apellido { get; init; }
 
         public NombreCompleto(string nombre, string apellido)
         {
-            if (string.IsNullOrWhiteSpace(nombre))
-                throw new ArgumentException("Nombre requerido", nameof(nombre));
-
-            if (string.IsNullOrWhiteSpace(apellido))
-                throw new ArgumentException("Apellido requerido", nameof(apellido));
-
             Nombre = nombre;
             Apellido = apellido;
+        }
+
+        public void Validar()
+        {
+            if (string.IsNullOrWhiteSpace(Nombre))
+                throw new UsuarioException("Nombre requerido");
+
+            if (string.IsNullOrWhiteSpace(Apellido))
+                throw new UsuarioException("Apellido requerido");
         }
 
         public override string ToString() => $"{Nombre} {Apellido}";

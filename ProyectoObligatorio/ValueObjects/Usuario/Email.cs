@@ -1,19 +1,24 @@
-﻿
+﻿using Dominio.Excepciones;
+using Dominio.InterfacesDelDominio;
+
 namespace Dominio.ValueObjects.Usuario
 {
-    public sealed record Email
+    public sealed record Email : IValidable
     {
         public string Value { get; init; }
 
         public Email(string text)
         {
-            if (string.IsNullOrWhiteSpace(text))
-                throw new ArgumentException("Email requerido", nameof(text));
-
-            if (!text.Contains("@") || !text.Contains("."))
-                throw new ArgumentException("Email inválido", nameof(text));
-
             Value = text;
+        }
+
+        public void Validar()
+        {
+            if (string.IsNullOrWhiteSpace(Value))
+                throw new UsuarioException("Email requerido");
+
+            if (!Value.Contains("@") || !Value.Contains("."))
+                throw new UsuarioException("Email inválido");
         }
 
         public override string ToString() => Value;

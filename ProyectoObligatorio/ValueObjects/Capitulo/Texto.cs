@@ -1,22 +1,27 @@
+using Dominio.Excepciones;
+using Dominio.InterfacesDelDominio;
 
 namespace Dominio.ValueObjects.Capitulo
 {
-    public sealed record Texto
+    public sealed record Texto : IValidable
     {
         public string Valor { get; init; }
 
         public Texto(string texto)
         {
-            if (string.IsNullOrWhiteSpace(texto))
-                throw new ArgumentException("Texto requerido", nameof(texto));
-
-            if (texto.Length < 3)
-                throw new ArgumentException("Texto debe tener al menos 3 caracteres", nameof(texto));
-
-            if (texto.Length > 2000)
-                throw new ArgumentException("Texto no puede exceder los 2000 caracteres", nameof(texto));
-
             Valor = texto;
+        }
+
+        public void Validar()
+        {
+            if (string.IsNullOrWhiteSpace(Valor))
+                throw new CapituloException("Texto requerido");
+
+            if (Valor.Length < 3)
+                throw new CapituloException("Texto debe tener al menos 3 caracteres");
+
+            if (Valor.Length > 2000)
+                throw new CapituloException("Texto no puede exceder los 2000 caracteres");
         }
 
         public override string ToString() => Valor;

@@ -6,5 +6,11 @@ namespace DTOs.DTOs
         public int Id { get; set; }
         public string Titulo { get; set; }
         public string Texto { get; set; }
+
+        // FinalDTO
+        public int CantLlegaron { get; set; }
+
+        // IntermedioDTO
+        public List<OpcionDTO> Opciones { get; set; }
     }
 }

@@ -14,8 +14,23 @@ namespace DTOs.Mappers
                 Titulo = new Titulo(dto.Titulo),
                 Sinopsis = new Sinopsis(dto.Sinopsis),
                 Categorias = dto.Categorias.Select(CategoriaMapper.FromDTO).ToList(),
-                Capitulo = CapituloMapper.FromIntermedioDTO(dto.Capitulo),
+                CapituloInicial = CapituloMapper.FromDTO(dto.CapituloInicial),
+                Capitulos = dto.Capitulos.Select(CapituloMapper.FromDTO).ToList(),
                 Estado = (EstadoHistoria) dto.Estado
+            };
+        }
+
+        public static HistoriaDTO ToDTO(Historia historia)
+        {
+            return new HistoriaDTO
+            {
+                Id = historia.Id,
+                Titulo = historia.Titulo.Valor,
+                Sinopsis = historia.Sinopsis.Valor,
+                Categorias = historia.Categorias.Select(CategoriaMapper.ToDTO).ToList(),
+                CapituloInicial = CapituloMapper.ToDTO(historia.CapituloInicial),
+                Capitulos = historia.Capitulos.Select(CapituloMapper.ToDTO).ToList(),
+                Estado = (int) historia.Estado
             };
         }
     }

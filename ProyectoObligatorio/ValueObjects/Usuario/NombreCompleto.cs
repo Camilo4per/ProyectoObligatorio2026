@@ -21,6 +21,12 @@ namespace Dominio.ValueObjects.Usuario
 
             if (string.IsNullOrWhiteSpace(Apellido))
                 throw new UsuarioException("Apellido requerido");
+
+            if (Nombre.Length < 2 || Nombre.Length > 20)
+                throw new UsuarioException("Nombre debe tener entre 2 y 20 caracteres");
+
+            if (Apellido.Length < 2 || Apellido.Length > 20)
+                throw new UsuarioException("Apellido debe tener entre 2 y 20 caracteres");
         }
 
         public override string ToString() => $"{Nombre} {Apellido}";

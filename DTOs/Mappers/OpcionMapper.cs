@@ -1,26 +1,27 @@
 using Dominio.Entidades;
-using Dominio.ValueObjects.Capitulo;
+using Dominio.ValueObjects.Opcion;
 using DTOs.DTOs;
 
 namespace DTOs.Mappers
 {
     public class OpcionMapper
     {
-        public static Opcion FromToIntermedioDTO(OpcionDTO dto)
+        // Aca uso operadores ternarios para manejar el caso en que CapDestino sea un Final o un Intermedio, ya que ambos tienen diferentes estructuras y propiedades.
+        public static Opcion FromDTO(OpcionDTO dto)
         {
             return new Opcion
             {
-                Texto = new Texto(dto.Texto),
-                CapDestino = CapituloMapper.FromIntermedioDTO(dto.CapDestino)
+                Texto = new TextoOpcion(dto.Texto),
+                CapDestino = CapituloMapper.FromDTO(dto.CapDestino)
             };
         }
 
-        public static Opcion FromToFinalDTO(OpcionDTO dto)
+        public static OpcionDTO ToDTO(Opcion opcion)
         {
-            return new Opcion
+            return new OpcionDTO
             {
-                Texto = new Texto(dto.Texto),
-                CapDestino = CapituloMapper.FromFinalDTO(dto.CapDestino)
+                Texto = opcion.Texto.Valor,
+                CapDestino = CapituloMapper.ToDTO(opcion.CapDestino)
             };
         }
     }

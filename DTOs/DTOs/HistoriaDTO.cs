@@ -8,7 +8,8 @@ namespace DTOs.DTOs
         public string Titulo { get; set; }
         public string Sinopsis { get; set; }
         public List<CategoriaDTO> Categorias { get; set; }
-        public CapituloDTO Capitulo { get; set; }
+        public CapituloDTO CapituloInicial { get; set; }
+        public List<CapituloDTO> Capitulos { get; set; }
         public int Estado { get; set; }
     }
 }

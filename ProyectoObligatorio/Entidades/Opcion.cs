@@ -1,5 +1,6 @@
-﻿using Dominio.InterfacesDelDominio;
-using Dominio.ValueObjects.Capitulo;
+﻿using Dominio.Excepciones;
+using Dominio.InterfacesDelDominio;
+using Dominio.ValueObjects.Opcion;
 
 namespace Dominio.Entidades
 {
@@ -8,10 +9,12 @@ namespace Dominio.Entidades
         public Capitulo CapDestino { get; set; }
 
         // Value Objects
-        public Texto Texto { get; set; }
+        public TextoOpcion Texto { get; set; }
         public void Validar()
         {
-            throw new NotImplementedException();
+            if (Texto == null) throw new OpcionException("Texto requerido");
+            if (CapDestino == null) throw new OpcionException("La opción debe llevar a otro capítulo");
+            Texto.Validar();
         }
     }
 }

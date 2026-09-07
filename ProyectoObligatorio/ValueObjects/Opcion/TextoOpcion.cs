@@ -1,13 +1,13 @@
 using Dominio.Excepciones;
 using Dominio.InterfacesDelDominio;
 
-namespace Dominio.ValueObjects.Capitulo
+namespace Dominio.ValueObjects.Opcion
 {
-    public sealed record Texto : IValidable
+    public sealed record TextoOpcion : IValidable
     {
         public string Valor { get; init; }
 
-        public Texto(string texto)
+        public TextoOpcion(string texto)
         {
             Valor = texto;
         }
@@ -15,13 +15,13 @@ namespace Dominio.ValueObjects.Capitulo
         public void Validar()
         {
             if (string.IsNullOrWhiteSpace(Valor))
-                throw new CapituloException("Texto requerido");
+                throw new OpcionException("Texto requerido");
 
             if (Valor.Length < 3)
-                throw new CapituloException("Texto debe tener al menos 3 caracteres");
+                throw new OpcionException("Texto debe tener al menos 3 caracteres");
 
             if (Valor.Length > 2000)
-                throw new CapituloException("Texto no puede exceder los 2000 caracteres");
+                throw new OpcionException("Texto no puede exceder los 2000 caracteres");
         }
 
         public override string ToString() => Valor;

@@ -1,13 +1,18 @@
-﻿using Dominio.InterfacesDelDominio;
+﻿using Dominio.Excepciones;
 
 namespace Dominio.Entidades
 {
-    public class Intermedio : Capitulo, IValidable
+    public class Intermedio : Capitulo
     {
         public List<Opcion> Opciones;
-        public void Validar()
+
+        public override void Validar()
         {
-            throw new NotImplementedException();
+            base.Validar();
+            if (Opciones == null || Opciones.Count == 0)
+                throw new IntermedioException("Un capítulo intermedio debe tener al menos una opción");
+            foreach (Opcion opcion in Opciones)
+                opcion.Validar();
         }
     }
 }

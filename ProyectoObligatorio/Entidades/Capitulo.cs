@@ -1,4 +1,5 @@
-﻿using Dominio.InterfacesDelDominio;
+﻿using Dominio.Excepciones;
+using Dominio.InterfacesDelDominio;
 using Dominio.ValueObjects.Capitulo;
 
 namespace Dominio.Entidades
@@ -9,11 +10,16 @@ namespace Dominio.Entidades
 
         // Value Objects
         public Titulo Titulo { get; set; }
-        public Texto Texto { get; set; }
+        public TextoCapitulo Texto { get; set; }
 
-        public void Validar()
+        public virtual void Validar()
         {
-            throw new NotImplementedException();
+            if (Titulo == null)
+                throw new CapituloException("Título requerido");
+            if (Texto == null)
+                throw new CapituloException("Texto requerido");
+            Titulo.Validar();
+            Texto.Validar();
         }
     }
 }

@@ -14,5 +14,14 @@ namespace DTOs.Mappers
                 Nombre = new Nombre(dto.Nombre)
             };
         }
+
+        public static CategoriaDTO ToDTO(Categoria categoria)
+        {
+            return new CategoriaDTO
+            {
+                Id = categoria.Id,
+                Nombre = categoria.Nombre.Valor
+            };
+        }
     }
 }

@@ -1,16 +1,18 @@
-﻿using Dominio.InterfacesDelDominio;
+﻿using Dominio.Excepciones;
 using Dominio.ValueObjects.Final;
 
 namespace Dominio.Entidades
 {
-    public class Final : Capitulo, IValidable
+    public class Final : Capitulo
     {
         public CantLlegaron CantLlegaron { get; set; }
 
-        // Falta implementar la validación de Final
-        public void Validar()
+        public override void Validar()
         {
-            throw new NotImplementedException();
+            base.Validar();
+            if (CantLlegaron == null)
+                throw new FinalException("CantLlegaron requerido");
+            CantLlegaron.Validar();
         }
     }
 }

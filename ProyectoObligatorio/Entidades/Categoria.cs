@@ -1,4 +1,5 @@
-﻿using Dominio.InterfacesDelDominio;
+﻿using Dominio.Excepciones;
+using Dominio.InterfacesDelDominio;
 using Dominio.ValueObjects.Categoria;
 
 namespace Dominio.Entidades
@@ -12,7 +13,9 @@ namespace Dominio.Entidades
 
         public void Validar()
         {
-            throw new NotImplementedException();
+            if (Nombre == null)
+                throw new CategoriaException("Nombre requerido");
+            Nombre.Validar();
         }
     }
 }

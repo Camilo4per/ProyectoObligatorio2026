@@ -168,6 +168,7 @@ Dominio (Entidades + ValueObjects) ←→ DTOs ←→ LogicaAplicacion (Casos de
 - [ ] Implementar `ExisteOpcion` en `RepositorioOpcion` (método vacío)
 - [ ] Agregar más casos de uso (ModificarUsuario, EliminarUsuario, etc.)
 - [ ] Implementar casos de uso para Historia/Capitulo/Opción/Categoría
+- [ ] Hacer el flujo completo de la entidad `Lectura` (recién creada como esqueleto: `Id`, `Usuario`, `Historia`, `FechaLectura`, `FinalAlcanzado`): crear ValueObject `FechaLectura`, implementar `IValidable` en la entidad, crear `LecturaException`, `LecturaDTO`/`LecturaMapper`, `IRepositorioLecturas`/`RepositorioLecturas`, casos de uso, DI y presentación
 - [ ] Corregir `Validar()` de `Intermedio`/`Final` (ocultan miembro heredado → CS0108). Hacer `virtual` en `Capitulo` y `override` en hijos
 - [ ] Corregir CS8618 (34 warnings): inicializar propiedades no-nullable con `required`/constructores o hacerlas nullable
 - [ ] No exponer `Password.Value` en `UsuarioMapper.ToDTO` (fallo de seguridad)

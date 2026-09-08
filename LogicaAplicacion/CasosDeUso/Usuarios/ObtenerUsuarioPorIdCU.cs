@@ -2,6 +2,7 @@
 using DTOs.Mappers;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
 using Dominio.InterfaceDeRepositorio;
+using Dominio.Entidades;
 
 namespace LogicaAplicacion.CasosDeUso.Usuarios
 {
@@ -14,7 +15,7 @@ namespace LogicaAplicacion.CasosDeUso.Usuarios
         }
         public UsuarioDTO Ejecutar(int id)
         {
-            Dominio.Entidades.Usuario usuario = repositorio.FindById(id);
+            Usuario usuario = repositorio.FindById(id);
             return UsuarioMapper.ToDTO(usuario);
         }
     }

@@ -1,5 +1,7 @@
 using Dominio.InterfaceDeRepositorio;
 using LogicaAccesoDatos.RepositorioEnMemoria;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
+using LogicaAplicacion.CasosDeUso.Usuarios;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +18,9 @@ builder.Services.AddScoped<IRepositorioOpciones, RepositorioOpciones>();
 builder.Services.AddScoped<IRepositorioUsuarios, RepositorioUsuarios>();
 
 //INICIALIZAMOS LOS CASOS DE USO
-
-
-// builder.Services.AddScoped<IAgregarUsuario, AgregarUsuarioCU>();
+builder.Services.AddScoped<IAgregarUsuario, AgregarUsuarioCU>();
+builder.Services.AddScoped<IEncontrarTodosUsuarios, EncontrarTodosUsuariosCU>();
+builder.Services.AddScoped<IObtenerUsuarioPorId, ObtenerUsuarioPorIdCU>();
 
 var app = builder.Build();
 
@@ -39,7 +41,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Usuario}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 

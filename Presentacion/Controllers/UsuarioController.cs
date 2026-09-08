@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
+using DTOs.DTOs;
 
 namespace Presentacion.Controllers
 {
@@ -25,43 +26,75 @@ namespace Presentacion.Controllers
             return View();
         }
 
-        // GET: UsuarioController/Details/5
-        public ActionResult Details(int id)
+        // GET: UsuarioController/Login
+        public ActionResult Login()
         {
             return View();
         }
 
-        // GET: UsuarioController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: UsuarioController/Create
+        // POST: UsuarioController/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Login(UsuarioDTO dto)
         {
             try
             {
+                agregarUsuario.Ejecutar(dto);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
+                // TODO: Colocar mensaje de error en la vista
                 return View();
             }
         }
 
-        // GET: UsuarioController/Edit/5
-        public ActionResult Edit(int id)
+
+        //===========================================================//
+        // CRUD: Registro, Detalles, Modificar, Eliminar
+        //===========================================================//
+
+        // GET: UsuarioController/Registro
+        public ActionResult Registro()
         {
             return View();
         }
 
-        // POST: UsuarioController/Edit/5
+        // POST: UsuarioController/Registro
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Registro(UsuarioDTO dto)
+        {
+            try
+            {
+                agregarUsuario.Ejecutar(dto);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                // TODO: Colocar mensaje de error en la vista
+                return View();
+            }
+        }
+
+        
+
+        // GET: UsuarioController/Detalles/5
+        public ActionResult Detalles(int id)
+        {
+            return View(obtenerUsuarioPorId.Ejecutar(id));
+        }
+
+        // GET: UsuarioController/Modificar/5
+        public ActionResult Modificar(int id)
+        {
+            return View();
+        }
+
+        // POST: UsuarioController/Modificar/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Modificar(int id, UsuarioDTO dto)
         {
             try
             {
@@ -82,7 +115,7 @@ namespace Presentacion.Controllers
         // POST: UsuarioController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, UsuarioDTO dto)
         {
             try
             {

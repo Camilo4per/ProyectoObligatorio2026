@@ -25,7 +25,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         
-                        @*TODO: Terminar de definir a donde llevaran los links y de que forma*@
+                        @*TODO: Terminar de definir a donde llevaran los links y de que forma
  
                         @if (Context.Session.GetString("LogeadoRol") == "Administrador")
                         {
@@ -54,6 +54,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Autorizacion" asp-action="Logout">Logout</a>
                             </li>
                         }   
+                        *@
                     </ul>
                 </div>
             </div>
@@ -67,12 +68,14 @@
 
     <footer class="border-top footer text-muted">
         <p>
+            @*
             &copy; 2026 - Obligatorio / Desarrollo Web Asistido con IA - Camilo Pereira, Ignacio Alvez
             @if (@Context.Session.GetString("LogeadoRol") != null)
             {
                 <span> | </span>
                 <span class="text-primary">Logeado: @Context.Session.GetString("LogeadoNombre"), @Context.Session.GetString("LogeadoCedula")</span>
             }
+            *@
         </p>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

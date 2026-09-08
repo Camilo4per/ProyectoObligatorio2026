@@ -2,7 +2,6 @@
 using DTOs.Mappers;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
 using Dominio.InterfaceDeRepositorio;
-using Dominio.Entidades;
 
 namespace LogicaAplicacion.CasosDeUso.Usuarios
 {

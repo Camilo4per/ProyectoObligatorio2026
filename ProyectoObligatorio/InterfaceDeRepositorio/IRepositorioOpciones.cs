@@ -2,7 +2,7 @@ using Dominio.Entidades;
 
 namespace Dominio.InterfaceDeRepositorio
 {
-    public interface IRepositorioOpcion : IRepository<Opcion>
+    public interface IRepositorioOpciones : IRepository<Opcion>
     {
         public void ExisteOpcion(Opcion aVerificar);
     }

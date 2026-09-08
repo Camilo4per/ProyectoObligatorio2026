@@ -13,4 +13,8 @@
     <ProjectReference Include="..\ProyectoObligatorio\Dominio.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Usuario\" />
+  </ItemGroup>
+
 </Project>

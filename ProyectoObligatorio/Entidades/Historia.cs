@@ -33,9 +33,12 @@ namespace Dominio.Entidades
 
             Titulo.Validar();
             Sinopsis.Validar();
+
+            // Valido que todas las categorías sean válidas
             foreach (Categoria categoria in Categorias)
                 categoria.Validar();
 
+            // Valido que todas las opciones de los capítulos intermedios tengan un destino válido
             foreach (Capitulo cap in Capitulos)
             {
                 if (cap is Intermedio intermedio)

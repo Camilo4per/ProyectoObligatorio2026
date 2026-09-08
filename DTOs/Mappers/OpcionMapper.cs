@@ -11,6 +11,7 @@ namespace DTOs.Mappers
         {
             return new Opcion
             {
+                Id = dto.Id,
                 Texto = new TextoOpcion(dto.Texto),
                 CapDestino = CapituloMapper.FromDTO(dto.CapDestino)
             };
@@ -20,6 +21,7 @@ namespace DTOs.Mappers
         {
             return new OpcionDTO
             {
+                Id = opcion.Id,
                 Texto = opcion.Texto.Valor,
                 CapDestino = CapituloMapper.ToDTO(opcion.CapDestino)
             };

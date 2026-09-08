@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Dominio.Entidades;
-using DTOs.DTOs;
-using LogicaAplicacion.CasosDeUso.Usuarios;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
 
 namespace Presentacion.Controllers

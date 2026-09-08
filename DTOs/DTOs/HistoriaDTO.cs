@@ -1,5 +1,3 @@
-using Dominio.Entidades;
-
 namespace DTOs.DTOs
 {
     public class HistoriaDTO

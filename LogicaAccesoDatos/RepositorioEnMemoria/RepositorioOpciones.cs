@@ -4,7 +4,7 @@ using Dominio.InterfaceDeRepositorio;
 
 namespace LogicaAccesoDatos.RepositorioEnMemoria
 {
-    public class RepositorioOpcion : IRepositorioOpcion
+    public class RepositorioOpciones : IRepositorioOpciones
     {
         private static List<Opcion> opciones = new List<Opcion>();
 

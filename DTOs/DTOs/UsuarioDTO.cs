@@ -1,6 +1,4 @@
-﻿using Dominio.Entidades;
-
-namespace DTOs.DTOs
+﻿namespace DTOs.DTOs
 {
     public class UsuarioDTO
     {

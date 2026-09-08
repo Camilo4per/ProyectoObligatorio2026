@@ -7,6 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 //INICIALIZAMOS LOS REPOSITORIOS
+builder.Services.AddScoped<IRepositorioCategorias, RepositorioCategorias>();
+builder.Services.AddScoped<IRepositorioFinales, RepositorioFinales>();
+builder.Services.AddScoped<IRepositorioHistorias, RepositorioHistorias>();
+builder.Services.AddScoped<IRepositorioIntermedios, RepositorioIntermedios>();
+builder.Services.AddScoped<IRepositorioLecturas, RepositorioLecturas>();
+builder.Services.AddScoped<IRepositorioOpciones, RepositorioOpciones>();
 builder.Services.AddScoped<IRepositorioUsuarios, RepositorioUsuarios>();
 
 //INICIALIZAMOS LOS CASOS DE USO

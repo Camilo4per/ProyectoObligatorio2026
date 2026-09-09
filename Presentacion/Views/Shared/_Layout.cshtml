@@ -25,36 +25,15 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         
-                        @*TODO: Terminar de definir a donde llevaran los links y de que forma
- 
-                        @if (Context.Session.GetString("LogeadoRol") == "Administrador")
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Persona" asp-action="PanelAdmin">Panel de Administrador</a>
-                            </li>
-                        }
+                        @*TODO: Terminar de definir a donde llevaran los links y de que forma*@  
 
-                        @if (Context.Session.GetString("LogeadoRol") == "Usuario")
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Persona" asp-action="PanelOperador">Panel de Operador</a>
-                            </li>
-                        }
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Registro">Registro de Usuarios</a>
+                        </li
 
-                        @if (Context.Session.GetString("LogeadoRol") == null)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Autorizacion" asp-action="Login">Login</a>
-                            </li>
-                        }
-
-                        @if (Context.Session.GetString("LogeadoRol") == "Usuario" || Context.Session.GetString("LogeadoRol") == "Administrador")
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Autorizacion" asp-action="Logout">Logout</a>
-                            </li>
-                        }   
-                        *@
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Login">Login</a>
+                        </li>
                     </ul>
                 </div>
             </div>

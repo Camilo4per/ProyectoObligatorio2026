@@ -77,8 +77,6 @@ namespace Presentacion.Controllers
             }
         }
 
-        
-
         // GET: UsuarioController/Detalles/5
         public ActionResult Detalles(int id)
         {

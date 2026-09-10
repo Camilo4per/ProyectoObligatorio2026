@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
 using DTOs.DTOs;
+using LogicaAccesoDatos.RepositorioEnMemoria;
 
 namespace Presentacion.Controllers
 {
@@ -39,7 +40,7 @@ namespace Presentacion.Controllers
         {
             try
             {
-                agregarUsuario.Ejecutar(dto);
+                // TODO: Crear Login
                 return RedirectToAction(nameof(Index));
             }
             catch

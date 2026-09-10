@@ -1,12 +1,15 @@
 ﻿using Dominio.Excepciones;
 using Dominio.InterfacesDelDominio;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dominio.ValueObjects.Usuario
 {
+    [Owned]
     public sealed record Email : IValidable
     {
         public string Value { get; init; }
 
+        public Email() { }
         public Email(string text)
         {
             Value = text;

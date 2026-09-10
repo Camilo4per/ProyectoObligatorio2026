@@ -13,4 +13,8 @@
     <Folder Include="ValueObjects\Historia\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="10.0.12" />
+  </ItemGroup>
+
 </Project>

@@ -1,12 +1,15 @@
 using Dominio.Excepciones;
 using Dominio.InterfacesDelDominio;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dominio.ValueObjects.Historia
 {
+    [Owned]
     public sealed record Sinopsis : IValidable
     {
         public string Valor { get; init; }
 
+        public Sinopsis() { }
         public Sinopsis(string texto)
         {
             Valor = texto;

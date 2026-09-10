@@ -1,13 +1,16 @@
 ﻿
 using Dominio.Excepciones;
 using Dominio.InterfacesDelDominio;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dominio.ValueObjects.Usuario
 {
+    [Owned]
     public sealed record Password : IValidable
     {
         public string Value { get; init; }
 
+        public Password() { }
         public Password(string value)
         {
             Value = value;

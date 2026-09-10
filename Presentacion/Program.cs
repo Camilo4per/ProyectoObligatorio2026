@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSession();
 
 //INICIALIZAMOS LOS REPOSITORIOS
 builder.Services.AddScoped<IRepositorioCategorias, RepositorioCategorias>();
@@ -14,13 +15,13 @@ builder.Services.AddScoped<IRepositorioFinales, RepositorioFinales>();
 builder.Services.AddScoped<IRepositorioHistorias, RepositorioHistorias>();
 builder.Services.AddScoped<IRepositorioIntermedios, RepositorioIntermedios>();
 builder.Services.AddScoped<IRepositorioLecturas, RepositorioLecturas>();
-builder.Services.AddScoped<IRepositorioOpciones, RepositorioOpciones>();
 builder.Services.AddScoped<IRepositorioUsuarios, RepositorioUsuarios>();
 
 //INICIALIZAMOS LOS CASOS DE USO
 builder.Services.AddScoped<IAgregarUsuario, AgregarUsuarioCU>();
 builder.Services.AddScoped<IEncontrarTodosUsuarios, EncontrarTodosUsuariosCU>();
 builder.Services.AddScoped<IObtenerUsuarioPorId, ObtenerUsuarioPorIdCU>();
+builder.Services.AddScoped<ILoginUsuario, LoginUsuarioCU>();
 
 var app = builder.Build();
 
@@ -36,6 +37,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseSession();
 
 app.MapStaticAssets();
 

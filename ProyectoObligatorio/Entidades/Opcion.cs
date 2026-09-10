@@ -6,7 +6,6 @@ namespace Dominio.Entidades
 {
     public class Opcion : IValidable
     {
-        public int Id { get; set; }
         public Capitulo CapDestino { get; set; }
 
         // Value Objects

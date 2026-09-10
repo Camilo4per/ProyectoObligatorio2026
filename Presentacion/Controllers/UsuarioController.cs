@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
 using DTOs.DTOs;
+using Dominio.Entidades;
 
 namespace Presentacion.Controllers
 {
@@ -10,14 +11,17 @@ namespace Presentacion.Controllers
         private IEncontrarTodosUsuarios encontrarTodosUsuarios;
         private IAgregarUsuario agregarUsuario;
         private IObtenerUsuarioPorId obtenerUsuarioPorId;
+        private ILoginUsuario loginUsuario;
         public UsuarioController(
             IAgregarUsuario agregarUsuarioCu,
             IObtenerUsuarioPorId obtenerUsuarioPorIdCu,
-            IEncontrarTodosUsuarios encontrarTodosUsuariosCu)
+            IEncontrarTodosUsuarios encontrarTodosUsuariosCu,
+            ILoginUsuario loginUsuarioCu)
         {
             agregarUsuario = agregarUsuarioCu;
             obtenerUsuarioPorId = obtenerUsuarioPorIdCu;
             encontrarTodosUsuarios = encontrarTodosUsuariosCu;
+            loginUsuario = loginUsuarioCu;
         }
 
         // GET: UsuarioController
@@ -32,19 +36,28 @@ namespace Presentacion.Controllers
             return View();
         }
 
+        // GET: UsuarioController/Logout
+        public ActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction(nameof(Index));
+        }
+
         // POST: UsuarioController/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(UsuarioDTO dto)
+        public ActionResult Login(string email, string password)
         {
             try
             {
-                agregarUsuario.Ejecutar(dto);
+                UsuarioDTO dto = loginUsuario.Ejecutar(email, password);
+                HttpContext.Session.SetInt32("IdUsuario", dto.Id);
+                HttpContext.Session.SetString("Rol", ((RolesUsuario)dto.Rol).ToString());
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                // TODO: Colocar mensaje de error en la vista
+                ViewBag.Error = "Email o contraseña incorrectos";
                 return View();
             }
         }
@@ -72,7 +85,7 @@ namespace Presentacion.Controllers
             }
             catch
             {
-                // TODO: Colocar mensaje de error en la vista
+                ViewBag.Error = "Error al registrar el usuario";
                 return View();
             }
         }

@@ -1,13 +1,16 @@
 ﻿using Dominio.Excepciones;
 using Dominio.InterfacesDelDominio;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dominio.ValueObjects.Usuario
 {
+    [Owned]
     public sealed record NombreCompleto : IValidable
     {
         public string Nombre { get; init; }
         public string Apellido { get; init; }
 
+        public NombreCompleto() { }
         public NombreCompleto(string nombre, string apellido)
         {
             Nombre = nombre;

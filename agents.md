@@ -49,20 +49,15 @@ dotnet ef database update
 - **NUNCA** llamar a EF/migraciones: no existe. Cambios de datos = `Add`/`Find` de `RepositorioEnMemoria`.
 - No agregar `using` redundantes ni comentarios de relleno (repo limpio de ambos).
 
-## Pendientes (verificados 07/09/2026)
+## Pendientes (verificados 10/09/2026)
 - [ ] `Update`/`Remove` de los 6 repositorios en memoria (tiran `NotImplementedException`)
 - [ ] Más casos de uso: `ModificarUsuario`, `EliminarUsuario` + CU para Historia/Capitulo/Opción/Categoría
-- [ ] Flujo de `Lectura`: solo falta la capa de presentación (controller + vistas + DI en `Program.cs`)
-- [ ] Corregir CS8618: 36 warnings, propiedades no-nullable sin inicializar
+- [ ] Flujo de `Lectura`: no hay controller ni vistas; registrar DI de lecturas en `Program.cs`
 - [ ] No exponer `Password.Value` en `UsuarioMapper.ToDTO` (fallo de seguridad; **no prioritario**, decisión del docente)
 - [ ] Revisar modelo `Opcion`: sin Id pero `IRepository<Opcion>` exige `FindById(int)` (usa índice de lista; `OpcionDTO.Id` no se traslada)
-- [ ] Quitar `using Dominio.Entidades` redundante en `HistoriaDTO`/`OpcionDTO` (ya no usan enums de dominio)
 - [ ] Revisar semántica de los `Existe*` (declarados `void`, lanzan excepción si existe; no devuelven `bool`)
 - [ ] `HistoriaMapper.FromDTO`: ligar `CapDestino` por referencia/Id a las instancias de `Capitulos` (hoy copias) + regla "no compartir capítulos" en `RepositorioHistorias` con `Capitulos.Intersect(...)`
-- [ ] Registrar DI de los CU en `Presentacion/Program.cs` (`IAgregarUsuario`, `IEncontrarTodosUsuarios`, `IObtenerUsuarioPorId` + lecturas; sigue comentado)
-- [ ] Crear `HomeController` (existe `Views/Home/Index.cshtml` sin controller)
-- [ ] Vistas y acciones para Usuario/Historia/Categoria/Capitulo (stubs con `return View()` sin vistas)
-- [ ] Agregar `IValidable` al UML (`DiagramaDeClases.asta`)
+- [ ] Vistas para acciones stub: Histórias/Categorias/Capítulos + `Modificar`/`Delete` de Usuario (solo existen vistas de Usuario: Index, Login, Registro)
 
 ---
-*Última actualización: 07/09/2026*
+*Última actualización: 10/09/2026*

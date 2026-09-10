@@ -1,15 +1,18 @@
 using Dominio.Excepciones;
 using Dominio.InterfacesDelDominio;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dominio.ValueObjects.Capitulo
 {
+    [Owned]
     public sealed record TextoCapitulo : IValidable
     {
         public string Valor { get; init; }
 
-        public TextoCapitulo(string texto)
+        public TextoCapitulo() { }
+        public TextoCapitulo(string value)
         {
-            Valor = texto;
+            Valor = value;
         }
 
         public void Validar()

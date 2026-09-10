@@ -1,12 +1,15 @@
 using Dominio.Excepciones;
 using Dominio.InterfacesDelDominio;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dominio.ValueObjects.Opcion
 {
+    [Owned]
     public sealed record TextoOpcion : IValidable
     {
         public string Valor { get; init; }
 
+        public TextoOpcion() { }
         public TextoOpcion(string texto)
         {
             Valor = texto;

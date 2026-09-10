@@ -13,6 +13,7 @@ namespace Dominio.ValueObjects.Capitulo
         public TextoCapitulo(string value)
         {
             Valor = value;
+            Validar();
         }
 
         public void Validar()

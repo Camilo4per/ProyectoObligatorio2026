@@ -11,7 +11,7 @@ namespace DTOs.Mappers
             return new Historia
             {
                 Id = dto.Id,
-                Titulo = new Titulo(dto.Titulo),
+                Titulo = new TituloHistoria(dto.Titulo),
                 Sinopsis = new Sinopsis(dto.Sinopsis),
                 Categorias = dto.Categorias.Select(CategoriaMapper.FromDTO).ToList(),
                 CapituloInicial = CapituloMapper.FromDTO(dto.CapituloInicial),

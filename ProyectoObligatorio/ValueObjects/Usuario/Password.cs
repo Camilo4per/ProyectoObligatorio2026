@@ -14,6 +14,7 @@ namespace Dominio.ValueObjects.Usuario
         public Password(string value)
         {
             Value = value;
+            Validar();
         }
 
         public void Validar()

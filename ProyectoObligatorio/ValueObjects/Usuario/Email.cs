@@ -10,9 +10,10 @@ namespace Dominio.ValueObjects.Usuario
         public string Value { get; init; }
 
         public Email() { }
-        public Email(string text)
+        public Email(string value)
         {
-            Value = text;
+            Value = value;
+            Validar();
         }
 
         public void Validar()

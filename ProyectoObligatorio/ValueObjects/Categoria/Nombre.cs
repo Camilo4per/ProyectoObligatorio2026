@@ -13,6 +13,7 @@ namespace Dominio.ValueObjects.Categoria
         public Nombre(string nombre)
         {
             Valor = nombre;
+            Validar();
         }
 
         public void Validar()

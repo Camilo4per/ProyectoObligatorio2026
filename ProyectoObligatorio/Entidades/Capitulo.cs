@@ -9,7 +9,7 @@ namespace Dominio.Entidades
         public int Id { get; set; }
 
         // Value Objects
-        public Titulo Titulo { get; set; }
+        public TituloCapitulo Titulo { get; set; }
         public TextoCapitulo Texto { get; set; }
 
         public virtual void Validar()

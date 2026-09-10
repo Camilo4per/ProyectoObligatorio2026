@@ -13,14 +13,14 @@ namespace DTOs.Mappers
                 ? new Final
                 {
                     Id = dto.Id,
-                    Titulo = new Titulo(dto.Titulo),
+                    Titulo = new TituloCapitulo(dto.Titulo),
                     Texto = new TextoCapitulo(dto.Texto),
                     CantLlegaron = new CantLlegaron(dto.CantLlegaron)
                 }
                 : new Intermedio
                 {
                     Id = dto.Id,
-                    Titulo = new Titulo(dto.Titulo),
+                    Titulo = new TituloCapitulo(dto.Titulo),
                     Texto = new TextoCapitulo(dto.Texto),
                     Opciones = dto.Opciones.Select(OpcionMapper.FromDTO).ToList()
                 };

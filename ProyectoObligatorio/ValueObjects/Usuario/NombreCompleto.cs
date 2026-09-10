@@ -15,6 +15,7 @@ namespace Dominio.ValueObjects.Usuario
         {
             Nombre = nombre;
             Apellido = apellido;
+            Validar();
         }
 
         public void Validar()

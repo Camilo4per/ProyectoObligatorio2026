@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(HistoriasContext))]
-    [Migration("20260910120409_Inicial")]
+    [Migration("20260910155931_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />

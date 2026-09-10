@@ -5,14 +5,15 @@ using Microsoft.EntityFrameworkCore;
 namespace Dominio.ValueObjects.Historia
 {
     [Owned]
-    public sealed record Titulo : IValidable
+    public sealed record TituloHistoria : IValidable
     {
         public string Valor { get; init; }
 
-        public Titulo() { }
-        public Titulo(string texto)
+        public TituloHistoria() { }
+        public TituloHistoria(string texto)
         {
             Valor = texto;
+            Validar();
         }
 
         public void Validar()

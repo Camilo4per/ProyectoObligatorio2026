@@ -13,7 +13,7 @@ namespace Dominio.Entidades
         public EstadoHistoria Estado { get; set; }
 
         // Value Objects
-        public Titulo Titulo { get; init; }
+        public TituloHistoria Titulo { get; init; }
         public Sinopsis Sinopsis { get; init; }
 
         public void Validar()

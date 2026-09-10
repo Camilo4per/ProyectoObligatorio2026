@@ -1,6 +1,9 @@
 using Dominio.InterfaceDeRepositorio;
 using LogicaAccesoDatos.RepositorioEnMemoria;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
+using LogicaAccesoDatos.EF;
+using Microsoft.EntityFrameworkCore;
+
 using LogicaAplicacion.CasosDeUso.Usuarios;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,8 +31,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseExceptionHandler("/Usuario/Index");
     app.UseHsts();
 }
 

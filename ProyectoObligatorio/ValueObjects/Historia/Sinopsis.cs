@@ -13,6 +13,7 @@ namespace Dominio.ValueObjects.Historia
         public Sinopsis(string texto)
         {
             Valor = texto;
+            Validar();
         }
 
         public void Validar()

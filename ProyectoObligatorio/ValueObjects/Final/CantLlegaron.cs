@@ -13,6 +13,7 @@ namespace Dominio.ValueObjects.Final
         public CantLlegaron(int valor)
         {
             Valor = valor;
+            Validar();
         }
 
         public void Validar()

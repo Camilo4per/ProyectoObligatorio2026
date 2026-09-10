@@ -13,6 +13,7 @@ namespace Dominio.ValueObjects.Opcion
         public TextoOpcion(string texto)
         {
             Valor = texto;
+            Validar();
         }
 
         public void Validar()

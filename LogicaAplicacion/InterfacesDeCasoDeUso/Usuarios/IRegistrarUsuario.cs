@@ -1,8 +1,8 @@
-﻿using DTOs.DTOs;
+using DTOs.DTOs;
 
 namespace LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios
 {
-    public interface IAgregarUsuario
+    public interface IRegistrarUsuario
     {
         public void Ejecutar(UsuarioDTO dto);
     }

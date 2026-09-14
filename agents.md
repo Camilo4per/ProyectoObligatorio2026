@@ -41,6 +41,7 @@ dotnet ef database update
 - **Controllers MVC** (en `Presentacion/Controllers/`): acciones delgadas `return View()`, inyección por constructor de **interfaces de casos de uso** (`IAgregarUsuario`, etc.), nunca instanciar repositorios. Registro DI SOLO en `Presentacion/Program.cs` (`builder.Services.AddScoped<...>`); los CU de Usuarios ya están registrados y activos.
 - Nombres: clases/métodos en **PascalCase**, vars PascalCase en controllers (estilo actual del repo), archivos = nombre de la clase. `namespace` por capa (`Dominio.*`, `DTOs.DTOs`, `DTOs.Mappers`, `LogicaAplicacion.*`, `LogicaAccesoDatos.*`, `Presentacion.*`).
 - Enums de dominio (`EstadoHistoria`, `RolesUsuario`) viajan como `int` en DTOs y se castean en el Mapper.
+- `Registro.cshtml` **no pide rol**: `RegistrarUsuarioCU` sobreescribe `dto.Rol = (int)RolesUsuario.Usuario` para que nadie se registre como administrador.
 - Vistas Razor: usar `@using Presentacion.Models`, TagHelpers MVC, Bootstrap (bootstrap.min.css), refs a `~/lib`, `~/css`, `~/js`. Layout `_Layout.cshtml` ya usa `Context.Session` para Login/Rol.
 
 ## Constraints
@@ -66,8 +67,5 @@ dotnet ef database update
 - [ ] `LecturaMapper.FromDTO` cast ciego `(Final) CapituloMapper.FromDTO(...)` → falla si el DTO tiene opciones
 - [ ] Repositorios en memoria no asignan `Id` en `Add()` → múltiples entidades con `Id=0`
 - [ ] `FindAll()` devuelve shallow copy pero entidades dentro son referencias compartidas → mutación entre callers
-- [ ] Namespace inconsistente: `Dominio.InterfaceDeRepositorio` (singular) vs `Dominio.InterfacesDelDominio` (plural); archivo `IEncontrarTodosLosUsuarios.cs` declara interfaz `IEncontrarTodosUsuarios` (nombre no coincide)
-- [ ] `Registro.cshtml` pide rol como `type="number"` crudo en vez de selector
-
 ---
-*Última actualización: 10/09/2026*
+*Última actualización: 12/09/2026*

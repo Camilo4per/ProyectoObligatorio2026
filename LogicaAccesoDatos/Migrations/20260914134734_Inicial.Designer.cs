@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(HistoriasContext))]
-    [Migration("20260914123233_Inicial")]
+    [Migration("20260914134734_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -35,8 +35,8 @@ namespace LogicaAccesoDatos.Migrations
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("nvarchar(8)");
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
 
                     b.Property<int?>("HistoriaId")
                         .HasColumnType("int");
@@ -150,6 +150,13 @@ namespace LogicaAccesoDatos.Migrations
                     b.HasBaseType("Dominio.Entidades.Capitulo");
 
                     b.HasDiscriminator().HasValue("Final");
+                });
+
+            modelBuilder.Entity("Dominio.Entidades.Intermedio", b =>
+                {
+                    b.HasBaseType("Dominio.Entidades.Capitulo");
+
+                    b.HasDiscriminator().HasValue("Intermedio");
                 });
 
             modelBuilder.Entity("Dominio.Entidades.Capitulo", b =>

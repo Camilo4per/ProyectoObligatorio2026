@@ -12,7 +12,7 @@ namespace DTOs.Mappers
             return new Opcion
             {
                 Texto = new TextoOpcion(dto.Texto),
-                CapDestino = CapituloMapper.FromDTO(dto.CapDestino)
+                CapDestino = dto.CapDestino != null ? CapituloMapper.FromDTO(dto.CapDestino) : null
             };
         }
 
@@ -21,7 +21,7 @@ namespace DTOs.Mappers
             return new OpcionDTO
             {
                 Texto = opcion.Texto.Valor,
-                CapDestino = CapituloMapper.ToDTO(opcion.CapDestino)
+                CapDestino = opcion.CapDestino != null ? CapituloMapper.ToDTO(opcion.CapDestino) : null
             };
         }
     }

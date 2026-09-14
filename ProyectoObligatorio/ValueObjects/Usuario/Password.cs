@@ -35,7 +35,7 @@ namespace Dominio.ValueObjects.Usuario
                 if (char.IsLower(ch)) hasLower = true;
                 else if (char.IsUpper(ch)) hasUpper = true;
                 else if (char.IsDigit(ch)) hasDigit = true;
-                else hasSpecial = true;
+                else hasSpecial = true; // Falta poner caracteres especiales.
 
                 if (hasLower && hasUpper && hasDigit && hasSpecial) break;
             }

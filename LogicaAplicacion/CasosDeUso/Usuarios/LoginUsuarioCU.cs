@@ -16,16 +16,19 @@ namespace LogicaAplicacion.CasosDeUso.Usuarios
             repositorio = repo;
         }
 
-        public UsuarioDTO Ejecutar(string email, string password)
+        public UsuarioDTO Ejecutar(string usuario, string password)
         {
             List<Usuario> todos = repositorio.FindAll();
-            Usuario usuario = todos.FirstOrDefault(u => u.Email.Value == email)
-                ?? throw new UsuarioException("Email o contraseña incorrectos");
 
-            if (!usuario.Password.Verify(password))
-                throw new UsuarioException("Email o contraseña incorrectos");
+            foreach (Usuario u in todos)
+            {
+                if (u.NombreUsuario == usuario && u.Password.Verify(password))
+                {
+                    return UsuarioMapper.ToDTO(u);
+                }
+            }
 
-            return UsuarioMapper.ToDTO(usuario);
+            throw new UsuarioException("Usuario o contraseña incorrectos");
         }
     }
 }

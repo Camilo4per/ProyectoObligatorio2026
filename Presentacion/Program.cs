@@ -1,7 +1,7 @@
 using Dominio.InterfaceDeRepositorio;
 using LogicaAccesoDatos.RepositorioEnMemoria;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
-using LogicaAccesoDatos.EF;
+using LogicaAccesoDatos.RepositorioEntityFramework;
 using Microsoft.EntityFrameworkCore;
 
 using LogicaAplicacion.CasosDeUso.Usuarios;

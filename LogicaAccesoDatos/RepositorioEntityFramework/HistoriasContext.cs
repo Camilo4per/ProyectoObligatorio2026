@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LogicaAccesoDatos.EF
+namespace LogicaAccesoDatos.RepositorioEntityFramework
 {
     public class HistoriasContext : DbContext
     {

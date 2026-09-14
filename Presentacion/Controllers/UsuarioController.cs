@@ -46,11 +46,11 @@ namespace Presentacion.Controllers
         // POST: UsuarioController/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(string email, string password)
+        public ActionResult Login(string usuario, string password)
         {
             try
             {
-                UsuarioDTO dto = loginUsuario.Ejecutar(email, password);
+                UsuarioDTO dto = loginUsuario.Ejecutar(usuario, password);
                 HttpContext.Session.SetInt32("IdUsuario", dto.Id);
                 HttpContext.Session.SetString("Rol", ((RolesUsuario)dto.Rol).ToString());
                 return RedirectToAction(nameof(Index));

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(DominioContext))]
-    [Migration("20260914134734_Inicial")]
-    partial class Inicial
+    [Migration("20260915223410_AgregacionDeCategoriaHistorias")]
+    partial class AgregacionDeCategoriaHistorias
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace LogicaAccesoDatos.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CategoriaHistoria", b =>
+                {
+                    b.Property<int>("CategoriasId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HistoriasId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CategoriasId", "HistoriasId");
+
+                    b.HasIndex("HistoriasId");
+
+                    b.ToTable("CategoriaHistoria");
+                });
 
             modelBuilder.Entity("Dominio.Entidades.Capitulo", b =>
                 {
@@ -38,12 +53,12 @@ namespace LogicaAccesoDatos.Migrations
                         .HasMaxLength(13)
                         .HasColumnType("nvarchar(13)");
 
-                    b.Property<int?>("HistoriaId")
+                    b.Property<int?>("idHistoria")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HistoriaId");
+                    b.HasIndex("idHistoria");
 
                     b.ToTable("Capitulos");
 
@@ -60,12 +75,7 @@ namespace LogicaAccesoDatos.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("HistoriaId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("HistoriaId");
 
                     b.ToTable("Categorias");
                 });
@@ -78,15 +88,15 @@ namespace LogicaAccesoDatos.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CapituloInicialId")
+                    b.Property<int>("Estado")
                         .HasColumnType("int");
 
-                    b.Property<int>("Estado")
+                    b.Property<int?>("idCapituloInicial")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CapituloInicialId");
+                    b.HasIndex("idCapituloInicial");
 
                     b.ToTable("Historias");
                 });
@@ -105,22 +115,22 @@ namespace LogicaAccesoDatos.Migrations
                     b.Property<DateTime>("FechaInicio")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("FinalAlcanzadoId")
+                    b.Property<int?>("idFinal")
                         .HasColumnType("int");
 
-                    b.Property<int>("HistoriaId")
+                    b.Property<int?>("idHistoria")
                         .HasColumnType("int");
 
-                    b.Property<int>("UsuarioId")
+                    b.Property<int?>("idUsuario")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FinalAlcanzadoId");
+                    b.HasIndex("idFinal");
 
-                    b.HasIndex("HistoriaId");
+                    b.HasIndex("idHistoria");
 
-                    b.HasIndex("UsuarioId");
+                    b.HasIndex("idUsuario");
 
                     b.ToTable("Lecturas");
                 });
@@ -159,11 +169,27 @@ namespace LogicaAccesoDatos.Migrations
                     b.HasDiscriminator().HasValue("Intermedio");
                 });
 
+            modelBuilder.Entity("CategoriaHistoria", b =>
+                {
+                    b.HasOne("Dominio.Entidades.Categoria", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriasId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Dominio.Entidades.Historia", null)
+                        .WithMany()
+                        .HasForeignKey("HistoriasId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Dominio.Entidades.Capitulo", b =>
                 {
                     b.HasOne("Dominio.Entidades.Historia", null)
                         .WithMany("Capitulos")
-                        .HasForeignKey("HistoriaId");
+                        .HasForeignKey("idHistoria")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.OwnsOne("Dominio.ValueObjects.Capitulo.TextoCapitulo", "Texto", b1 =>
                         {
@@ -208,10 +234,6 @@ namespace LogicaAccesoDatos.Migrations
 
             modelBuilder.Entity("Dominio.Entidades.Categoria", b =>
                 {
-                    b.HasOne("Dominio.Entidades.Historia", null)
-                        .WithMany("Categorias")
-                        .HasForeignKey("HistoriaId");
-
                     b.OwnsOne("Dominio.ValueObjects.Categoria.Nombre", "Nombre", b1 =>
                         {
                             b1.Property<int>("CategoriaId")
@@ -237,9 +259,7 @@ namespace LogicaAccesoDatos.Migrations
                 {
                     b.HasOne("Dominio.Entidades.Capitulo", "CapituloInicial")
                         .WithMany()
-                        .HasForeignKey("CapituloInicialId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("idCapituloInicial");
 
                     b.OwnsOne("Dominio.ValueObjects.Historia.Sinopsis", "Sinopsis", b1 =>
                         {
@@ -288,19 +308,15 @@ namespace LogicaAccesoDatos.Migrations
                 {
                     b.HasOne("Dominio.Entidades.Final", "FinalAlcanzado")
                         .WithMany()
-                        .HasForeignKey("FinalAlcanzadoId");
+                        .HasForeignKey("idFinal");
 
                     b.HasOne("Dominio.Entidades.Historia", "Historia")
                         .WithMany()
-                        .HasForeignKey("HistoriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("idHistoria");
 
                     b.HasOne("Dominio.Entidades.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("idUsuario");
 
                     b.Navigation("FinalAlcanzado");
 
@@ -398,11 +414,48 @@ namespace LogicaAccesoDatos.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Dominio.Entidades.Intermedio", b =>
+                {
+                    b.OwnsMany("Dominio.Entidades.Opcion", "Opciones", b1 =>
+                        {
+                            b1.Property<int>("idCapitulo")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<string>("Texto")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<int?>("idCapDestino")
+                                .HasColumnType("int");
+
+                            b1.HasKey("idCapitulo", "Id");
+
+                            b1.HasIndex("idCapDestino");
+
+                            b1.ToTable("Opcion");
+
+                            b1.HasOne("Dominio.Entidades.Capitulo", "CapDestino")
+                                .WithMany()
+                                .HasForeignKey("idCapDestino");
+
+                            b1.WithOwner()
+                                .HasForeignKey("idCapitulo");
+
+                            b1.Navigation("CapDestino");
+                        });
+
+                    b.Navigation("Opciones");
+                });
+
             modelBuilder.Entity("Dominio.Entidades.Historia", b =>
                 {
                     b.Navigation("Capitulos");
-
-                    b.Navigation("Categorias");
                 });
 #pragma warning restore 612, 618
         }

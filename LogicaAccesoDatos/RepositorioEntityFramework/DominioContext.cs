@@ -23,5 +23,23 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework
             // Configura la cadena de conexión a la base de datos
             optionsBuilder.UseSqlServer(@"SERVER=(localdb)\MsSqlLocalDb;DATABASE=ObligatorioDB;Integrated Security=true;");
         }
+
+        // Configura las FKs para las opciones de los capítulos intermedios
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // FK unica: Capitulo -> Historia
+            modelBuilder.Entity<Capitulo>()
+                .HasOne<Historia>()
+                .WithMany(h => h.Capitulos)
+                .HasForeignKey(c => c.idHistoria)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Intermedio>()
+                .OwnsMany(i => i.Opciones, op =>
+                {
+                    op.WithOwner().HasForeignKey("idCapitulo");
+                    op.HasOne(o => o.CapDestino).WithMany().HasForeignKey(o => o.idCapDestino);
+                });
+        }
     }
 }

@@ -53,6 +53,7 @@ namespace Presentacion.Controllers
                 UsuarioDTO dto = loginUsuario.Ejecutar(usuario, password);
                 HttpContext.Session.SetInt32("IdUsuario", dto.Id);
                 HttpContext.Session.SetString("Rol", ((RolesUsuario)dto.Rol).ToString());
+                HttpContext.Session.SetString("NombreUsuario", dto.NombreUsuario);
                 return RedirectToAction(nameof(Index));
             }
             catch

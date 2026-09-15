@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaAccesoDatos.Migrations
 {
     [DbContext(typeof(DominioContext))]
-    [Migration("20260915000556_CambiosEF")]
-    partial class CambiosEF
+    [Migration("20260915220706_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,15 +38,12 @@ namespace LogicaAccesoDatos.Migrations
                         .HasMaxLength(13)
                         .HasColumnType("nvarchar(13)");
 
-                    b.Property<int?>("HistoriaId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("idHistoria")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HistoriaId");
+                    b.HasIndex("idHistoria");
 
                     b.ToTable("Capitulos");
 
@@ -108,9 +105,6 @@ namespace LogicaAccesoDatos.Migrations
                     b.Property<DateTime>("FechaInicio")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("FinalAlcanzadoId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("idFinal")
                         .HasColumnType("int");
 
@@ -122,7 +116,7 @@ namespace LogicaAccesoDatos.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FinalAlcanzadoId");
+                    b.HasIndex("idFinal");
 
                     b.HasIndex("idHistoria");
 
@@ -169,7 +163,8 @@ namespace LogicaAccesoDatos.Migrations
                 {
                     b.HasOne("Dominio.Entidades.Historia", null)
                         .WithMany("Capitulos")
-                        .HasForeignKey("HistoriaId");
+                        .HasForeignKey("idHistoria")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.OwnsOne("Dominio.ValueObjects.Capitulo.TextoCapitulo", "Texto", b1 =>
                         {
@@ -292,7 +287,7 @@ namespace LogicaAccesoDatos.Migrations
                 {
                     b.HasOne("Dominio.Entidades.Final", "FinalAlcanzado")
                         .WithMany()
-                        .HasForeignKey("FinalAlcanzadoId");
+                        .HasForeignKey("idFinal");
 
                     b.HasOne("Dominio.Entidades.Historia", "Historia")
                         .WithMany()
@@ -396,6 +391,45 @@ namespace LogicaAccesoDatos.Migrations
 
                     b.Navigation("CantLlegaron")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Dominio.Entidades.Intermedio", b =>
+                {
+                    b.OwnsMany("Dominio.Entidades.Opcion", "Opciones", b1 =>
+                        {
+                            b1.Property<int>("idCapitulo")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<string>("Texto")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<int?>("idCapDestino")
+                                .HasColumnType("int");
+
+                            b1.HasKey("idCapitulo", "Id");
+
+                            b1.HasIndex("idCapDestino");
+
+                            b1.ToTable("Opcion");
+
+                            b1.HasOne("Dominio.Entidades.Capitulo", "CapDestino")
+                                .WithMany()
+                                .HasForeignKey("idCapDestino");
+
+                            b1.WithOwner()
+                                .HasForeignKey("idCapitulo");
+
+                            b1.Navigation("CapDestino");
+                        });
+
+                    b.Navigation("Opciones");
                 });
 
             modelBuilder.Entity("Dominio.Entidades.Historia", b =>

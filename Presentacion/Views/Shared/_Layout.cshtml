@@ -56,14 +56,12 @@
 
     <footer class="border-top footer text-muted">
         <p>
-            @*
             &copy; 2026 - Obligatorio / Desarrollo Web Asistido con IA - Camilo Pereira, Ignacio Alvez
-            @if (@Context.Session.GetString("LogeadoRol") != null)
+            @if (Context.Session.GetString("Rol") != null)
             {
                 <span> | </span>
-                <span class="text-primary">Logeado: @Context.Session.GetString("LogeadoNombre"), @Context.Session.GetString("LogeadoCedula")</span>
+                <span class="text-primary">Logeado: @Context.Session.GetString("NombreUsuario")</span>
             }
-            *@
         </p>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

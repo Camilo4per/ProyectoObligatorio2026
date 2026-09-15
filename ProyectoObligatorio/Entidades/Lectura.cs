@@ -13,7 +13,7 @@ namespace Dominio.Entidades
         public Historia Historia { get; init; }
         public DateTime FechaInicio { get; init; }
         public DateTime? FechaFin { get; init; }
-        [ForeignKey(nameof(Final))] public int? idFinal { get; set; }
+        [ForeignKey(nameof(FinalAlcanzado))] public int? idFinal { get; set; }
         public Final? FinalAlcanzado { get; init; }
 
         public void Validar()

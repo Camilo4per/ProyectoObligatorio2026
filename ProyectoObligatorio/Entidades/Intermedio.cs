@@ -4,7 +4,7 @@ namespace Dominio.Entidades
 {
     public class Intermedio : Capitulo
     {
-        public List<Opcion> Opciones;
+        public List<Opcion> Opciones { get; set; }
 
         public override void Validar()
         {

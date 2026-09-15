@@ -1,5 +1,4 @@
 using Dominio.Entidades;
-using Dominio.ValueObjects.Opcion;
 using DTOs.DTOs;
 
 namespace DTOs.Mappers
@@ -11,7 +10,9 @@ namespace DTOs.Mappers
         {
             return new Opcion
             {
-                Texto = new TextoOpcion(dto.Texto),
+                Texto = dto.Texto,
+                idCapitulo = dto.idCapitulo,
+                idCapDestino = dto.idCapDestino,
                 CapDestino = dto.CapDestino != null ? CapituloMapper.FromDTO(dto.CapDestino) : null
             };
         }
@@ -20,7 +21,9 @@ namespace DTOs.Mappers
         {
             return new OpcionDTO
             {
-                Texto = opcion.Texto.Valor,
+                Texto = opcion.Texto,
+                idCapitulo = opcion.idCapitulo,
+                idCapDestino = opcion.idCapDestino,
                 CapDestino = opcion.CapDestino != null ? CapituloMapper.ToDTO(opcion.CapDestino) : null
             };
         }

@@ -17,6 +17,7 @@ namespace DTOs.Mappers
                 Historia = HistoriaMapper.FromDTO(dto.Historia),
                 FechaInicio = dto.FechaInicio,
                 FechaFin = dto.FechaFin,
+                idFinal = dto.idFinal,
                 FinalAlcanzado = dto.FinalAlcanzado != null
                     ? (Final) CapituloMapper.FromDTO(dto.FinalAlcanzado)
                     : null
@@ -34,6 +35,7 @@ namespace DTOs.Mappers
                 Historia = HistoriaMapper.ToDTO(lectura.Historia),
                 FechaInicio = lectura.FechaInicio,
                 FechaFin = lectura.FechaFin,
+                idFinal = lectura.idFinal,
                 FinalAlcanzado = lectura.FinalAlcanzado != null
                     ? CapituloMapper.ToDTO(lectura.FinalAlcanzado)
                     : null

@@ -16,7 +16,7 @@ namespace LogicaAplicacion.CasosDeUso.Usuarios
         public void Ejecutar(UsuarioDTO dto)
         {
             // Sobreescribo rol para que siempre sea usuario y no puedan registrarse como administrador
-            dto.Rol = (int)RolesUsuario.Usuario;
+            dto.Rol = (int) RolesUsuario.Usuario;
             repositorio.Add(UsuarioMapper.FromDTO(dto));
         }
     }

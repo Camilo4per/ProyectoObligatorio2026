@@ -11,7 +11,9 @@ namespace DTOs.Mappers
             return new Lectura
             {
                 Id = dto.Id,
+                idUsuario = dto.idUsuario,
                 Usuario = UsuarioMapper.FromDTO(dto.Usuario),
+                idHistoria = dto.idHistoria,
                 Historia = HistoriaMapper.FromDTO(dto.Historia),
                 FechaInicio = dto.FechaInicio,
                 FechaFin = dto.FechaFin,
@@ -26,7 +28,9 @@ namespace DTOs.Mappers
             return new LecturaDTO
             {
                 Id = lectura.Id,
+                idUsuario = lectura.idUsuario,
                 Usuario = UsuarioMapper.ToDTO(lectura.Usuario),
+                idHistoria = lectura.idHistoria,
                 Historia = HistoriaMapper.ToDTO(lectura.Historia),
                 FechaInicio = lectura.FechaInicio,
                 FechaFin = lectura.FechaFin,

@@ -15,6 +15,7 @@ namespace DTOs.Mappers
                 Sinopsis = new Sinopsis(dto.Sinopsis),
                 Categorias = dto.Categorias.Select(CategoriaMapper.FromDTO).ToList(),
                 CapituloInicial = CapituloMapper.FromDTO(dto.CapituloInicial),
+                idCapituloInicial = dto.CapituloInicial.Id,
                 Capitulos = dto.Capitulos.Select(CapituloMapper.FromDTO).ToList(),
                 Estado = (EstadoHistoria) dto.Estado
             };
@@ -29,6 +30,7 @@ namespace DTOs.Mappers
                 Sinopsis = historia.Sinopsis.Valor,
                 Categorias = historia.Categorias.Select(CategoriaMapper.ToDTO).ToList(),
                 CapituloInicial = CapituloMapper.ToDTO(historia.CapituloInicial),
+                idCapituloInicial = historia.idCapituloInicial,
                 Capitulos = historia.Capitulos.Select(CapituloMapper.ToDTO).ToList(),
                 Estado = (int) historia.Estado
             };

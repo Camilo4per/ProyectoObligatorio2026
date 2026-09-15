@@ -1,6 +1,7 @@
 ﻿using Dominio.Excepciones;
 using Dominio.InterfacesDelDominio;
 using Dominio.ValueObjects.Historia;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dominio.Entidades
 {
@@ -8,6 +9,7 @@ namespace Dominio.Entidades
     {
         public int Id { get; set; }
         public List<Categoria> Categorias { get; set; }
+        [ForeignKey(nameof(CapituloInicial))] public int? idCapituloInicial { get; set; }
         public Capitulo CapituloInicial { get; set; }
         public List<Capitulo> Capitulos { get; set; }
         public EstadoHistoria Estado { get; set; }

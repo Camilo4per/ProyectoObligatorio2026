@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LogicaAccesoDatos.Migrations
 {
-    [DbContext(typeof(HistoriasContext))]
-    partial class HistoriasContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(DominioContext))]
+    partial class DominioContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -36,6 +36,9 @@ namespace LogicaAccesoDatos.Migrations
                         .HasColumnType("nvarchar(13)");
 
                     b.Property<int?>("HistoriaId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("idHistoria")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -75,15 +78,15 @@ namespace LogicaAccesoDatos.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CapituloInicialId")
+                    b.Property<int>("Estado")
                         .HasColumnType("int");
 
-                    b.Property<int>("Estado")
+                    b.Property<int?>("idCapituloInicial")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CapituloInicialId");
+                    b.HasIndex("idCapituloInicial");
 
                     b.ToTable("Historias");
                 });
@@ -105,19 +108,22 @@ namespace LogicaAccesoDatos.Migrations
                     b.Property<int?>("FinalAlcanzadoId")
                         .HasColumnType("int");
 
-                    b.Property<int>("HistoriaId")
+                    b.Property<int?>("idFinal")
                         .HasColumnType("int");
 
-                    b.Property<int>("UsuarioId")
+                    b.Property<int?>("idHistoria")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("idUsuario")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("FinalAlcanzadoId");
 
-                    b.HasIndex("HistoriaId");
+                    b.HasIndex("idHistoria");
 
-                    b.HasIndex("UsuarioId");
+                    b.HasIndex("idUsuario");
 
                     b.ToTable("Lecturas");
                 });
@@ -234,9 +240,7 @@ namespace LogicaAccesoDatos.Migrations
                 {
                     b.HasOne("Dominio.Entidades.Capitulo", "CapituloInicial")
                         .WithMany()
-                        .HasForeignKey("CapituloInicialId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("idCapituloInicial");
 
                     b.OwnsOne("Dominio.ValueObjects.Historia.Sinopsis", "Sinopsis", b1 =>
                         {
@@ -289,15 +293,11 @@ namespace LogicaAccesoDatos.Migrations
 
                     b.HasOne("Dominio.Entidades.Historia", "Historia")
                         .WithMany()
-                        .HasForeignKey("HistoriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("idHistoria");
 
                     b.HasOne("Dominio.Entidades.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("idUsuario");
 
                     b.Navigation("FinalAlcanzado");
 

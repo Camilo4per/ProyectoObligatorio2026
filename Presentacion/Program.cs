@@ -1,10 +1,9 @@
 using Dominio.InterfaceDeRepositorio;
 using LogicaAccesoDatos.RepositorioEnMemoria;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
-using LogicaAccesoDatos.RepositorioEntityFramework;
 using Microsoft.EntityFrameworkCore;
-
 using LogicaAplicacion.CasosDeUso.Usuarios;
+using LogicaAccesoDatos.RepositorioEntityFramework.Repositorios;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +17,7 @@ builder.Services.AddScoped<IRepositorioFinales, RepositorioFinales>();
 builder.Services.AddScoped<IRepositorioHistorias, RepositorioHistorias>();
 builder.Services.AddScoped<IRepositorioIntermedios, RepositorioIntermedios>();
 builder.Services.AddScoped<IRepositorioLecturas, RepositorioLecturas>();
-builder.Services.AddScoped<IRepositorioUsuarios, RepositorioUsuarios>();
+builder.Services.AddScoped<IRepositorioUsuarios, RepositorioUsuariosEF>();
 
 //INICIALIZAMOS LOS CASOS DE USO
 builder.Services.AddScoped<IRegistrarUsuario, RegistrarUsuarioCU>();

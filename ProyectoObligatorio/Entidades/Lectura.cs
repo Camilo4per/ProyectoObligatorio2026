@@ -1,15 +1,19 @@
 ﻿using Dominio.Excepciones;
 using Dominio.InterfacesDelDominio;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dominio.Entidades
 {
     public class Lectura : IValidable
     {
         public int Id { get; set; }
+        [ForeignKey(nameof(Usuario))] public int? idUsuario { get; set; }
         public Usuario Usuario { get; init; }
+        [ForeignKey(nameof(Historia))] public int? idHistoria { get; set; }
         public Historia Historia { get; init; }
         public DateTime FechaInicio { get; init; }
         public DateTime? FechaFin { get; init; }
+        [ForeignKey(nameof(Final))] public int? idFinal { get; set; }
         public Final? FinalAlcanzado { get; init; }
 
         public void Validar()

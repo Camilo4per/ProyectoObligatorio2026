@@ -1,6 +1,7 @@
 ﻿using Dominio.Excepciones;
 using Dominio.InterfacesDelDominio;
 using Dominio.ValueObjects.Capitulo;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dominio.Entidades
 {
@@ -11,6 +12,7 @@ namespace Dominio.Entidades
         // Value Objects
         public TituloCapitulo Titulo { get; set; }
         public TextoCapitulo Texto { get; set; }
+        [ForeignKey(nameof(Historia))] public int? idHistoria { get; set; }
 
         public virtual void Validar()
         {

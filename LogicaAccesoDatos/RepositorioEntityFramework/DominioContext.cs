@@ -6,7 +6,7 @@ using System.Text;
 
 namespace LogicaAccesoDatos.RepositorioEntityFramework
 {
-    public class HistoriasContext : DbContext
+    public class DominioContext : DbContext
     {
         #region DbSets
         public DbSet<Usuario> Usuarios { get; set; }

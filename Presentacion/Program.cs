@@ -1,9 +1,9 @@
 using Dominio.InterfaceDeRepositorio;
-using LogicaAccesoDatos.RepositorioEnMemoria;
+using LogicaAccesoDatos.RepositorioEntityFramework;
+using LogicaAccesoDatos.RepositorioEntityFramework.Repositorios;
+using LogicaAplicacion.CasosDeUso.Usuarios;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
 using Microsoft.EntityFrameworkCore;
-using LogicaAplicacion.CasosDeUso.Usuarios;
-using LogicaAccesoDatos.RepositorioEntityFramework.Repositorios;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,13 +11,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
 
+//REGISTRAMOS EL CONTEXTO QUE USAN LOS REPOSITORIOS EF
+builder.Services.AddDbContext<DominioContext>();
+
 //INICIALIZAMOS LOS REPOSITORIOS
-builder.Services.AddScoped<IRepositorioCategorias, RepositorioCategorias>();
-builder.Services.AddScoped<IRepositorioFinales, RepositorioFinales>();
-builder.Services.AddScoped<IRepositorioHistorias, RepositorioHistorias>();
-builder.Services.AddScoped<IRepositorioIntermedios, RepositorioIntermedios>();
-builder.Services.AddScoped<IRepositorioLecturas, RepositorioLecturas>();
-builder.Services.AddScoped<IRepositorioUsuarios, RepositorioUsuarios>();
+builder.Services.AddScoped<IRepositorioCategorias, RepositorioCategoriasEF>();
+builder.Services.AddScoped<IRepositorioFinales, RepositorioFinalesEF>();
+builder.Services.AddScoped<IRepositorioHistorias, RepositorioHistoriasEF>();
+builder.Services.AddScoped<IRepositorioIntermedios, RepositorioIntermediosEF>();
+builder.Services.AddScoped<IRepositorioLecturas, RepositorioLecturasEF>();
+builder.Services.AddScoped<IRepositorioUsuarios, RepositorioUsuariosEF>();
 
 //INICIALIZAMOS LOS CASOS DE USO
 builder.Services.AddScoped<IRegistrarUsuario, RegistrarUsuarioCU>();

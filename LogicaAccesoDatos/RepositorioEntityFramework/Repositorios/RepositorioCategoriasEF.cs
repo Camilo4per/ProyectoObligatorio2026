@@ -38,6 +38,7 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public void Update(Categoria nuevo)
         {
+            if (nuevo == null) { throw new CategoriaException("La categoria esta vacia"); }
             nuevo.Validar();
             _context.Categorias.Update(nuevo);
             _context.SaveChanges();

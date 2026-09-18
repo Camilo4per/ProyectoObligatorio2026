@@ -21,8 +21,8 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
         public void Add(Usuario nuevo)
         {
             if (nuevo == null) { throw new UsuarioException("El usuario esta vacio"); }
-            ExisteUsuario(nuevo);
             nuevo.Validar();
+            ExisteUsuario(nuevo);
             _context.Usuarios.Add(nuevo);
             _context.SaveChanges();
         }
@@ -43,6 +43,7 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public void Update(Usuario nuevo)
         {
+            if (nuevo == null) { throw new UsuarioException("El usuario esta vacio"); }
             nuevo.Validar();
             _context.Usuarios.Update(nuevo);
             _context.SaveChanges();

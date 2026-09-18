@@ -38,6 +38,7 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public void Update(Final nuevo)
         {
+            if (nuevo == null) { throw new FinalException("El capitulo final esta vacio"); }
             nuevo.Validar();
             _context.Finales.Update(nuevo);
             _context.SaveChanges();

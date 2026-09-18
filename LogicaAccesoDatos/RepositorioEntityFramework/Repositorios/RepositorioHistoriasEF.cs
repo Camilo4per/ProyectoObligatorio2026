@@ -38,6 +38,7 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public void Update(Historia nuevo)
         {
+            if (nuevo == null) { throw new HistoriaException("La historia esta vacia"); }
             nuevo.Validar();
             _context.Historias.Update(nuevo);
             _context.SaveChanges();

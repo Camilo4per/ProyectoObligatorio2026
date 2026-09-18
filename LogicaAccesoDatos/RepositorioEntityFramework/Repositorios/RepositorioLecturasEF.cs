@@ -16,8 +16,8 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
         public void Add(Lectura nueva)
         {
             if (nueva == null) { throw new LecturaException("La lectura esta vacia"); }
-            ExisteLectura(nueva);
             nueva.Validar();
+            ExisteLectura(nueva);
             _context.Lecturas.Add(nueva);
             _context.SaveChanges();
         }
@@ -40,6 +40,7 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public void Update(Lectura nueva)
         {
+            if (nueva == null) { throw new LecturaException("La lectura esta vacia"); }
             nueva.Validar();
             _context.Lecturas.Update(nueva);
             _context.SaveChanges();

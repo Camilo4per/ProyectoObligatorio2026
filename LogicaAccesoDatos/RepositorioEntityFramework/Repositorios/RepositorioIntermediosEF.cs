@@ -39,6 +39,7 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public void Update(Intermedio nuevo)
         {
+            if (nuevo == null) { throw new IntermedioException("El capitulo intermedio esta vacio"); }
             nuevo.Validar();
             _context.Intermedios.Update(nuevo);
             _context.SaveChanges();

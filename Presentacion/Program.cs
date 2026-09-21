@@ -3,7 +3,8 @@ using LogicaAccesoDatos.RepositorioEntityFramework;
 using LogicaAccesoDatos.RepositorioEntityFramework.Repositorios;
 using LogicaAplicacion.CasosDeUso.Usuarios;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
-using Microsoft.EntityFrameworkCore;
+using LogicaAplicacion.CasosDeUso.Historias;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,9 @@ builder.Services.AddScoped<IRepositorioLecturas, RepositorioLecturasEF>();
 builder.Services.AddScoped<IRepositorioUsuarios, RepositorioUsuariosEF>();
 
 //INICIALIZAMOS LOS CASOS DE USO
+
+builder.Services.AddScoped<IAgregarHistoria, AgregarHistoriaCU>();
+
 builder.Services.AddScoped<IRegistrarUsuario, RegistrarUsuarioCU>();
 builder.Services.AddScoped<IEncontrarTodosUsuarios, EncontrarTodosUsuariosCU>();
 builder.Services.AddScoped<IObtenerUsuarioPorId, ObtenerUsuarioPorIdCU>();

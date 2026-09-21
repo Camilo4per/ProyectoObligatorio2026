@@ -1,10 +1,19 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
+using DTOs.DTOs;
 
 namespace Presentacion.Controllers
 {
     public class HistoriaController : Controller
     {
+        private IAgregarHistoria agregarHistoria;
+        public HistoriaController(
+            IAgregarHistoria agregarHistoriaCu
+            )
+        {
+            agregarHistoria = agregarHistoriaCu;
+        }
+
         // GET: HistoriaController
         public ActionResult Index()
         {
@@ -20,16 +29,18 @@ namespace Presentacion.Controllers
         // GET: HistoriaController/Create
         public ActionResult Create()
         {
+            // Enviar Lista de Categorias a la vista
             return View();
         }
 
         // POST: HistoriaController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(HistoriaDTO dto)
         {
             try
             {
+                agregarHistoria.Ejecutar(dto);
                 return RedirectToAction(nameof(Index));
             }
             catch

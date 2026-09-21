@@ -20,4 +20,8 @@
     <ProjectReference Include="..\ProyectoObligatorio\Dominio.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Historia\" />
+  </ItemGroup>
+
 </Project>

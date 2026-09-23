@@ -1,6 +1,7 @@
 using Dominio.Entidades;
 using Dominio.Excepciones;
 using Dominio.InterfaceDeRepositorio;
+using Microsoft.EntityFrameworkCore;
 
 namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 {
@@ -46,7 +47,11 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public List<Historia> FindAll()
         {
-            return _context.Historias.ToList();
+            return _context.Historias
+                .Include(h => h.Capitulos)
+                .Include(h => h.Categorias)
+                .Include(h => h.CapituloInicial)
+                .ToList();
         }
 
         public Historia FindById(int id)

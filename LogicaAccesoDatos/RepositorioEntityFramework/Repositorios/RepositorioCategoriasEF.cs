@@ -45,7 +45,7 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
         }
         public Categoria FindById(int id)
         {
-            return _context.Categorias.Where(c => c.Id == id).FirstOrDefault()
+            return _context.Categorias.Where(c => c.Id == id).FirstOrDefault() 
                 ?? throw new CategoriaException("Categoria inexistente");
         }
 

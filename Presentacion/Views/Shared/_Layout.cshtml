@@ -26,6 +26,10 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Logout">Logout</a>
                             </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Historia" asp-action="Index">Historias</a>
+                            </li>
                         }
 
                         @if (Context.Session.GetString("Rol") == null)

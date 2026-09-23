@@ -5,7 +5,7 @@ namespace Dominio.Entidades
     public class Intermedio : Capitulo
     {
         #region Atributos
-        public List<Opcion> Opciones { get; set; }
+        public List<Opcion>? Opciones { get; set; }
 
         #endregion
 
@@ -18,12 +18,14 @@ namespace Dominio.Entidades
 
         public void ValidarOpciones()
         {
-            if (Opciones == null || Opciones.Count == 0)
-                throw new IntermedioException("Un capítulo intermedio debe tener al menos una opción");
-
-            // Valido cada opción
-            foreach (Opcion opcion in Opciones)
-                opcion.Validar();
+            if (Opciones != null) 
+            {
+                // Valido cada opción
+                foreach (Opcion opcion in Opciones) 
+                {                 
+                    opcion.Validar();
+                }
+            }
         }
 
         #endregion

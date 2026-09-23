@@ -1,10 +1,11 @@
 ﻿using Dominio.InterfaceDeRepositorio;
 using DTOs.DTOs;
 using DTOs.Mappers;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
 
 namespace LogicaAplicacion.CasosDeUso.Historias
 {
-    public class AgregarHistoriaCU
+    public class AgregarHistoriaCU : IAgregarHistoria
     {
         private IRepositorioHistorias repositorio;
         public AgregarHistoriaCU(IRepositorioHistorias repo)

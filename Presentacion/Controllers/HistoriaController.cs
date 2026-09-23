@@ -7,17 +7,20 @@ namespace Presentacion.Controllers
     public class HistoriaController : Controller
     {
         private IAgregarHistoria agregarHistoria;
+        private IEncontrarTodasHistorias encontrarTodasHistorias;
         public HistoriaController(
-            IAgregarHistoria agregarHistoriaCu
+            IAgregarHistoria agregarHistoriaCu,
+            IEncontrarTodasHistorias encontrarTodasHistoriasCu
             )
         {
             agregarHistoria = agregarHistoriaCu;
+            encontrarTodasHistorias = encontrarTodasHistoriasCu;
         }
 
         // GET: HistoriaController
         public ActionResult Index()
         {
-            return View();
+            return View(encontrarTodasHistorias.Ejecutar());
         }
 
         // GET: HistoriaController/Details/5

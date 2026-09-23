@@ -26,6 +26,7 @@ builder.Services.AddScoped<IRepositorioUsuarios, RepositorioUsuariosEF>();
 //INICIALIZAMOS LOS CASOS DE USO
 
 builder.Services.AddScoped<IAgregarHistoria, AgregarHistoriaCU>();
+builder.Services.AddScoped<IEncontrarTodasHistorias, EncontrarTodasLasHistoriasCU>();
 
 builder.Services.AddScoped<IRegistrarUsuario, RegistrarUsuarioCU>();
 builder.Services.AddScoped<IEncontrarTodosUsuarios, EncontrarTodosUsuariosCU>();

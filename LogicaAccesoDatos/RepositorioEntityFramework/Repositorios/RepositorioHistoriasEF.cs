@@ -19,6 +19,7 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
             if (nuevo == null) { throw new HistoriaException("La historia esta vacia"); }
             nuevo.Validar();
             ExisteHistoria(nuevo);
+            AdjuntarCategorias(nuevo);
             _context.Historias.Add(nuevo);
             _context.SaveChanges();
         }
@@ -41,8 +42,22 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
         {
             if (nuevo == null) { throw new HistoriaException("La historia esta vacia"); }
             nuevo.Validar();
+            AdjuntarCategorias(nuevo);
             _context.Historias.Update(nuevo);
             _context.SaveChanges();
+        }
+
+        private void AdjuntarCategorias(Historia historia)
+        {
+            List<Categoria> ligadas = new List<Categoria>();
+            foreach (Categoria categoria in historia.Categorias)
+            {
+                Categoria existente = _context.Categorias.Find(categoria.Id)
+                    ?? throw new CategoriaException("Categoría inexistente");
+                ligadas.Add(existente);
+            }
+
+            historia.Categorias = ligadas;
         }
 
         public List<Historia> FindAll()
@@ -56,7 +71,12 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public Historia FindById(int id)
         {
-            return _context.Historias.Where(h => h.Id == id).FirstOrDefault()
+            return _context.Historias
+                .Include(h => h.Capitulos)
+                .Include(h => h.Categorias)
+                .Include(h => h.CapituloInicial)
+                .Where(h => h.Id == id)
+                .FirstOrDefault()
                 ?? throw new HistoriaException("Historia inexistente");
         }
     }

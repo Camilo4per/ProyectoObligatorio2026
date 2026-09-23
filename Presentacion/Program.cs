@@ -5,6 +5,8 @@ using LogicaAplicacion.CasosDeUso.Usuarios;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
 using LogicaAplicacion.CasosDeUso.Historias;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
+using LogicaAplicacion.CasosDeUso.Categorias;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Categorias;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +29,11 @@ builder.Services.AddScoped<IRepositorioUsuarios, RepositorioUsuariosEF>();
 
 builder.Services.AddScoped<IAgregarHistoria, AgregarHistoriaCU>();
 builder.Services.AddScoped<IEncontrarTodasHistorias, EncontrarTodasLasHistoriasCU>();
+builder.Services.AddScoped<IObtenerHistoriaPorId, ObtenerHistoriaPorIdCU>();
+builder.Services.AddScoped<IModificarHistoria, ModificarHistoriaCU>();
+builder.Services.AddScoped<IEliminarHistoria, EliminarHistoriaCU>();
+
+builder.Services.AddScoped<IEncontrarTodasCategorias, EncontrarTodasLasCategoriasCU>();
 
 builder.Services.AddScoped<IRegistrarUsuario, RegistrarUsuarioCU>();
 builder.Services.AddScoped<IEncontrarTodosUsuarios, EncontrarTodosUsuariosCU>();

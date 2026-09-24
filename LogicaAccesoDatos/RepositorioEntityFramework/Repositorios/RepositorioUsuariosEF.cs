@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Dominio.Entidades;
@@ -59,6 +59,11 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
             // Si no es null ?? Si es null
             return _context.Usuarios.Where(u => u.Id == id).FirstOrDefault()
                 ?? throw new UsuarioException("Usuario inexistente");
+        }
+
+        public Usuario? FindByNombreUsuario(string nombreUsuario)
+        {
+            return _context.Usuarios.FirstOrDefault(u => u.NombreUsuario == nombreUsuario);
         }
     }
 }

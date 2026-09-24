@@ -18,14 +18,11 @@ namespace LogicaAplicacion.CasosDeUso.Usuarios
 
         public UsuarioDTO Ejecutar(string usuario, string password)
         {
-            List<Usuario> todos = repositorio.FindAll();
+            Usuario? u = repositorio.FindByNombreUsuario(usuario);
 
-            foreach (Usuario u in todos)
+            if (u != null && u.Password.Verify(password))
             {
-                if (u.NombreUsuario == usuario && u.Password.Verify(password))
-                {
-                    return UsuarioMapper.ToDTO(u);
-                }
+                return UsuarioMapper.ToDTO(u);
             }
 
             throw new UsuarioException("Usuario o contraseña incorrectos");

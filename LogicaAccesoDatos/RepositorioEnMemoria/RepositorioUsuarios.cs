@@ -1,4 +1,4 @@
-﻿using Dominio.Entidades;
+using Dominio.Entidades;
 using Dominio.Excepciones;
 using Dominio.InterfaceDeRepositorio;
 
@@ -50,6 +50,11 @@ namespace LogicaAccesoDatos.RepositorioEnMemoria
         public void Remove(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public Usuario? FindByNombreUsuario(string nombreUsuario)
+        {
+            return usuarios.FirstOrDefault(u => u.NombreUsuario == nombreUsuario);
         }
     }
 }

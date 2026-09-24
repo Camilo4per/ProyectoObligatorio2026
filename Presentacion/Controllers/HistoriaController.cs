@@ -118,7 +118,9 @@ namespace Presentacion.Controllers
             catch (Exception ex)
             {
                 ViewBag.Error = ex.Message;
-                return View();
+                // Re-renderiza la confirmación con el model para mostrar el mensaje
+                // de error (Delete.cshtml usa @Model).
+                return View(obtenerHistoriaPorId.Ejecutar(id));
             }
         }
 

@@ -29,6 +29,20 @@ namespace LogicaAccesoDatos.RepositorioEnMemoria
             }
         }
 
+        public bool TieneLecturasDeHistoria(int idHistoria)
+        {
+            foreach (Lectura item in lecturas)
+            {
+                if (item.idHistoria == idHistoria ||
+                    (item.idFinal != null && item.FinalAlcanzado?.idHistoria == idHistoria))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public Lectura FindById(int id)
         {
             foreach (Lectura lectura in lecturas)

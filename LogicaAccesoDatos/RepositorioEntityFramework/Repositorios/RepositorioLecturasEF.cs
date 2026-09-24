@@ -32,6 +32,15 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
             }
         }
 
+        // True si hay lecturas ligadas a la historia, ya sea por idHistoria (directa)
+        // o porque terminaron en un final que pertenece a esa historia (idFinal).
+        public bool TieneLecturasDeHistoria(int idHistoria)
+        {
+            return _context.Lecturas.Any(l =>
+                l.idHistoria == idHistoria ||
+                (l.idFinal != null && l.FinalAlcanzado!.idHistoria == idHistoria));
+        }
+
         public void Remove(int id)
         {
             _context.Lecturas.Remove(new Lectura { Id = id });

@@ -53,8 +53,10 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public void Remove(int id)
         {
-            _context.Historias.Remove(new Historia { Id = id });
-            _context.SaveChanges();
+            // DELETE directo de la fila: se saltea el change tracker (no tiene que ordenar
+            // el borrado del ciclo de FKs) y la base resuelve la cascada: capitulos por
+            // idHistoria (Cascade) y los joins de CategoriaHistoria.
+            _context.Historias.Where(h => h.Id == id).ExecuteDelete();
         }
 
         public void Update(Historia nuevo)

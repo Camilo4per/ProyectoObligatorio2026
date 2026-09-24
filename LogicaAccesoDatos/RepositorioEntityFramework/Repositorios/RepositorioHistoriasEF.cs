@@ -70,12 +70,20 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
             Historia existente = _context.Historias
                 .Include(h => h.Capitulos)
                 .Include(h => h.Categorias)
+                .Include(h => h.CapituloInicial)
                 .FirstOrDefault(h => h.Id == nuevo.Id)
                 ?? throw new HistoriaException("Historia inexistente");
 
             existente.Titulo = nuevo.Titulo;
             existente.Sinopsis = nuevo.Sinopsis;
             existente.Estado = nuevo.Estado;
+
+            // Si la historia solo tiene el capitulo inicial, permito modificar su titulo y texto.
+            if (existente.Capitulos.Count <= 1 && nuevo.CapituloInicial != null && existente.CapituloInicial != null)
+            {
+                existente.CapituloInicial.Titulo = nuevo.CapituloInicial.Titulo;
+                existente.CapituloInicial.Texto = nuevo.CapituloInicial.Texto;
+            }
 
             existente.Categorias.Clear();
             foreach (Categoria categoria in nuevo.Categorias)
@@ -102,22 +110,40 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public List<Historia> FindAll()
         {
-            return _context.Historias
+            List<Historia> historias = _context.Historias
                 .Include(h => h.Capitulos)
                 .Include(h => h.Categorias)
                 .Include(h => h.CapituloInicial)
                 .ToList();
+
+            List<int> ids = historias.Select(h => h.Id).ToList();
+            if (ids.Count > 0)
+            {
+                _context.Intermedios
+                    .Where(i => i.idHistoria.HasValue && ids.Contains(i.idHistoria.Value))
+                    .Include(i => i.Opciones)
+                    .ToList();
+            }
+
+            return historias;
         }
 
         public Historia FindById(int id)
         {
-            return _context.Historias
+            Historia historia = _context.Historias
                 .Include(h => h.Capitulos)
                 .Include(h => h.Categorias)
                 .Include(h => h.CapituloInicial)
                 .Where(h => h.Id == id)
                 .FirstOrDefault()
                 ?? throw new HistoriaException("Historia inexistente");
+
+            _context.Intermedios
+                .Where(i => i.idHistoria == id)
+                .Include(i => i.Opciones)
+                .ToList();
+
+            return historia;
         }
     }
 }

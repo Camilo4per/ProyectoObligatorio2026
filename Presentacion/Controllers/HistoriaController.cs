@@ -1,9 +1,10 @@
-﻿using Dominio.Entidades;
+using Dominio.Entidades;
 using DTOs.DTOs;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Categorias;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Presentacion.Controllers
@@ -32,6 +33,17 @@ namespace Presentacion.Controllers
             modificarHistoria = modificarHistoriaCu;
             eliminarHistoria = eliminarHistoriaCu;
             encontrarTodasCategorias = encontrarTodasCategoriasCu;
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            string? rol = HttpContext.Session.GetString("Rol");
+            if (rol != RolesUsuario.Administrador.ToString())
+            {
+                context.Result = RedirectToAction("Login", "Usuario");
+                return;
+            }
+            base.OnActionExecuting(context);
         }
 
         // GET: HistoriaController
@@ -95,6 +107,16 @@ namespace Presentacion.Controllers
             {
                 ViewBag.Error = ex.Message;
                 ViewBag.Categorias = CategoriasSelectList(dto.CategoriaIds);
+                try
+                {
+                    HistoriaDTO existente = obtenerHistoriaPorId.Ejecutar(id);
+                    dto.Capitulos = existente.Capitulos;
+                    if (dto.CapituloInicial == null) dto.CapituloInicial = existente.CapituloInicial;
+                }
+                catch
+                {
+                    // Ignora si no se pudo recargar
+                }
                 return View(dto);
             }
         }

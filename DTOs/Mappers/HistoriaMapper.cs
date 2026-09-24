@@ -13,10 +13,10 @@ namespace DTOs.Mappers
             Capitulo inicial = CapituloMapper.FromDTO(dto.CapituloInicial);
 
             // dto.Capitulos debe contener el CapituloInicial.
-            // Si un elemento de la lista es exactamente la misma referencia, reutilizo el
+            // Si un elemento de la lista coincide con el inicial, reutilizo el
             // capítulo ya mapeado en vez de crear una copia duplicada del mismo capítulo.
             List<Capitulo> capitulos = dto.Capitulos
-                .Select(c => ReferenceEquals(c, dto.CapituloInicial) ? inicial : CapituloMapper.FromDTO(c))
+                .Select(c => (c == dto.CapituloInicial || (c.Id != 0 && dto.CapituloInicial != null && c.Id == dto.CapituloInicial.Id)) ? inicial : CapituloMapper.FromDTO(c))
                 .ToList();
 
             // Garantiza que el capítulo inicial esté en la lista de capítulos:
@@ -55,7 +55,7 @@ namespace DTOs.Mappers
                 // Funciona porque EF asigna la misma instancia de entidad a ambas navegaciones
                 // (relationship fixup) cuando el inicial está en la lista por Id.
                 Capitulos = historia.Capitulos
-                    .Select(c => ReferenceEquals(c, historia.CapituloInicial) ? inicial : CapituloMapper.ToDTO(c))
+                    .Select(c => (c == historia.CapituloInicial || (c.Id != 0 && historia.idCapituloInicial.HasValue && c.Id == historia.idCapituloInicial.Value)) ? inicial : CapituloMapper.ToDTO(c))
                     .ToList(),
                 Estado = (int) historia.Estado
             };

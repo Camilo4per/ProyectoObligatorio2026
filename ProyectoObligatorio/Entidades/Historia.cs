@@ -1,4 +1,4 @@
-﻿using Dominio.Excepciones;
+using Dominio.Excepciones;
 using Dominio.InterfacesDelDominio;
 using Dominio.ValueObjects.Historia;
 using System.ComponentModel.DataAnnotations;
@@ -35,6 +35,60 @@ namespace Dominio.Entidades
             ValidarCategorias();
             ValidarCapituloInicial();
             ValidarCapitulos();
+
+            if (Estado == EstadoHistoria.Publicada)
+            {
+                ValidarPublicacion();
+            }
+        }
+
+        public void ValidarPublicacion()
+        {
+            if (Capitulos == null || Capitulos.Count == 0)
+                throw new HistoriaException("La historia debe tener al menos un capítulo para ser publicada");
+
+            bool tieneFinal = Capitulos.Any(c => c is Final);
+            if (!tieneFinal)
+                throw new HistoriaException("La historia debe tener al menos un capítulo final para poder ser publicada");
+
+            foreach (Capitulo cap in Capitulos)
+            {
+                if (cap is Intermedio inter)
+                {
+                    if (inter.Opciones == null || inter.Opciones.Count == 0)
+                    {
+                        throw new HistoriaException(
+                            $"El capítulo '{inter.Titulo?.Valor ?? inter.Id.ToString()}' debe tener al menos una opción para poder publicar la historia.");
+                    }
+
+                    foreach (Opcion op in inter.Opciones)
+                    {
+                        int? destinoId = op.idCapDestino ?? op.CapDestino?.Id;
+                        Capitulo? destino = Capitulos.FirstOrDefault(c =>
+                            (destinoId != null && destinoId != 0 && c.Id == destinoId) ||
+                            (op.CapDestino != null && c == op.CapDestino)
+                        );
+
+                        if (destino == null)
+                        {
+                            throw new HistoriaException(
+                                $"La opción '{op.Texto}' del capítulo '{inter.Titulo?.Valor ?? inter.Id.ToString()}' no conduce a un capítulo existente en la historia.");
+                        }
+
+                        if (destino == inter || (inter.Id != 0 && destino.Id != 0 && destino.Id == inter.Id))
+                        {
+                            throw new HistoriaException(
+                                $"La opción '{op.Texto}' del capítulo '{inter.Titulo?.Valor ?? inter.Id.ToString()}' debe conducir a otro capítulo.");
+                        }
+
+                        if (!(destino is Intermedio || destino is Final))
+                        {
+                            throw new HistoriaException(
+                                $"La opción '{op.Texto}' del capítulo '{inter.Titulo?.Valor ?? inter.Id.ToString()}' debe conducir a un capítulo intermedio o final.");
+                        }
+                    }
+                }
+            }
         }
 
         public void ValidarCategorias()

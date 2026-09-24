@@ -29,6 +29,35 @@
         </select>
     </div>
 
+    <h4 class="mt-3">Capítulo inicial</h4>
+    <input type="hidden" asp-for="CapituloInicial.Id" />
+    <input type="hidden" asp-for="CapituloInicial.idHistoria" />
+    @if (Model.Capitulos != null && Model.Capitulos.Count > 1)
+    {
+        <div class="alert alert-info">
+            El capítulo inicial no se puede modificar porque la historia ya posee otros capítulos agregados.
+        </div>
+        <div class="form-group">
+            <label asp-for="CapituloInicial.Titulo" class="control-label">Título del capítulo inicial</label>
+            <input asp-for="CapituloInicial.Titulo" class="form-control" readonly />
+        </div>
+        <div class="form-group">
+            <label asp-for="CapituloInicial.Texto" class="control-label">Texto del capítulo inicial</label>
+            <textarea asp-for="CapituloInicial.Texto" class="form-control" readonly></textarea>
+        </div>
+    }
+    else
+    {
+        <div class="form-group">
+            <label asp-for="CapituloInicial.Titulo" class="control-label">Título del capítulo inicial</label>
+            <input asp-for="CapituloInicial.Titulo" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="CapituloInicial.Texto" class="control-label">Texto del capítulo inicial</label>
+            <textarea asp-for="CapituloInicial.Texto" class="form-control"></textarea>
+        </div>
+    }
+
     <div class="form-group mt-2">
         <input type="submit" value="Guardar" class="btn btn-primary" />
         <a asp-action="Index" class="btn btn-secondary">Volver</a>

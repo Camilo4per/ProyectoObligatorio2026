@@ -21,9 +21,9 @@ namespace Dominio.Entidades
         
         public EstadoHistoria Estado { get; set; }
 
-        public TituloHistoria Titulo { get; init; }
+        public TituloHistoria Titulo { get; set; }
         
-        public Sinopsis Sinopsis { get; init; }
+        public Sinopsis Sinopsis { get; set; }
 
         #endregion
 

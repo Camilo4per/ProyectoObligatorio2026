@@ -20,7 +20,26 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
             nuevo.Validar();
             ExisteHistoria(nuevo);
             AdjuntarCategorias(nuevo);
-            _context.Historias.Add(nuevo);
+
+            // Historia.Id y Capitulo.Id los genera la BD, y las FKs idCapituloInicial
+            // y idHistoria se apuntan entre sí: en un solo SaveChanges no hay orden de
+            // INSERT posible (dependencia circular). Guardo la historia con sus capitulos
+            // sin el FK al inicial, y en un segundo SaveChanges seteo idCapituloInicial
+            // con el Id ya generado.
+            Capitulo inicial = nuevo.CapituloInicial;
+            nuevo.CapituloInicial = null!;
+
+            try
+            {
+                _context.Historias.Add(nuevo);
+                _context.SaveChanges();
+            }
+            finally
+            {
+                nuevo.CapituloInicial = inicial;
+            }
+
+            nuevo.idCapituloInicial = inicial.Id;
             _context.SaveChanges();
         }
 
@@ -42,8 +61,27 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
         {
             if (nuevo == null) { throw new HistoriaException("La historia esta vacia"); }
             nuevo.Validar();
-            AdjuntarCategorias(nuevo);
-            _context.Historias.Update(nuevo);
+
+            // Patron EF estandar: cargo la version trackeada y muto sus valores; EF calcula
+            // los cambios (incluida la tabla intermedia CategoriaHistoria) sin re-adjuntar
+            // un grafo que pueda chocar con el tracking o duplicar joins.
+            Historia existente = _context.Historias
+                .Include(h => h.Capitulos)
+                .Include(h => h.Categorias)
+                .FirstOrDefault(h => h.Id == nuevo.Id)
+                ?? throw new HistoriaException("Historia inexistente");
+
+            existente.Titulo = nuevo.Titulo;
+            existente.Sinopsis = nuevo.Sinopsis;
+            existente.Estado = nuevo.Estado;
+
+            existente.Categorias.Clear();
+            foreach (Categoria categoria in nuevo.Categorias)
+            {
+                existente.Categorias.Add(_context.Categorias.Find(categoria.Id)
+                    ?? throw new CategoriaException("Categoria inexistente"));
+            }
+
             _context.SaveChanges();
         }
 

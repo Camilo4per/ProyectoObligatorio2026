@@ -59,7 +59,11 @@ namespace DTOs.Mappers
                 Titulo = intermedio.Titulo.Valor,
                 Texto = intermedio.Texto.Valor,
                 idHistoria = intermedio.idHistoria,
-                Opciones = intermedio.Opciones?.Select(OpcionMapper.ToDTO).ToList()
+                // Intermedio sin opciones se serializa como null: en la inferencia de
+                // FromDTO, null -> Intermedio, lista vacia -> Final, con items -> Intermedio.
+                Opciones = intermedio.Opciones is { Count: > 0 }
+                    ? intermedio.Opciones.Select(OpcionMapper.ToDTO).ToList()
+                    : null
             };
         }
     }

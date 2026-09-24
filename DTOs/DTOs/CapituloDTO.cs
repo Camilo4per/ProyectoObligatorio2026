@@ -12,6 +12,6 @@ namespace DTOs.DTOs
         public int CantLlegaron { get; set; }
 
         // IntermedioDTO
-        public List<OpcionDTO> Opciones { get; set; }
+        public List<OpcionDTO>? Opciones { get; set; }
     }
 }

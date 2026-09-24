@@ -56,9 +56,9 @@ namespace Presentacion.Controllers
                 HttpContext.Session.SetString("NombreUsuario", dto.NombreUsuario);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                ViewBag.Error = "Email o contraseña incorrectos";
+                ViewBag.Error = ex.Message;
                 return View();
             }
         }
@@ -84,9 +84,9 @@ namespace Presentacion.Controllers
                 registrarUsuario.Ejecutar(dto);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                ViewBag.Error = "Error al registrar el usuario";
+                ViewBag.Error = ex.Message;
                 return View();
             }
         }
@@ -112,8 +112,9 @@ namespace Presentacion.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
+                ViewBag.Error = ex.Message;
                 return View();
             }
         }
@@ -133,8 +134,9 @@ namespace Presentacion.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
+                ViewBag.Error = ex.Message;
                 return View();
             }
         }

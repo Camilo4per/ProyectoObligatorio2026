@@ -1,6 +1,7 @@
 ﻿using Dominio.Excepciones;
 using Dominio.InterfacesDelDominio;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Dominio.ValueObjects.Usuario
 {

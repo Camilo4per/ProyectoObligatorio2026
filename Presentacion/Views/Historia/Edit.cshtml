@@ -1,0 +1,41 @@
+@model DTOs.DTOs.HistoriaDTO
+
+@{
+    ViewData["Title"] = "Modificar Historia";
+}
+
+<h1>Modificar Historia</h1>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Titulo" class="control-label"></label>
+        <input asp-for="Titulo" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Sinopsis" class="control-label"></label>
+        <textarea asp-for="Sinopsis" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label asp-for="CategoriaIds" class="control-label">Categorías</label>
+        <select asp-for="CategoriaIds" class="form-control" asp-items="ViewBag.Categorias" multiple></select>
+    </div>
+    <div class="form-group">
+        <label asp-for="Estado" class="control-label">Estado</label>
+        <select asp-for="Estado" class="form-control">
+            <option value="0">Borrador</option>
+            <option value="1">Publicada</option>
+        </select>
+    </div>
+
+    <div class="form-group mt-2">
+        <input type="submit" value="Guardar" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+    </div>
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}

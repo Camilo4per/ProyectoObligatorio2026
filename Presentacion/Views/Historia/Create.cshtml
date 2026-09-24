@@ -1,0 +1,42 @@
+@model DTOs.DTOs.HistoriaDTO
+
+@{
+    ViewData["Title"] = "Nueva Historia";
+}
+
+<h1>Nueva Historia</h1>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Titulo" class="control-label"></label>
+        <input asp-for="Titulo" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Sinopsis" class="control-label"></label>
+        <textarea asp-for="Sinopsis" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label asp-for="CategoriaIds" class="control-label">Categorías</label>
+        <select asp-for="CategoriaIds" class="form-control" asp-items="ViewBag.Categorias" multiple></select>
+    </div>
+
+    <h4>Capítulo inicial</h4>
+    <div class="form-group">
+        <label asp-for="CapituloInicial.Titulo" class="control-label">Título del capítulo</label>
+        <input asp-for="CapituloInicial.Titulo" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="CapituloInicial.Texto" class="control-label">Texto del capítulo</label>
+        <textarea asp-for="CapituloInicial.Texto" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group mt-2">
+        <input type="submit" value="Crear" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+    </div>
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}

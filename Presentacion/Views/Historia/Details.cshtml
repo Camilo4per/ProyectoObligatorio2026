@@ -1,0 +1,32 @@
+@model DTOs.DTOs.HistoriaDTO
+
+@{
+    ViewData["Title"] = "Detalles de Historia";
+}
+
+<h1>Detalles de Historia</h1>
+
+<dl class="row">
+    <dt class="col-sm-2">Id</dt>
+    <dd class="col-sm-10">@Model.Id</dd>
+
+    <dt class="col-sm-2">Nombre</dt>
+    <dd class="col-sm-10">@Model.Titulo</dd>
+
+    <dt class="col-sm-2">Sinopsis</dt>
+    <dd class="col-sm-10">@Model.Sinopsis</dd>
+
+    <dt class="col-sm-2">Estado</dt>
+    <dd class="col-sm-10">@(Model.Estado == 0 ? "Borrador" : "Publicada")</dd>
+
+    <dt class="col-sm-2">Categorías</dt>
+    <dd class="col-sm-10">@string.Join(", ", Model.Categorias.Select(c => c.Nombre))</dd>
+
+    <dt class="col-sm-2">Capítulo inicial</dt>
+    <dd class="col-sm-10">
+        <strong>@Model.CapituloInicial.Titulo</strong><br />
+        @Model.CapituloInicial.Texto
+    </dd>
+</dl>
+
+<a asp-action="Index" class="btn btn-secondary">Volver</a>

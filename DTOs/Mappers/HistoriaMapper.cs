@@ -8,15 +8,21 @@ namespace DTOs.Mappers
     {
         public static Historia FromDTO(HistoriaDTO dto)
         {
+            Capitulo inicial = CapituloMapper.FromDTO(dto.CapituloInicial);
+
+            List<Capitulo> capitulos = dto.Capitulos.Select(CapituloMapper.FromDTO).ToList();
+
+            if (!capitulos.Contains(inicial))
+                capitulos.Insert(0, inicial);
+
             return new Historia
             {
                 Id = dto.Id,
                 Titulo = new TituloHistoria(dto.Titulo),
                 Sinopsis = new Sinopsis(dto.Sinopsis),
                 Categorias = dto.Categorias.Select(CategoriaMapper.FromDTO).ToList(),
-                CapituloInicial = CapituloMapper.FromDTO(dto.CapituloInicial),
-                idCapituloInicial = dto.CapituloInicial.Id,
-                Capitulos = dto.Capitulos.Select(CapituloMapper.FromDTO).ToList(),
+                CapituloInicial = inicial,
+                Capitulos = capitulos,
                 Estado = (EstadoHistoria) dto.Estado
             };
         }

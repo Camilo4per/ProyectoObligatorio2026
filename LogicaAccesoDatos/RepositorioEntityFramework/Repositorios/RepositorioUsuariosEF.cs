@@ -4,6 +4,7 @@ using System.Text;
 using Dominio.Entidades;
 using Dominio.Excepciones;
 using Dominio.InterfaceDeRepositorio;
+using Dominio.ValueObjects.Usuario;
 
 namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 {
@@ -14,14 +15,14 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public RepositorioUsuariosEF(DominioContext context)
         {
-            _context = new DominioContext();
+            _context = context;
         }
 
         public void Add(Usuario nuevo)
         {
             if (nuevo == null) { throw new UsuarioException("El usuario esta vacio"); }
-            ExisteUsuario(nuevo);
             nuevo.Validar();
+            ExisteUsuario(nuevo);
             _context.Usuarios.Add(nuevo);
             _context.SaveChanges();
         }
@@ -30,10 +31,23 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
         {
             if (_context.Usuarios.Any(u => u.NombreUsuario == aVerificar.NombreUsuario))
             {
-                throw new UsuarioException("El usuario ya existe.");
+                throw new UsuarioException("Un usuario con el mismo nombre ya existe.");
             }
         }
 
+        public void Remove(int id)
+        {
+            _context.Usuarios.Remove(new Usuario { Id = id });
+            _context.SaveChanges();
+        }
+
+        public void Update(Usuario nuevo)
+        {
+            if (nuevo == null) { throw new UsuarioException("El usuario esta vacio"); }
+            nuevo.Validar();
+            _context.Usuarios.Update(nuevo);
+            _context.SaveChanges();
+        }
         public List<Usuario> FindAll()
         {
             return _context.Usuarios.ToList();
@@ -41,17 +55,10 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public Usuario FindById(int id)
         {
-            return _context.Usuarios.Where(u => u.Id == id).FirstOrDefault();
-        }
-
-        public void Remove(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(Usuario nuevo)
-        {
-            throw new NotImplementedException();
+            // Evalúa el resultado de la izquierda. Si es distinto de null, lo retorna directamente.
+            // Si no es null ?? Si es null
+            return _context.Usuarios.Where(u => u.Id == id).FirstOrDefault()
+                ?? throw new UsuarioException("Usuario inexistente");
         }
     }
 }

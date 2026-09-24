@@ -1,0 +1,22 @@
+@model DTOs.DTOs.HistoriaDTO
+
+@{
+    ViewData["Title"] = "Eliminar Historia";
+}
+
+<h1>Eliminar Historia</h1>
+
+<p>¿Está seguro que desea eliminar la historia <strong>@Model.Titulo</strong> (Id: @Model.Id)?</p>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <div class="form-group mt-2">
+        <input type="submit" value="Eliminar" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}

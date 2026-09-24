@@ -1,0 +1,42 @@
+@model IEnumerable<DTOs.DTOs.HistoriaDTO>
+
+@{
+    ViewData["Title"] = "Historias";
+}
+
+<h1>Historias</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Nueva Historia</a>
+</p>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DTOs.DTOs.HistoriaDTO Historia in Model)
+            {
+                <tr>
+                    <td>@Historia.Id</td>
+                    <td>@Historia.Titulo</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@Historia.Id" class="btn btn-sm btn-info">Detalles</a>
+                        <a asp-action="Edit" asp-route-id="@Historia.Id" class="btn btn-sm btn-warning">Modificar</a>
+                        <a asp-action="Delete" asp-route-id="@Historia.Id" class="btn btn-sm btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No hay historias registradas.</p>
+}

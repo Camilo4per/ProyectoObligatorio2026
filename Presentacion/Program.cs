@@ -1,9 +1,12 @@
 using Dominio.InterfaceDeRepositorio;
-using LogicaAccesoDatos.RepositorioEnMemoria;
-using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
-using Microsoft.EntityFrameworkCore;
-using LogicaAplicacion.CasosDeUso.Usuarios;
+using LogicaAccesoDatos.RepositorioEntityFramework;
 using LogicaAccesoDatos.RepositorioEntityFramework.Repositorios;
+using LogicaAplicacion.CasosDeUso.Usuarios;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
+using LogicaAplicacion.CasosDeUso.Historias;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
+using LogicaAplicacion.CasosDeUso.Categorias;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Categorias;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,15 +14,27 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
 
+//REGISTRAMOS EL CONTEXTO QUE USAN LOS REPOSITORIOS EF
+builder.Services.AddDbContext<DominioContext>();
+
 //INICIALIZAMOS LOS REPOSITORIOS
-builder.Services.AddScoped<IRepositorioCategorias, RepositorioCategorias>();
-builder.Services.AddScoped<IRepositorioFinales, RepositorioFinales>();
-builder.Services.AddScoped<IRepositorioHistorias, RepositorioHistorias>();
-builder.Services.AddScoped<IRepositorioIntermedios, RepositorioIntermedios>();
-builder.Services.AddScoped<IRepositorioLecturas, RepositorioLecturas>();
-builder.Services.AddScoped<IRepositorioUsuarios, RepositorioUsuarios>();
+builder.Services.AddScoped<IRepositorioCategorias, RepositorioCategoriasEF>();
+builder.Services.AddScoped<IRepositorioFinales, RepositorioFinalesEF>();
+builder.Services.AddScoped<IRepositorioHistorias, RepositorioHistoriasEF>();
+builder.Services.AddScoped<IRepositorioIntermedios, RepositorioIntermediosEF>();
+builder.Services.AddScoped<IRepositorioLecturas, RepositorioLecturasEF>();
+builder.Services.AddScoped<IRepositorioUsuarios, RepositorioUsuariosEF>();
 
 //INICIALIZAMOS LOS CASOS DE USO
+
+builder.Services.AddScoped<IAgregarHistoria, AgregarHistoriaCU>();
+builder.Services.AddScoped<IEncontrarTodasHistorias, EncontrarTodasLasHistoriasCU>();
+builder.Services.AddScoped<IObtenerHistoriaPorId, ObtenerHistoriaPorIdCU>();
+builder.Services.AddScoped<IModificarHistoria, ModificarHistoriaCU>();
+builder.Services.AddScoped<IEliminarHistoria, EliminarHistoriaCU>();
+
+builder.Services.AddScoped<IEncontrarTodasCategorias, EncontrarTodasLasCategoriasCU>();
+
 builder.Services.AddScoped<IRegistrarUsuario, RegistrarUsuarioCU>();
 builder.Services.AddScoped<IEncontrarTodosUsuarios, EncontrarTodosUsuariosCU>();
 builder.Services.AddScoped<IObtenerUsuarioPorId, ObtenerUsuarioPorIdCU>();

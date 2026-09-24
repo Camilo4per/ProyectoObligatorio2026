@@ -17,6 +17,11 @@
     <ProjectReference Include="..\DTOs\DTOs.csproj" />
     <ProjectReference Include="..\LogicaAccesoDatos\LogicaAccesoDatos.csproj" />
     <ProjectReference Include="..\LogicaAplicacion\LogicaAplicacion.csproj" />
+    <ProjectReference Include="..\ProyectoObligatorio\Dominio.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Historia\" />
   </ItemGroup>
 
 </Project>

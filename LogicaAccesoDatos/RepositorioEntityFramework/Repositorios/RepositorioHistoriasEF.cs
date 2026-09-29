@@ -116,6 +116,7 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
                 .Include(h => h.CapituloInicial)
                 .ToList();
 
+            // Cargar los intermedios y sus opciones para todas las historias encontradas.
             List<int> ids = historias.Select(h => h.Id).ToList();
             if (ids.Count > 0)
             {

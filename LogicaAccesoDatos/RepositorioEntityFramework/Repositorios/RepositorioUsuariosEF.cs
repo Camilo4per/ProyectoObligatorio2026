@@ -37,7 +37,7 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public void Remove(int id)
         {
-            _context.Usuarios.Remove(new Usuario { Id = id });
+            _context.Usuarios.Remove(FindById(id));
             _context.SaveChanges();
         }
 
@@ -53,6 +53,7 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
             return _context.Usuarios.ToList();
         }
 
+        // Sinplificar ?? a if
         public Usuario FindById(int id)
         {
             // Evalúa el resultado de la izquierda. Si es distinto de null, lo retorna directamente.

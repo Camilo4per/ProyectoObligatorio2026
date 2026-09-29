@@ -32,7 +32,7 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public void Remove(int id)
         {
-            _context.Categorias.Remove(new Categoria { Id = id });
+            _context.Categorias.Remove(FindById(id));
             _context.SaveChanges();
         }
 

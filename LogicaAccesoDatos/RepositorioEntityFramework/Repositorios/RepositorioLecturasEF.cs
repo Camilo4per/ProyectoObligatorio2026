@@ -43,7 +43,7 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public void Remove(int id)
         {
-            _context.Lecturas.Remove(new Lectura { Id = id });
+            _context.Lecturas.Remove(FindById(id));
             _context.SaveChanges();
         }
 

@@ -33,7 +33,9 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public void Remove(int id)
         {
-            _context.Capitulos.Where(c => c.Id == id).ExecuteDelete();
+            _context.Capitulos
+                .Where(c => c.Id == id)
+                .ExecuteDelete();
             _context.SaveChanges();
         }
 
@@ -52,7 +54,9 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public Intermedio FindById(int id)
         {
-            return _context.Intermedios.Where(i => i.Id == id).FirstOrDefault()
+            return _context.Intermedios
+                .Where(i => i.Id == id)
+                .FirstOrDefault()
                 ?? throw new IntermedioException("Capitulo intermedio inexistente");
         }
     }

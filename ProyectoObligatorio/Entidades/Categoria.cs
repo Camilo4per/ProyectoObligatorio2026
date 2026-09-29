@@ -17,6 +17,7 @@ namespace Dominio.Entidades
         #endregion
         public void Validar()
         {
+            if (Nombre == null) throw new CategoriaException("El nombre de la categoría no puede ser nulo.");
             Nombre.Validar();
         }
     }

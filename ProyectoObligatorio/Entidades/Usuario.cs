@@ -25,9 +25,12 @@ namespace Dominio.Entidades
         #region Validaciones
         public void Validar()
         {
-            Password.Validar();
-            Email.Validar();
+            if (NombreUsuario == null) throw new UsuarioException("El nombre de usuario no puede ser nulo");
             NombreCompleto.Validar();
+            if (Password == null) throw new UsuarioException("La contraseña no puede ser nula");
+            Password.Validar();
+            if(Email == null) throw new UsuarioException("El email no puede ser nulo");
+            Email.Validar();
         }
 
         public void ValidarNombreUsuario()

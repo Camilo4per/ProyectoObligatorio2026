@@ -12,6 +12,7 @@ namespace Dominio.Entidades
         public override void Validar()
         {
             base.Validar();
+            if (CantLlegaron == null) throw new FinalException("El valor de CantLlegaron no puede ser nulo.");
             CantLlegaron.Validar();
         }
     }

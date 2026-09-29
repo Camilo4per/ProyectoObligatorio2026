@@ -22,7 +22,9 @@ namespace Dominio.Entidades
         #region Validaciones
         public void Validar()
         {
+            if (Usuario == null) throw new LecturaException("El usuario no puede ser nulo");
             Usuario.Validar();
+            if (Historia == null) throw new LecturaException("La historia no puede ser nula");
             Historia.Validar();
             ValidarFechaInicio();
             if (FechaFin != null) ValidarFechaFin();

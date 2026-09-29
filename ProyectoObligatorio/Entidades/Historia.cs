@@ -36,6 +36,7 @@ namespace Dominio.Entidades
             ValidarCapituloInicial();
             ValidarCapitulos();
 
+            // Cuando la historia está en estado Publicada, se valida que cumpla con los requisitos para ser publicada.
             if (Estado == EstadoHistoria.Publicada)
             {
                 ValidarPublicacion();
@@ -47,10 +48,12 @@ namespace Dominio.Entidades
             if (Capitulos == null || Capitulos.Count == 0)
                 throw new HistoriaException("La historia debe tener al menos un capítulo para ser publicada");
 
+            // Valido que haya al menos un capítulo final.
             bool tieneFinal = Capitulos.Any(c => c is Final);
             if (!tieneFinal)
                 throw new HistoriaException("La historia debe tener al menos un capítulo final para poder ser publicada");
 
+            // Valido que todos los capítulos intermedios tengan al menos una opción y que todas las opciones conduzcan a un capítulo existente en la historia.
             foreach (Capitulo cap in Capitulos)
             {
                 if (cap is Intermedio inter)
@@ -63,12 +66,15 @@ namespace Dominio.Entidades
 
                     foreach (Opcion op in inter.Opciones)
                     {
-                        int? destinoId = op.idCapDestino ?? op.CapDestino?.Id;
-                        Capitulo? destino = Capitulos.FirstOrDefault(c =>
+                        int? destinoId = op.idCapDestino;
+                        if (destinoId == null) destinoId = op.CapDestino?.Id;
+
+                        Capitulo? destino = Capitulos
+                            .FirstOrDefault(c =>
                             (destinoId != null && destinoId != 0 && c.Id == destinoId) ||
                             (op.CapDestino != null && c == op.CapDestino)
                         );
-
+                        
                         if (destino == null)
                         {
                             throw new HistoriaException(
@@ -102,6 +108,8 @@ namespace Dominio.Entidades
 
         public void ValidarCapituloInicial()
         {
+            if (CapituloInicial == null)
+                throw new HistoriaException("El capítulo inicial de una historia no puede ser nulo");
             CapituloInicial.Validar();
 
             if (CapituloInicial is Final)

@@ -4,4 +4,5 @@
   <Project Path="LogicaAplicacion/LogicaAplicacion.csproj" Id="22add05b-08a6-499f-bb0b-6caf4a1e23bf" />
   <Project Path="Presentacion/Presentacion.csproj" Id="5c412805-22ab-4054-88fa-243b7f2c1fa9" />
   <Project Path="ProyectoObligatorio/Dominio.csproj" />
+  <Project Path="WebApi/ApiWeb.csproj" Id="d626c226-46a0-4ebb-9a3f-6ea6fa3e678d" />
 </Solution>

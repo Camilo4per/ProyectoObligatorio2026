@@ -30,17 +30,17 @@ namespace Presentacion.Controllers
             return View();
         }
 
-        // GET: UsuarioController/Login
-        public ActionResult Login()
-        {
-            return View();
-        }
-
         // GET: UsuarioController/Logout
         public ActionResult Logout()
         {
             HttpContext.Session.Clear();
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: UsuarioController/Login
+        public ActionResult Login()
+        {
+            return View();
         }
 
         // POST: UsuarioController/Login

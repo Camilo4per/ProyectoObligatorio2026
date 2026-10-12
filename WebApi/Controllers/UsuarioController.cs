@@ -3,7 +3,6 @@ using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
 using DTOs.DTOs;
 using Dominio.Excepciones;
 using System.Net;
-using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

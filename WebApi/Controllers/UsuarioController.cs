@@ -14,16 +14,16 @@ namespace ApiWeb.Controllers
     {
         private IEncontrarTodosUsuarios _encontrarTodosUsuariosCu;
         private IObtenerUsuarioPorId _obtenerUsuarioPorIdCu;
-        private IRegistrarUsuario _registrarUsuarioCu;
+        private IAgregarUsuario _agregarUsuarioCu;
         public UsuarioController(
             IEncontrarTodosUsuarios encontrarTodosUsuarios, 
             IObtenerUsuarioPorId obtenerUsuarioPorId,
-            IRegistrarUsuario registrarUsuario
+            IAgregarUsuario agregarUsuario
             )
         {
             _encontrarTodosUsuariosCu = encontrarTodosUsuarios;
             _obtenerUsuarioPorIdCu = obtenerUsuarioPorId;
-            _registrarUsuarioCu = registrarUsuario;
+            _agregarUsuarioCu = agregarUsuario;
         }
 
         // GET: api/<UsuarioController>
@@ -72,7 +72,7 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                _registrarUsuarioCu.Ejecutar(dto);
+                _agregarUsuarioCu.Ejecutar(dto);
                 return Created("api/Usuario", dto);
             }
             catch (UsuarioException uex)

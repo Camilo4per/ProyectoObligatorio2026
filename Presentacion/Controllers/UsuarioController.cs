@@ -9,16 +9,16 @@ namespace Presentacion.Controllers
     public class UsuarioController : Controller
     {
         private IEncontrarTodosUsuarios encontrarTodosUsuarios;
-        private IRegistrarUsuario registrarUsuario;
+        private IAgregarUsuario agregarUsuario;
         private IObtenerUsuarioPorId obtenerUsuarioPorId;
         private ILoginUsuario loginUsuario;
         public UsuarioController(
-            IRegistrarUsuario registrarUsuarioCu,
+            IAgregarUsuario agregarUsuarioCu,
             IObtenerUsuarioPorId obtenerUsuarioPorIdCu,
             IEncontrarTodosUsuarios encontrarTodosUsuariosCu,
             ILoginUsuario loginUsuarioCu)
         {
-            registrarUsuario = registrarUsuarioCu;
+            agregarUsuario = agregarUsuarioCu;
             obtenerUsuarioPorId = obtenerUsuarioPorIdCu;
             encontrarTodosUsuarios = encontrarTodosUsuariosCu;
             loginUsuario = loginUsuarioCu;
@@ -81,7 +81,7 @@ namespace Presentacion.Controllers
         {
             try
             {
-                registrarUsuario.Ejecutar(dto);
+                agregarUsuario.Ejecutar(dto);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

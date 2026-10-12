@@ -6,10 +6,10 @@ using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
 
 namespace LogicaAplicacion.CasosDeUso.Usuarios
 {
-    public class RegistrarUsuarioCU : IRegistrarUsuario
+    public class AgregarUsuarioCU : IAgregarUsuario
     {
         private IRepositorioUsuarios repositorio;
-        public RegistrarUsuarioCU(IRepositorioUsuarios repo)
+        public AgregarUsuarioCU(IRepositorioUsuarios repo)
         {
             repositorio = repo;
         }

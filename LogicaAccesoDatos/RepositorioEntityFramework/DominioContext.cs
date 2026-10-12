@@ -18,11 +18,15 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework
         public DbSet<Lectura> Lecturas { get; set; }
         #endregion
 
+        /*
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Configura la cadena de conexión a la base de datos
             optionsBuilder.UseSqlServer(@"SERVER=(localdb)\MsSqlLocalDb;DATABASE=ObligatorioDB;Integrated Security=true;");
         }
+        */
+
+        public DominioContext(DbContextOptions dbContextOptions) : base(dbContextOptions) { }
 
         // Configura las FKs para las opciones de los capítulos intermedios
         protected override void OnModelCreating(ModelBuilder modelBuilder)

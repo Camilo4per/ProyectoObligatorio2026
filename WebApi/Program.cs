@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Dominio.InterfaceDeRepositorio;
 using LogicaAccesoDatos.RepositorioEntityFramework;
 using LogicaAccesoDatos.RepositorioEntityFramework.Repositorios;
@@ -17,8 +18,10 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 
-//REGISTRAMOS EL CONTEXTO QUE USAN LOS REPOSITORIOS EF
-builder.Services.AddDbContext<DominioContext>();
+//REGISTRAMOS EL CONTEXTO DE LA BASE DE DATOS
+builder.Services.AddDbContext<DominioContext>(
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("ObligatorioDB"))
+    );
 
 //INICIALIZAMOS LOS REPOSITORIOS
 builder.Services.AddScoped<IRepositorioCategorias, RepositorioCategoriasEF>();

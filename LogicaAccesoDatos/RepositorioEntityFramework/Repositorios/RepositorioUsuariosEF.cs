@@ -20,11 +20,19 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public void Add(Usuario nuevo)
         {
-            if (nuevo == null) { throw new UsuarioException("El usuario esta vacio"); }
             nuevo.Validar();
             ExisteUsuario(nuevo);
-            _context.Usuarios.Add(nuevo);
-            _context.SaveChanges();
+
+            try 
+            {
+                _context.Usuarios.Add(nuevo);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new UsuarioException($"Error al agregar el usuario en la base de datos");
+            }
+            
         }
 
         public void ExisteUsuario(Usuario aVerificar)

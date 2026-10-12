@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
 using DTOs.DTOs;
+using Dominio.Excepciones;
+using System.Net;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,35 +13,77 @@ namespace ApiWeb.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
-        private IEncontrarTodosUsuarios _encontrarTodosUsuarios;
-        private IObtenerUsuarioPorId _obtenerUsuarioPorId;
+        private IEncontrarTodosUsuarios _encontrarTodosUsuariosCu;
+        private IObtenerUsuarioPorId _obtenerUsuarioPorIdCu;
+        private IRegistrarUsuario _registrarUsuarioCu;
         public UsuarioController(
             IEncontrarTodosUsuarios encontrarTodosUsuarios, 
-            IObtenerUsuarioPorId obtenerUsuarioPorId
+            IObtenerUsuarioPorId obtenerUsuarioPorId,
+            IRegistrarUsuario registrarUsuario
             )
         {
-            _encontrarTodosUsuarios = encontrarTodosUsuarios;
-            _obtenerUsuarioPorId = obtenerUsuarioPorId;
+            _encontrarTodosUsuariosCu = encontrarTodosUsuarios;
+            _obtenerUsuarioPorIdCu = obtenerUsuarioPorId;
+            _registrarUsuarioCu = registrarUsuario;
         }
 
         // GET: api/<UsuarioController>
         [HttpGet]
-        public IEnumerable<UsuarioDTO> Get()
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public ActionResult<IEnumerable<UsuarioDTO>> Get()
         {
-            return _encontrarTodosUsuarios.Ejecutar();
+            try
+            {
+                return Ok(_encontrarTodosUsuariosCu.Ejecutar());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         // GET api/<UsuarioController>/5
         [HttpGet("{id}")]
-        public UsuarioDTO Get(int id)
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public ActionResult<IEnumerable<UsuarioDTO>> Get(int id)
         {
-            return _obtenerUsuarioPorId.Ejecutar(id);
+            try
+            {
+                return Ok(_obtenerUsuarioPorIdCu.Ejecutar(id));
+            }
+            catch (UsuarioException uex)
+            { 
+                return BadRequest(uex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         // POST api/<UsuarioController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public ActionResult Post([FromBody] UsuarioDTO dto)
         {
+            try
+            {
+                _registrarUsuarioCu.Ejecutar(dto);
+                return Created("api/Usuario", dto);
+            }
+            catch (UsuarioException uex)
+            {
+                return BadRequest(uex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         // PUT api/<UsuarioController>/5

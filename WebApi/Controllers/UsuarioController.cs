@@ -15,15 +15,18 @@ namespace ApiWeb.Controllers
         private IEncontrarTodosUsuarios _encontrarTodosUsuariosCu;
         private IObtenerUsuarioPorId _obtenerUsuarioPorIdCu;
         private IAgregarUsuario _agregarUsuarioCu;
+        private ILoginUsuario _loginUsuarioCu;
         public UsuarioController(
             IEncontrarTodosUsuarios encontrarTodosUsuarios, 
             IObtenerUsuarioPorId obtenerUsuarioPorId,
-            IAgregarUsuario agregarUsuario
+            IAgregarUsuario agregarUsuario,
+            ILoginUsuario loginUsuario
             )
         {
             _encontrarTodosUsuariosCu = encontrarTodosUsuarios;
             _obtenerUsuarioPorIdCu = obtenerUsuarioPorId;
             _agregarUsuarioCu = agregarUsuario;
+            _loginUsuarioCu = loginUsuario;
         }
 
         // GET: api/<UsuarioController>
@@ -44,8 +47,8 @@ namespace ApiWeb.Controllers
 
         // GET api/<UsuarioController>/5
         [HttpGet("{id}")]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public ActionResult<IEnumerable<UsuarioDTO>> Get(int id)
         {
@@ -63,6 +66,7 @@ namespace ApiWeb.Controllers
             }
         }
 
+        /*
         // POST api/<UsuarioController>
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
@@ -84,17 +88,29 @@ namespace ApiWeb.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        */
 
-        // PUT api/<UsuarioController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // POST api/<UsuarioController>/Login
+        [HttpPost("Login")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public ActionResult Login([FromBody] UsuarioDTO dto)
         {
+            try
+            {
+                return Ok(_loginUsuarioCu.Ejecutar(dto.NombreUsuario, dto.Password));
+            }
+            catch (UsuarioException uex)
+            {
+                return BadRequest(uex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
-        // DELETE api/<UsuarioController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+
     }
 }

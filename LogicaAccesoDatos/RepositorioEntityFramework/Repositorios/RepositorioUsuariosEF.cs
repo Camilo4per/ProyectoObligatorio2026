@@ -21,16 +21,16 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
         public void Add(Usuario nuevo)
         {
             nuevo.Validar();
-            ExisteUsuario(nuevo);
 
             try 
             {
+                ExisteUsuario(nuevo);
                 _context.Usuarios.Add(nuevo);
                 _context.SaveChanges();
             }
-            catch (Exception ex)
+            catch
             {
-                throw new UsuarioException($"Error al agregar el usuario en la base de datos");
+                throw new UsuarioException("Error al agregar el usuario en la base de datos");
             }
             
         }

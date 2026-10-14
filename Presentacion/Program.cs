@@ -8,6 +8,8 @@ using LogicaAplicacion.CasosDeUso.Historias;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
 using LogicaAplicacion.CasosDeUso.Categorias;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Categorias;
+using LogicaAplicacion.CasosDeUso.Lecturas;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Lecturas;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +42,10 @@ builder.Services.AddScoped<IAgregarUsuario, AgregarUsuarioCU>();
 builder.Services.AddScoped<IEncontrarTodosUsuarios, EncontrarTodosUsuariosCU>();
 builder.Services.AddScoped<IObtenerUsuarioPorId, ObtenerUsuarioPorIdCU>();
 builder.Services.AddScoped<ILoginUsuario, LoginUsuarioCU>();
+
+builder.Services.AddScoped<IAgregarLectura, AgregarLecturaCU>();
+builder.Services.AddScoped<IObtenerLecturasPorId, ObtenerLecturasPorIdCU>();
+builder.Services.AddScoped<IEncontrarTodasLasLecturas, EncontrarTodasLasLecturasCU>();
 
 var app = builder.Build();
 

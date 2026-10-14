@@ -4,9 +4,11 @@ using LogicaAccesoDatos.RepositorioEntityFramework;
 using LogicaAccesoDatos.RepositorioEntityFramework.Repositorios;
 using LogicaAplicacion.CasosDeUso.Categorias;
 using LogicaAplicacion.CasosDeUso.Historias;
+using LogicaAplicacion.CasosDeUso.Lecturas;
 using LogicaAplicacion.CasosDeUso.Usuarios;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Categorias;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Lecturas;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +47,10 @@ builder.Services.AddScoped<IAgregarUsuario, AgregarUsuarioCU>();
 builder.Services.AddScoped<IEncontrarTodosUsuarios, EncontrarTodosUsuariosCU>();
 builder.Services.AddScoped<IObtenerUsuarioPorId, ObtenerUsuarioPorIdCU>();
 builder.Services.AddScoped<ILoginUsuario, LoginUsuarioCU>();
+
+builder.Services.AddScoped<IAgregarLectura, AgregarLecturaCU>();
+builder.Services.AddScoped<IObtenerLecturasPorId, ObtenerLecturasPorIdCU>();
+builder.Services.AddScoped<IEncontrarTodasLasLecturas, EncontrarTodasLasLecturasCU>();
 
 var app = builder.Build();
 

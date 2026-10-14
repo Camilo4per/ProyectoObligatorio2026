@@ -2,6 +2,7 @@
 using DTOs.DTOs;
 using Dominio.Excepciones;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,36 +12,79 @@ namespace ApiWeb.Controllers
     [ApiController]
     public class LecturaController : ControllerBase
     {
+        private IEncontrarTodasLasLecturas _encontrarTodasLasLecturasCu;
+        private IObtenerLecturasPorId _obtenerLecturasPorIdCu;
+        private IAgregarLectura _agregarLecturaCu;
+        public LecturaController(
+            IEncontrarTodasLasLecturas encontrarTodasLasLecturas,
+            IObtenerLecturasPorId obtenerLecturasPorId,
+            IAgregarLectura agregarLectura
+            )
+        {
+            _encontrarTodasLasLecturasCu = encontrarTodasLasLecturas;
+            _obtenerLecturasPorIdCu = obtenerLecturasPorId;
+            _agregarLecturaCu = agregarLectura;
+        }
+
         // GET: api/<LecturaController>
         [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public ActionResult<IEnumerable<LecturaDTO>> Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                return Ok(_encontrarTodasLasLecturasCu.Ejecutar());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         // GET api/<LecturaController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public ActionResult<LecturaDTO> Get(int id)
         {
-            return "value";
+            try
+            {
+                return Ok(_obtenerLecturasPorIdCu.Ejecutar(id));
+            }
+            catch (LecturaException lex)
+            {
+                return BadRequest(lex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
+        /*
         // POST api/<LecturaController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public ActionResult Post([FromBody] LecturaDTO dto)
         {
+            try
+            {
+                _agregarLecturaCu.Ejecutar(dto);
+                return Created("api/Lectura", dto);
+            }
+            catch (LecturaException lex)
+            {
+                return BadRequest(lex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
-
-        // PUT api/<LecturaController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<LecturaController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        */
     }
 }

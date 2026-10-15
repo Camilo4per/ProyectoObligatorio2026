@@ -56,23 +56,5 @@ namespace ApiWeb.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
-        // POST api/<HistoriaController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<HistoriaController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<HistoriaController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

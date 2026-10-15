@@ -41,7 +41,7 @@ builder.Services.AddScoped<IEncontrarTodasCategorias, EncontrarTodasLasCategoria
 builder.Services.AddScoped<IAgregarUsuario, AgregarUsuarioCU>();
 builder.Services.AddScoped<IEncontrarTodosUsuarios, EncontrarTodosUsuariosCU>();
 builder.Services.AddScoped<IObtenerUsuarioPorId, ObtenerUsuarioPorIdCU>();
-builder.Services.AddScoped<ILoginUsuario, LoginUsuarioCU>();
+builder.Services.AddScoped<ILoginCU, LoginCU>();
 
 builder.Services.AddScoped<IAgregarLectura, AgregarLecturaCU>();
 builder.Services.AddScoped<IObtenerLecturasPorId, ObtenerLecturasPorIdCU>();

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
 using DTOs.DTOs;
 using Dominio.Excepciones;
@@ -14,19 +14,16 @@ namespace ApiWeb.Controllers
     {
         private IEncontrarTodosUsuarios _encontrarTodosUsuariosCu;
         private IObtenerUsuarioPorId _obtenerUsuarioPorIdCu;
-        private IAgregarUsuario _agregarUsuarioCu;
-        private ILoginUsuario _loginUsuarioCu;
+        private ILoginCU _loginCu;
         public UsuarioController(
             IEncontrarTodosUsuarios encontrarTodosUsuarios, 
             IObtenerUsuarioPorId obtenerUsuarioPorId,
-            IAgregarUsuario agregarUsuario,
-            ILoginUsuario loginUsuario
+            ILoginCU loginCu
             )
         {
             _encontrarTodosUsuariosCu = encontrarTodosUsuarios;
             _obtenerUsuarioPorIdCu = obtenerUsuarioPorId;
-            _agregarUsuarioCu = agregarUsuario;
-            _loginUsuarioCu = loginUsuario;
+            _loginCu = loginCu;
         }
 
         // GET: api/<UsuarioController>
@@ -66,30 +63,6 @@ namespace ApiWeb.Controllers
             }
         }
 
-        /*
-        // POST api/<UsuarioController>
-        [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.Created)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        public ActionResult Post([FromBody] UsuarioDTO dto)
-        {
-            try
-            {
-                _agregarUsuarioCu.Ejecutar(dto);
-                return Created("api/Usuario", dto);
-            }
-            catch (UsuarioException uex)
-            {
-                return BadRequest(uex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-        */
-
         // POST api/<UsuarioController>/Login
         [HttpPost("Login")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
@@ -99,7 +72,7 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                return Ok(_loginUsuarioCu.Ejecutar(dto.NombreUsuario, dto.Password));
+                return Ok(_loginCu.Ejecutar(dto.NombreUsuario, dto.Password));
             }
             catch (UsuarioException uex)
             {

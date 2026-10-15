@@ -1,4 +1,5 @@
 using Dominio.Entidades;
+using Dominio.Excepciones;
 using DTOs.DTOs;
 
 namespace DTOs.Mappers
@@ -18,9 +19,7 @@ namespace DTOs.Mappers
                 FechaInicio = dto.FechaInicio,
                 FechaFin = dto.FechaFin,
                 idFinal = dto.idFinal,
-                FinalAlcanzado = dto.FinalAlcanzado != null
-                    ? (Final) CapituloMapper.FromDTO(dto.FinalAlcanzado)
-                    : null
+                FinalAlcanzado = MapearFinalAlcanzado(dto.FinalAlcanzado)
             };
         }
 
@@ -40,6 +39,18 @@ namespace DTOs.Mappers
                     ? CapituloMapper.ToDTO(lectura.FinalAlcanzado)
                     : null
             };
+        }
+
+        // El final alcanzado en una lectura es siempre un Final: si el DTO indica otra
+        // cosa se avisa con la excepción de contexto, en vez de castear a ciegas.
+        private static Final? MapearFinalAlcanzado(CapituloDTO? dto)
+        {
+            if (dto == null) return null;
+
+            Capitulo capitulo = CapituloMapper.FromDTO(dto);
+            if (capitulo is Final final) return final;
+
+            throw new LecturaException("El capítulo alcanzado en una lectura debe ser de tipo final");
         }
     }
 }

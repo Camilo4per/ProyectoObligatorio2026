@@ -28,7 +28,12 @@ namespace Dominio.Entidades
             Historia.Validar();
             ValidarFechaInicio();
             if (FechaFin != null) ValidarFechaFin();
-            if (FinalAlcanzado != null) FinalAlcanzado?.Validar();
+            if (FinalAlcanzado != null)
+            {
+                if (FinalAlcanzado is not Final)
+                    throw new LecturaException("El capítulo alcanzado debe ser de tipo final");
+                FinalAlcanzado.Validar();
+            }
         }
 
         public void ValidarFechaInicio()

@@ -7,11 +7,11 @@ using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
 
 namespace LogicaAplicacion.CasosDeUso.Usuarios
 {
-    public class LoginUsuarioCU : ILoginUsuario
+    public class LoginCU : ILoginCU
     {
         private IRepositorioUsuarios repositorio;
 
-        public LoginUsuarioCU(IRepositorioUsuarios repo)
+        public LoginCU(IRepositorioUsuarios repo)
         {
             repositorio = repo;
         }

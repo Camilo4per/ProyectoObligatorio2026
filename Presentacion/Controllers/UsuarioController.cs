@@ -11,17 +11,17 @@ namespace Presentacion.Controllers
         private IEncontrarTodosUsuarios encontrarTodosUsuarios;
         private IAgregarUsuario agregarUsuario;
         private IObtenerUsuarioPorId obtenerUsuarioPorId;
-        private ILoginUsuario loginUsuario;
+        private ILoginCU loginCU;
         public UsuarioController(
             IAgregarUsuario agregarUsuarioCu,
             IObtenerUsuarioPorId obtenerUsuarioPorIdCu,
             IEncontrarTodosUsuarios encontrarTodosUsuariosCu,
-            ILoginUsuario loginUsuarioCu)
+            ILoginCU loginCUCu)
         {
             agregarUsuario = agregarUsuarioCu;
             obtenerUsuarioPorId = obtenerUsuarioPorIdCu;
             encontrarTodosUsuarios = encontrarTodosUsuariosCu;
-            loginUsuario = loginUsuarioCu;
+            loginCU = loginCUCu;
         }
 
         // GET: UsuarioController
@@ -50,7 +50,7 @@ namespace Presentacion.Controllers
         {
             try
             {
-                UsuarioDTO dto = loginUsuario.Ejecutar(usuario, password);
+                UsuarioDTO dto = loginCU.Ejecutar(usuario, password);
                 HttpContext.Session.SetInt32("IdUsuario", dto.Id);
                 HttpContext.Session.SetString("Rol", ((RolesUsuario)dto.Rol).ToString());
                 HttpContext.Session.SetString("NombreUsuario", dto.NombreUsuario);

@@ -9,17 +9,8 @@ namespace DTOs.Mappers
     {
         public static Capitulo FromDTO(CapituloDTO dto)
         {
-            if (dto.Opciones == null)
-                return new Intermedio
-                {
-                    Id = dto.Id,
-                    Titulo = new TituloCapitulo(dto.Titulo),
-                    Texto = new TextoCapitulo(dto.Texto),
-                    idHistoria = dto.idHistoria,
-                    Opciones = null
-                };
-
-            if (dto.Opciones.Count == 0)
+            // El tipo lo define el DTO: un Final con Opciones = null sigue siendo Final.
+            if (dto.Tipo == (int) TipoCapitulo.Final)
                 return new Final
                 {
                     Id = dto.Id,
@@ -35,7 +26,7 @@ namespace DTOs.Mappers
                 Titulo = new TituloCapitulo(dto.Titulo),
                 Texto = new TextoCapitulo(dto.Texto),
                 idHistoria = dto.idHistoria,
-                Opciones = dto.Opciones.Select(OpcionMapper.FromDTO).ToList()
+                Opciones = dto.Opciones?.Select(OpcionMapper.FromDTO).ToList()
             };
         }
 
@@ -45,25 +36,25 @@ namespace DTOs.Mappers
                 return new CapituloDTO
                 {
                     Id = final.Id,
+                    Tipo = (int) TipoCapitulo.Final,
                     Titulo = final.Titulo.Valor,
                     Texto = final.Texto.Valor,
                     CantLlegaron = final.CantLlegaron.Valor,
-                    idHistoria = final.idHistoria,
-                    Opciones = new List<OpcionDTO>()
+                    idHistoria = final.idHistoria
                 };
 
             Intermedio intermedio = (Intermedio) capitulo;
             return new CapituloDTO
             {
                 Id = intermedio.Id,
+                Tipo = (int) TipoCapitulo.Intermedio,
                 Titulo = intermedio.Titulo.Valor,
                 Texto = intermedio.Texto.Valor,
                 idHistoria = intermedio.idHistoria,
-                // Intermedio sin opciones se serializa como null: en la inferencia de
-                // FromDTO, null -> Intermedio, lista vacia -> Final, con items -> Intermedio.
-                Opciones = intermedio.Opciones is { Count: > 0 }
-                    ? intermedio.Opciones.Select(OpcionMapper.ToDTO).ToList()
-                    : null
+                // Una lista vacía es "no tiene opciones", no "es final".
+                Opciones = (intermedio.Opciones ?? new List<Opcion>())
+                    .Select(OpcionMapper.ToDTO)
+                    .ToList()
             };
         }
     }

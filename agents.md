@@ -3,7 +3,7 @@
 ## Overview
 Sistema de facultad (DDD, 6 proyectos, `net10.0`) de **historias interactivas**: usuarios, historias, capítulos (Intermedio/Final) con opciones de destino y lecturas. Arquitectura en capas: `Dominio` (entidades + ValueObjects) → `DTOs`/`LogicaAplicacion` (casos de uso) → `LogicaAccesoDatos` (repositorios EF Core + en memoria) → dos frontends sobre la misma capa: `Presentacion` (ASP.NET Core MVC) y `WebApi` (API REST `ApiWeb` con Swagger). La persistencia activa es **EF Core/SQL Server**: los 6 repos registrados en DI (`IRepositorioCategorias`, `Finales`, `Historias`, `Intermedios`, `Lecturas`, `Usuarios`) son los `Repositorio*EF` sobre `DominioContext` (registrado con `AddDbContext` + `UseSqlServer`, cadena desde `appsettings.json`). Los `Repositorio*` de `LogicaAccesoDatos/RepositorioEnMemoria` siguen existiendo pero **ya no están en DI**.
 
-Estado funcional (verificado 12/10/2026): usuarios (registro/login/lista) en MVC, **CRUD de historias completo** (alta, edición, borrado, detalles, listado con categorías), categorías (solo listado). **`WebApi` (nuevo) expone `UsuarioController` REST**: `GET /api/Usuario`, `GET /api/Usuario/{id}`, `POST /api/Usuario` (los `PUT`/`DELETE` siguen vacíos) + Swagger; registra los mismos repos/CUs. Capítulos y Lecturas: sin CU ni vistas aún. Categoría/Capítulo tienen controller **stub** (scaffold sin vistas).
+Estado funcional (verificado 12/10/2026): usuarios (registro/login/lista) en MVC, **CRUD de historias completo** (alta, edición, borrado, detalles, listado con categorías), categorías (solo listado). **`WebApi` (nuevo) expone `UsuarioController` REST**: `GET /api/Usuario`, `GET /api/Usuario/{id}`, `POST /api/Usuario/LoginApi` (el `POST /api/Usuario` y los `PUT`/`DELETE` siguen comentados/vacíos) + Swagger; registra los mismos repos/CUs. **Login**: el de `Presentacion` es solo para `Administrador` (`ILoginAdministrador` → `LoginAdministradorCU`), mientras que la API conserva el login general (`ILoginApi` → `LoginApiCU`). Capítulos y Lecturas: sin CU ni vistas aún. Categoría/Capítulo tienen controller **stub** (scaffold sin vistas).
 
 ```
 ProyectoObligatorio/Dominio.csproj            (Microsoft.EntityFrameworkCore.Abstractions)
@@ -22,7 +22,7 @@ dotnet run --project Presentacion                   # levanta la app MVC (http l
 dotnet run --project WebApi                          # levanta la API REST (http localhost:5281, Swagger en /swagger)
 ```
 - Ambos frontends (`Presentacion/Program.cs` y `WebApi/Program.cs`) registran el mismo DI: `builder.Services.AddDbContext<DominioContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ObligatorioDB")))` y los 6 `IRepositorio*` → `Repositorio*EF` (SQL Server, base local `ObligatorioDB`). Los repos en memoria NO están registrados.
-- Casos de uso registrados: Historias (`IAgregarHistoria`, `IEncontrarTodasHistorias`, `IObtenerHistoriaPorId`, `IModificarHistoria`, `IEliminarHistoria`), Categorías (`IEncontrarTodasCategorias`), Usuarios (`IAgregarUsuario`, `IEncontrarTodosUsuarios`, `IObtenerUsuarioPorId`, `ILoginUsuario`).
+- Casos de uso registrados: Historias (`IAgregarHistoria`, `IEncontrarTodasHistorias`, `IObtenerHistoriaPorId`, `IModificarHistoria`, `IEliminarHistoria`), Categorías (`IEncontrarTodasCategorias`), Usuarios (`IAgregarUsuario`, `IEncontrarTodosUsuarios`, `IObtenerUsuarioPorId`, `ILoginApi`; en `Presentacion` además `ILoginAdministrador`).
 - **`dotnet ef` NO está instalado en el shell del agente** (y no instalar herramientas sin autorización). Para operaciones de DB (drop/update) usar un proyecto temporal que referencie `LogicaAccesoDatos` y llame `context.Database.EnsureDeleted()`/`Migrate()`, o pedirle al usuario que corra `dotnet ef`.
 
 ## Testing
@@ -49,13 +49,13 @@ dotnet ef database update
 ### Patrones de `RepositorioHistoriasEF` (NO cambiar sin motivo)
 - **`Add`: guardado en dos fases** por la dependencia circular Historias ↔ CapituloInicial: romper el ciclo con `CapituloInicial = null!`, `Add` + `SaveChanges`, restaurar la navegación y persistir `idCapituloInicial` en un **segundo `SaveChanges`**. Sin transacción (decisión explícita del usuario).
 - **`Update`: patrón mutar-trackeado** (no `Update(grafoNuevo)`): carga la entidad con `Include(Capitulos/Categorias)`, muta `Titulo`/`Sinopsis`/`Estado`, reconcilia `Categorias` contra instancias trackeadas, y `SaveChanges`. Re-adjuntar un grafo nuevo desde el DTO chocaba con el tracking ("misma key ya trackeada") y re-insertaba joins de `CategoriaHistoria` (PK violation). El flujo de Edit de la vista no edita capítulos, así que `Update` no los toca.
-- **Nota de EF**: las colecciones `OwnsMany` vacías (ej. `Intermedio.Opciones`) se materializan como **lista vacía, no `null`**. Esto condiciona la inferencia de `CapituloMapper` (ver Code Style).
+- **Nota de EF**: las colecciones `OwnsMany` vacías (ej. `Intermedio.Opciones`) se materializan como **lista vacía, no `null`**. Ya no condiciona el tipo del capítulo: manda `CapituloDTO.Tipo` (ver Code Style).
 
 ## Code Style & Conventions
 - **Modelo DDD estricto**: entidades = estado + reglas (`Validar()` lanza excepción de contexto: `UsuarioException`, `CapituloException`, etc.); ValueObjects = `record` validadores con propiedad `Valor`; `DTOs` = tipos planos (`string`/`int`, enums de dominio como `int`); `Mappers` = `static FromDTO`/`ToDTO`, **sin repositorios ni lógica de negocio**.
 - **`Capitulo` es abstracto** (TPH); `Historia` tiene `CapituloInicial` + `List<Capitulo> Capitulos` (nada de `Pertenece`). `Historia.Titulo`/`Sinopsis` son `get; set;` (pasaron de `init` a `set` para permitir el patrón mutar-trackeado de `Update`; las validaciones del dominio siguen). Los VOs viajan como `int` en DTOs (enums de dominio).
 - **Round-trip de capítulos (`CapituloMapper` + `HistoriaMapper`)** — mantener la simetría `ToDTO`/`FromDTO`:
-  - `CapituloMapper.FromDTO` infiere: `Opciones == null → Intermedio`, `Count == 0 → Final`, `con items → Intermedio`. Para que eso sea consistente, **`ToDTO` emite `Opciones = null` para un Intermedio sin opciones** y `new List<OpcionDTO>()` para un `Final` (si se serializara lista vacía, el Intermedio sin opciones round-trippea como Final → "el capítulo inicial no puede ser de tipo final").
+  - **El tipo viaja explícito en `CapituloDTO.Tipo`** (`TipoCapitulo`: 0 Intermedio / 1 Final) y `CapituloMapper` lo lee tal cual en ambos sentidos. **NO reintroducir la inferencia por `Opciones`** (`null` / vacía / con items): era ambigua —un `Final` sin opciones era indistinguible de un `Intermedio` sin opciones— y fue la causa del bug "el capítulo inicial no puede ser de tipo final". Hoy `Opciones` significa solo "opciones de un intermedio": lista (posiblemente vacía) en intermedios, `null` en finales.
   - `HistoriaMapper.ToDTO` **reutiliza el DTO del `CapituloInicial`** dentro de `Capitulos` (por `ReferenceEquals`) y `FromDTO` hace el espejo: así el round-trip no duplica el capítulo inicial (misma instancia → mismo DTO → misma entidad).
 - **Controllers MVC** (en `Presentacion/Controllers/`): acciones delgadas `return View()`, inyección por constructor de **interfaces de casos de uso**, nunca instanciar repositorios. Registro DI SOLO en `Presentacion/Program.cs` (y `WebApi/Program.cs` para la API). **`CategoriaController`/`CapituloController` son stubs de scaffold** (sin CU, `return View()` sin vistas) — no usarlos como referencia.
 - **Controllers REST** (en `WebApi/Controllers/`): heredan `ControllerBase`, `[Route("api/[controller]")]` + `[ApiController]`; inyección por constructor de los mismos CUs; envuelven las llamadas en `try/catch` devolviendo `Ok`/`Created`/`BadRequest` (excepciones de dominio) o `StatusCode(500, ex.Message)`. También llevan atributos `[ProducesResponseType]` para Swagger.
@@ -68,12 +68,12 @@ dotnet ef database update
 - **NUNCA** instanciar mappers/repositorios `new` fuera de su capa; todo pasa por DI. No duplicar endpoints: hay dos frontends (`Presentacion` MVC y `WebApi` REST) sobre los mismos CUs; no crear otro frontend sin pedirlo.
 - **NUNCA** agregar dependencias externas (paquetes NuGet) en `Dominio` que no sean `Microsoft.EntityFrameworkCore.Abstractions`; no saltarse el `IRepository<T>` (un futuro DbContext va detrás de la misma interfaz, sin tocar dominio).
 - **NUNCA** poner entidades de dominio dentro de DTOs (referencias y enums prohibidas; los `Mappers` hacen la conversión).
-- **NUNCA** crear `IntermedioDTO`/`FinalDTO` polimórficos ni reintroducir `Pertenece`: el modelo es `CapituloDTO` único + inferencia de tipo en `CapituloMapper`.
+- **NUNCA** crear `IntermedioDTO`/`FinalDTO` polimórficos ni reintroducir `Pertenece`: el modelo es `CapituloDTO` único + campo `Tipo` (`TipoCapitulo`) leído por `CapituloMapper`.
 - **NUNCA** crear `IRepository<Opcion>` ni repositorio de opciones: `Opcion` no tiene `Id` y se persiste embebida en su capítulo (tabla `Opcion` vía `OwnsMany`).
 - Las anotaciones `[Owned]`/`[ForeignKey]` en las entidades **se conservan por pedido del profe** aunque alguna (ej. `Opcion.idCapitulo` → `Intermedio`) no tenga navegación que respalde; la mayoría de las relaciones quedan por convención/anotación y solo `Intermedio.Opciones` y la FK `Capitulo.idHistoria` usan Fluent.
 - No agregar `using` redundantes ni comentarios de relleno (repo limpio de ambos).
 
-## Pendientes (actualizados 12/10/2026)
+## Pendientes (actualizados 15/10/2026)
 - [ ] **Registrarse como Administrador**: la vista lo permite (opciones hardcodeadas `Administrador (0)` / `Usuario (1)`) y `AgregarUsuarioCU` ya no sobreescribe `Rol`. Decidir si se mantiene o se vuelve a forzar `RolesUsuario.Usuario` en el CU
 - [ ] **Password en texto plano**: `Password.Verify` compara `value == Value` sin hash (el propio código lo comenta: "sin hash por ahora"). Es la mejora de seguridad #1 del proyecto
 - [ ] **POST Delete sin model**: en `UsuarioController` el catch hace `return View()` sin model pero `Delete.cshtml` usa `@Model` → NRE solo si el borrado falla. Pasar el model o redirigir (en `HistoriaController` ya está resuelto, ver Completado 24/09)
@@ -85,10 +85,15 @@ dotnet ef database update
 - [ ] **`WebApi` incompleto**: solo `UsuarioController` (GET all, GET id, POST); `PUT`/`DELETE` vacíos y no hay controllers REST de Historia/Categoría. Los `[ProducesResponseType]` no declaran el body de error.
 - [ ] **Excepción incorrecta en `Capitulo.Validar()`**: los null-checks de `Titulo`/`Texto` lanzan `UsuarioException` (debería ser `CapituloException`); revisar coherencia de excepciones de contexto en las entidades.
 - [ ] **`RepositorioUsuariosEF.Add` traga la excepción**: el `catch (Exception ex)` lanza un mensaje genérico y no usa `ex` (se pierde el detalle, ej. violación de índice único).
-- [ ] `LecturaMapper.FromDTO` cast ciego `(Final) CapituloMapper.FromDTO(...)` → falla si el DTO tiene opciones
 - [ ] Repositorios en memoria no asignan `Id` en `Add()` → múltiples entidades con `Id=0` (fuera de DI)
 - [ ] `FindAll()` devuelve shallow copy pero entidades dentro son referencias compartidas → mutación entre callers
 - [ ] `DiagramaDeClases.asta.lock` quedó untracked (artefacto de la herramienta ASTA; conviene agregar a `.gitignore` y decidir si el `.asta` modificado se commitea)
+
+## Completado el 15/10/2026 (verificado con `dotnet build`, 0 errores)
+- [x] **Login de `Presentacion` solo para administradores**: nuevo `ILoginAdministrador` + `LoginAdministradorCU` (autentica reutilizando `ILoginApi` y lanza `UsuarioException("Solo los administradores pueden iniciar sesión en esta aplicación")` si `Rol != Administrador`); registrado en `Presentacion/Program.cs` y consumido por `UsuarioController.Login`. La regla vive en el CU, no en el controller.
+- [x] **Login de la `WebApi` renombrado**: `ILoginUsuario`/`LoginUsuarioCU` → `ILoginApi`/`LoginApiCU`, y el endpoint pasó de `POST /api/Usuario/Login` a `POST /api/Usuario/LoginApi`. El login de la API sigue abierto a cualquier rol.
+- [x] **Tipo de capítulo explícito (se elimina la inferencia por `Opciones`)**: nuevo enum `Dominio.Entidades.TipoCapitulo` + `CapituloDTO.Tipo` (0 Intermedio / 1 Final). `CapituloMapper.ToDTO`/`FromDTO` usan ese campo; `ToDTO` emite para un intermedio la lista de `Opciones` (posiblemente vacía) y para un final la deja en `null`. `AgregarHistoriaCU` fuerza `Tipo = Intermedio` en el capítulo inicial (antes anulaba `Opciones` para lograr lo mismo) y `Historia/Create.cshtml` postea el tipo como hidden. Sin migración (no cambia el esquema). Beneficio extra en la API: el JSON ahora expone `tipo` en vez de que el cliente lo deduzca de `opciones: null` vs `[]`.
+- [x] **`LecturaMapper.FromDTO` ya no castea a ciegas**: el helper `MapearFinalAlcanzado` construye el capítulo y, si no es `Final`, lanza `LecturaException("El capítulo alcanzado en una lectura debe ser de tipo final")` en lugar de `InvalidCastException` (500).
 
 ## Completado el 12/10/2026 (verificado con `dotnet build` 0/0)
 - [x] **Proyecto `WebApi` (`ApiWeb`) creado**: segundo frontend REST sobre los mismos CUs. `WebApi/Program.cs` registra `AddControllers`, `AddOpenApi`, `AddSwaggerGen` + `SwaggerUI` (en Development), el `DominioContext` y los 6 repos/CUs (idéntico a `Presentacion`). `ApiWeb.csproj` referencia DTOs/LogicaAplicacion/LogicaAccesoDatos/Dominio y agrega `Swashbuckle.AspNetCore 10.3.0`, `Microsoft.AspNetCore.OpenApi 10.0.12` y `Microsoft.EntityFrameworkCore.Tools 10.0.12`. Agregado al `.slnx`.
@@ -144,4 +149,4 @@ dotnet ef database update
 - [x] **Login/sesión**: `UsuarioController` setea `NombreUsuario` en Session; `_Layout.cshtml` usa las claves reales (`IdUsuario`, `Rol`, `NombreUsuario`) en vez de `LogeadoRol`/`LogeadoNombre`/`LogeadoCedula`.
 - [x] **`Opcion.Validar()`** ya valida null-safe (`Texto` null-check antes de usarlo).
 ---
-*Última actualización: 12/10/2026*
+*Última actualización: 15/10/2026*

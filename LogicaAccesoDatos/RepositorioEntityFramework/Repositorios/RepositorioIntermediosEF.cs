@@ -43,18 +43,22 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
         {
             if (nuevo == null) { throw new IntermedioException("El capitulo intermedio esta vacio"); }
             nuevo.Validar();
-            _context.Intermedios.Update(nuevo);
+            if (_context.Entry(nuevo).State == EntityState.Detached)
+            {
+                _context.Intermedios.Update(nuevo);
+            }
             _context.SaveChanges();
         }
 
         public List<Intermedio> FindAll()
         {
-            return _context.Intermedios.ToList();
+            return _context.Intermedios.Include(i => i.Opciones).ToList();
         }
 
         public Intermedio FindById(int id)
         {
             return _context.Intermedios
+                .Include(i => i.Opciones)
                 .Where(i => i.Id == id)
                 .FirstOrDefault()
                 ?? throw new IntermedioException("Capitulo intermedio inexistente");

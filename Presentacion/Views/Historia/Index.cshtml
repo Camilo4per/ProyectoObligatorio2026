@@ -30,6 +30,7 @@
                         <a asp-action="Details" asp-route-id="@Historia.Id" class="btn btn-sm btn-info">Detalles</a>
                         <a asp-action="Edit" asp-route-id="@Historia.Id" class="btn btn-sm btn-warning">Modificar</a>
                         <a asp-action="Delete" asp-route-id="@Historia.Id" class="btn btn-sm btn-danger">Eliminar</a>
+                        <a asp-controller="Capitulo" asp-action="Create" asp-route-idHistoria="@Historia.Id" class="btn btn-sm btn-success">Agregar Capitulo</a>
                     </td>
                 </tr>
             }

@@ -18,5 +18,9 @@ namespace DTOs.DTOs
 
         // Solo Intermedio
         public List<OpcionDTO>? Opciones { get; set; }
+
+        // Datos para encadenamiento al crear el capítulo
+        public int? idCapituloAntecedente { get; set; }
+        public string? TextoOpcion { get; set; }
     }
 }

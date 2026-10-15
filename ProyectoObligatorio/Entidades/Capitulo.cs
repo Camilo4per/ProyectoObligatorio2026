@@ -1,4 +1,4 @@
-﻿using Dominio.Excepciones;
+using Dominio.Excepciones;
 using Dominio.InterfacesDelDominio;
 using Dominio.ValueObjects.Capitulo;
 using System.ComponentModel.DataAnnotations;
@@ -20,9 +20,9 @@ namespace Dominio.Entidades
 
         public virtual void Validar()
         {
-            if(Titulo == null) throw new UsuarioException("El título del capítulo no puede ser nulo.");
+            if(Titulo == null) throw new CapituloException("El título del capítulo no puede ser nulo.");
             Titulo.Validar();
-            if(Texto == null) throw new UsuarioException("El texto del capítulo no puede ser nulo.");
+            if(Texto == null) throw new CapituloException("El texto del capítulo no puede ser nulo.");
             Texto.Validar();
         }
     }

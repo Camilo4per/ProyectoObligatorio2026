@@ -35,16 +35,6 @@ namespace Presentacion.Controllers
             encontrarTodasCategorias = encontrarTodasCategoriasCu;
         }
 
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            string? rol = HttpContext.Session.GetString("Rol");
-            if (rol != RolesUsuario.Administrador.ToString())
-            {
-                context.Result = RedirectToAction("Login", "Usuario");
-                return;
-            }
-            base.OnActionExecuting(context);
-        }
 
         // GET: HistoriaController
         public ActionResult Index()

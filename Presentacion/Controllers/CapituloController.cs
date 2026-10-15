@@ -1,83 +1,107 @@
-﻿using Microsoft.AspNetCore.Http;
+using Dominio.Excepciones;
+using DTOs.DTOs;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Capitulos;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
 
 namespace Presentacion.Controllers
 {
     public class CapituloController : Controller
     {
-        // GET: CapituloController
-        public ActionResult Index()
+        private IAgregarCapitulo _agregarCapituloCU;
+        private IObtenerHistoriaPorId _obtenerHistoriaPorIdCU;
+
+        public CapituloController(IAgregarCapitulo agregarCapituloCU, IObtenerHistoriaPorId obtenerHistoriaPorIdCU)
         {
-            return View();
+            _agregarCapituloCU = agregarCapituloCU;
+            _obtenerHistoriaPorIdCU = obtenerHistoriaPorIdCU;
         }
 
-        // GET: CapituloController/Details/5
-        public ActionResult Details(int id)
+        // GET: Capitulo/Create?idHistoria=5
+        public ActionResult Create(int idHistoria)
         {
-            return View();
+            string? rolUsuario = HttpContext.Session.GetString("Rol");
+            if (rolUsuario != "Administrador")
+            {
+                return RedirectToAction("Login", "Usuario");
+            }
+
+            if (idHistoria <= 0)
+            {
+                return NotFound();
+            }
+
+            HistoriaDTO? historia = _obtenerHistoriaPorIdCU.Ejecutar(idHistoria);
+            if (historia == null)
+            {
+                return NotFound();
+            }
+
+            CargarDatosVista(historia, null);
+
+            CapituloDTO nuevoCapitulo = new CapituloDTO
+            {
+                idHistoria = idHistoria,
+                Tipo = 0
+            };
+
+            return View(nuevoCapitulo);
         }
 
-        // GET: CapituloController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: CapituloController/Create
+        // POST: Capitulo/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(CapituloDTO capitulo)
         {
+            string? rolUsuario = HttpContext.Session.GetString("Rol");
+            if (rolUsuario != "Administrador")
+            {
+                return RedirectToAction("Login", "Usuario");
+            }
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                _agregarCapituloCU.Ejecutar(capitulo, capitulo.idCapituloAntecedente ?? 0, capitulo.TextoOpcion ?? "");
+                return RedirectToAction("Index", "Historia");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ViewBag.Error = ex.Message;
+
+                if (capitulo.idHistoria.HasValue)
+                {
+                    HistoriaDTO? historia = _obtenerHistoriaPorIdCU.Ejecutar(capitulo.idHistoria.Value);
+                    if (historia != null)
+                    {
+                        CargarDatosVista(historia, capitulo.idCapituloAntecedente);
+                    }
+                }
+
+                return View(capitulo);
             }
         }
 
-        // GET: CapituloController/Edit/5
-        public ActionResult Edit(int id)
+        private void CargarDatosVista(HistoriaDTO historia, int? idAntecedenteSeleccionado)
         {
-            return View();
-        }
+            ViewBag.TituloHistoria = historia.Titulo;
 
-        // POST: CapituloController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
+            List<CapituloDTO> capitulosIntermedios = new List<CapituloDTO>();
+            if (historia.Capitulos != null)
             {
-                return RedirectToAction(nameof(Index));
+                foreach (CapituloDTO cap in historia.Capitulos)
+                {
+                    if (cap.Tipo == 0)
+                    {
+                        capitulosIntermedios.Add(cap);
+                    }
+                }
             }
-            catch
-            {
-                return View();
-            }
-        }
 
-        // GET: CapituloController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: CapituloController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            ViewBag.CapitulosAntecedentes = new SelectList(capitulosIntermedios, "Id", "Titulo", idAntecedenteSeleccionado);
         }
     }
 }

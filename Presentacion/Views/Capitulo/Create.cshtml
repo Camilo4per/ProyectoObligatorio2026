@@ -1,0 +1,64 @@
+@model DTOs.DTOs.CapituloDTO
+
+@{
+    ViewData["Title"] = "Agregar Capítulo";
+    string? mensajeError = ViewBag.Error as string;
+    Microsoft.AspNetCore.Mvc.Rendering.SelectList? capitulosAntecedentes = ViewBag.CapitulosAntecedentes as Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+}
+
+<h2>Agregar Capítulo a la Historia: @ViewBag.TituloHistoria</h2>
+
+@if (!string.IsNullOrEmpty(mensajeError))
+{
+    <div class="alert alert-danger" role="alert">
+        @mensajeError
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="idHistoria" />
+
+            <div class="form-group mb-3">
+                <label asp-for="idCapituloAntecedente" class="form-label">Capítulo Antecedente (sólo intermedios)</label>
+                <select asp-for="idCapituloAntecedente" asp-items="capitulosAntecedentes" class="form-select" required>
+                    <option value="">-- Seleccione un capítulo antecedente --</option>
+                </select>
+                <small class="form-text text-muted">Solamente se pueden encadenar nuevos capítulos a partir de capítulos de tipo intermedio.</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="TextoOpcion" class="form-label">Texto de la Opción de Destino</label>
+                <input asp-for="TextoOpcion" class="form-control" placeholder="Ej: Abrir la puerta misteriosa..." required />
+                <small class="form-text text-muted">Texto que aparecerá en el capítulo antecedente como opción que conduce a este nuevo capítulo.</small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Tipo" class="form-label">Tipo de Capítulo</label>
+                <select asp-for="Tipo" class="form-select">
+                    <option value="0">Intermedio</option>
+                    <option value="1">Final</option>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Titulo" class="form-label">Título del Capítulo</label>
+                <input asp-for="Titulo" class="form-control" required />
+                <span asp-validation-for="Titulo" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Texto" class="form-label">Texto / Contenido del Capítulo</label>
+                <textarea asp-for="Texto" class="form-control" rows="6" required></textarea>
+                <span asp-validation-for="Texto" class="text-danger"></span>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Guardar Capítulo</button>
+                <a asp-controller="Historia" asp-action="Index" class="btn btn-secondary">Volver al Listado</a>
+            </div>
+        </form>
+    </div>
+</div>

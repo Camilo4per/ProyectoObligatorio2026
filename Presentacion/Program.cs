@@ -12,6 +12,8 @@ using LogicaAplicacion.CasosDeUso.Lecturas;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Lecturas;
 using LogicaAplicacion.CasosDeUso.Capitulos;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Capitulos;
+using LogicaAplicacion.CasosDeUso.Auditorias;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Auditorias;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +31,7 @@ builder.Services.AddScoped<IRepositorioHistorias, RepositorioHistoriasEF>();
 builder.Services.AddScoped<IRepositorioIntermedios, RepositorioIntermediosEF>();
 builder.Services.AddScoped<IRepositorioLecturas, RepositorioLecturasEF>();
 builder.Services.AddScoped<IRepositorioUsuarios, RepositorioUsuariosEF>();
+builder.Services.AddScoped<IRepositorioAuditorias, RepositorioAuditoriasEF>();
 
 //INICIALIZAMOS LOS CASOS DE USO
 
@@ -50,6 +53,8 @@ builder.Services.AddScoped<IObtenerLecturasPorId, ObtenerLecturasPorIdCU>();
 builder.Services.AddScoped<IEncontrarTodasLasLecturas, EncontrarTodasLasLecturasCU>();
 
 builder.Services.AddScoped<IAgregarCapitulo, AgregarCapituloCU>();
+builder.Services.AddScoped<IRegistrarAuditoria, RegistrarAuditoriaCU>();
+builder.Services.AddScoped<IConsultarAuditorias, ConsultarAuditoriasCU>();
 
 var app = builder.Build();
 

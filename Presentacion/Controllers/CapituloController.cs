@@ -65,7 +65,8 @@ namespace Presentacion.Controllers
 
             try
             {
-                _agregarCapituloCU.Ejecutar(capitulo, capitulo.idCapituloAntecedente ?? 0, capitulo.TextoOpcion ?? "");
+                int? idAdmin = HttpContext.Session.GetInt32("IdUsuario");
+                _agregarCapituloCU.Ejecutar(capitulo, capitulo.idCapituloAntecedente ?? 0, capitulo.TextoOpcion ?? "", idAdmin);
                 return RedirectToAction("Index", "Historia");
             }
             catch (Exception ex)

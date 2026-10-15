@@ -1,8 +1,11 @@
+using Dominio.Entidades;
 using Dominio.Excepciones;
 using Dominio.InterfaceDeRepositorio;
 using DTOs.DTOs;
 using DTOs.Mappers;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Auditorias;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
+using System.Collections.Generic;
 
 namespace LogicaAplicacion.CasosDeUso.Historias
 {
@@ -10,15 +13,22 @@ namespace LogicaAplicacion.CasosDeUso.Historias
     {
         private IRepositorioHistorias repositorioHistorias;
         private IRepositorioCategorias repositorioCategorias;
-        public ModificarHistoriaCU(IRepositorioHistorias repoHistorias, IRepositorioCategorias repoCategorias)
+        private IRegistrarAuditoria _registrarAuditoria;
+
+        public ModificarHistoriaCU(
+            IRepositorioHistorias repoHistorias,
+            IRepositorioCategorias repoCategorias,
+            IRegistrarAuditoria registrarAuditoria)
         {
             repositorioHistorias = repoHistorias;
             repositorioCategorias = repoCategorias;
+            _registrarAuditoria = registrarAuditoria;
         }
 
-        public void Ejecutar(HistoriaDTO dto)
+        public void Ejecutar(HistoriaDTO dto, int? idUsuarioAdmin = null)
         {
             HistoriaDTO completo = HistoriaMapper.ToDTO(repositorioHistorias.FindById(dto.Id));
+            int estadoAnterior = completo.Estado;
 
             if (dto.CapituloInicial != null && completo.CapituloInicial != null)
             {
@@ -51,6 +61,15 @@ namespace LogicaAplicacion.CasosDeUso.Historias
             completo.Categorias = ResolverCategorias(dto.CategoriaIds);
 
             repositorioHistorias.Update(HistoriaMapper.FromDTO(completo));
+
+            if (idUsuarioAdmin.HasValue && idUsuarioAdmin.Value > 0)
+            {
+                string accion = (dto.Estado == (int)EstadoHistoria.Publicada && estadoAnterior != (int)EstadoHistoria.Publicada)
+                    ? "Publicación de Historia"
+                    : "Modificación de Historia";
+
+                _registrarAuditoria.Ejecutar(accion, dto.Id, idUsuarioAdmin.Value);
+            }
         }
 
         private List<CategoriaDTO> ResolverCategorias(List<int> ids)

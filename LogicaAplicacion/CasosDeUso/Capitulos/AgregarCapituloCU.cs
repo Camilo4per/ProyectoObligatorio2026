@@ -3,6 +3,7 @@ using Dominio.Excepciones;
 using Dominio.InterfaceDeRepositorio;
 using DTOs.DTOs;
 using DTOs.Mappers;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Auditorias;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Capitulos;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,18 +15,21 @@ namespace LogicaAplicacion.CasosDeUso.Capitulos
         private IRepositorioHistorias _repoHistorias;
         private IRepositorioIntermedios _repoIntermedios;
         private IRepositorioFinales _repoFinales;
+        private IRegistrarAuditoria _registrarAuditoria;
 
         public AgregarCapituloCU(
             IRepositorioHistorias repoHistorias,
             IRepositorioIntermedios repoIntermedios,
-            IRepositorioFinales repoFinales)
+            IRepositorioFinales repoFinales,
+            IRegistrarAuditoria registrarAuditoria)
         {
             _repoHistorias = repoHistorias;
             _repoIntermedios = repoIntermedios;
             _repoFinales = repoFinales;
+            _registrarAuditoria = registrarAuditoria;
         }
 
-        public void Ejecutar(CapituloDTO nuevoCapituloDto, int idCapituloAntecedente, string textoOpcion)
+        public void Ejecutar(CapituloDTO nuevoCapituloDto, int idCapituloAntecedente, string textoOpcion, int? idUsuarioAdmin = null)
         {
             if (nuevoCapituloDto == null)
             {
@@ -103,6 +107,12 @@ namespace LogicaAplicacion.CasosDeUso.Capitulos
 
             intermedioAntecedente.Opciones.Add(nuevaOpcion);
             _repoIntermedios.Update(intermedioAntecedente);
+
+            // 6. Registro de Auditoría automático
+            if (idUsuarioAdmin.HasValue && idUsuarioAdmin.Value > 0)
+            {
+                _registrarAuditoria.Ejecutar($"Creación de Capítulo: {nuevoCapitulo.Titulo.Valor}", historia.Id, idUsuarioAdmin.Value);
+            }
         }
     }
 }

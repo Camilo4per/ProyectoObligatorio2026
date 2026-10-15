@@ -4,6 +4,6 @@ namespace LogicaAplicacion.InterfacesDeCasoDeUso.Historias
 {
     public interface IModificarHistoria
     {
-        public void Ejecutar(HistoriaDTO dto);
+        public void Ejecutar(HistoriaDTO dto, int? idUsuarioAdmin = null);
     }
 }

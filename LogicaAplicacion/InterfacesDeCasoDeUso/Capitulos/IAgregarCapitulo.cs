@@ -4,6 +4,6 @@ namespace LogicaAplicacion.InterfacesDeCasoDeUso.Capitulos
 {
     public interface IAgregarCapitulo
     {
-        void Ejecutar(CapituloDTO nuevoCapituloDto, int idCapituloAntecedente, string textoOpcion);
+        void Ejecutar(CapituloDTO nuevoCapituloDto, int idCapituloAntecedente, string textoOpcion, int? idUsuarioAdmin = null);
     }
 }

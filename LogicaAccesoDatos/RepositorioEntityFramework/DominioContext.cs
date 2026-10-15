@@ -1,4 +1,4 @@
-﻿using Dominio.Entidades;
+using Dominio.Entidades;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,6 +16,7 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework
         public DbSet<Intermedio> Intermedios { get; set; }
         public DbSet<Final> Finales { get; set; }
         public DbSet<Lectura> Lecturas { get; set; }
+        public DbSet<Auditoria> Auditorias { get; set; }
         #endregion
 
         /*
@@ -44,6 +45,18 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework
                     op.WithOwner().HasForeignKey("idCapitulo");
                     op.HasOne(o => o.CapDestino).WithMany().HasForeignKey(o => o.idCapDestino);
                 });
+
+            modelBuilder.Entity<Auditoria>()
+                .HasOne(a => a.Usuario)
+                .WithMany()
+                .HasForeignKey(a => a.idUsuario)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Auditoria>()
+                .HasOne(a => a.Historia)
+                .WithMany()
+                .HasForeignKey(a => a.idHistoria)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

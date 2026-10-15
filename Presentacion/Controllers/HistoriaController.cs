@@ -62,7 +62,8 @@ namespace Presentacion.Controllers
         {
             try
             {
-                agregarHistoria.Ejecutar(dto);
+                int? idAdmin = HttpContext.Session.GetInt32("IdUsuario");
+                agregarHistoria.Ejecutar(dto, idAdmin);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -90,7 +91,8 @@ namespace Presentacion.Controllers
             try
             {
                 dto.Id = id;
-                modificarHistoria.Ejecutar(dto);
+                int? idAdmin = HttpContext.Session.GetInt32("IdUsuario");
+                modificarHistoria.Ejecutar(dto, idAdmin);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

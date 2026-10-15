@@ -1,0 +1,74 @@
+@model IEnumerable<DTOs.DTOs.AuditoriaDTO>
+
+@{
+    ViewData["Title"] = "Auditoría de Historias";
+    Microsoft.AspNetCore.Mvc.Rendering.SelectList? historias = ViewBag.Historias as Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+    Microsoft.AspNetCore.Mvc.Rendering.SelectList? usuarios = ViewBag.Usuarios as Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+}
+
+<h1>Auditoría de Historias</h1>
+<p class="text-muted">Registro automático de acciones sobre historias y capítulos (RF05).</p>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" asp-action="Index" class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <label for="idHistoria" class="form-label">Filtrar por Historia</label>
+                <select name="idHistoria" id="idHistoria" asp-items="historias" class="form-select">
+                    <option value="">-- Todas las historias --</option>
+                </select>
+            </div>
+
+            <div class="col-md-5">
+                <label for="idUsuario" class="form-label">Filtrar por Administrador</label>
+                <select name="idUsuario" id="idUsuario" asp-items="usuarios" class="form-select">
+                    <option value="">-- Todos los administradores --</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Limpiar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Fecha y Hora</th>
+                <th>Administrador</th>
+                <th>Acción Realizada</th>
+                <th>Historia Afectada</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DTOs.DTOs.AuditoriaDTO item in Model)
+            {
+                <tr>
+                    <td>@item.Fecha.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                    <td>
+                        <strong>@(item.NombreUsuario ?? "Desconocido")</strong>
+                        <span class="text-muted small">(ID: @item.IdUsuario)</span>
+                    </td>
+                    <td>
+                        <span class="badge bg-info text-dark">@item.Accion</span>
+                    </td>
+                    <td>
+                        <strong>@(item.TituloHistoria ?? "N/A")</strong>
+                        <span class="text-muted small">(ID: @item.IdHistoria)</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">
+        No se encontraron registros de auditoría para los criterios seleccionados.
+    </div>
+}

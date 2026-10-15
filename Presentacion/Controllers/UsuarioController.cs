@@ -51,6 +51,13 @@ namespace Presentacion.Controllers
             try
             {
                 UsuarioDTO dto = loginCU.Ejecutar(usuario, password);
+
+                if (dto.Rol != (int)RolesUsuario.Administrador)
+                {
+                    ViewBag.Error = "Solo los administradores pueden iniciar sesión.";
+                    return View();
+                }
+
                 HttpContext.Session.SetInt32("IdUsuario", dto.Id);
                 HttpContext.Session.SetString("Rol", ((RolesUsuario)dto.Rol).ToString());
                 HttpContext.Session.SetString("NombreUsuario", dto.NombreUsuario);

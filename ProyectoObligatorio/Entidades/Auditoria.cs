@@ -31,7 +31,7 @@ namespace Dominio.Entidades
                 throw new AuditoriaException("La acción de auditoría no puede estar vacía.");
             }
 
-            if (Fecha == default)
+            if (Fecha == default) // TODO: Cambiar
             {
                 throw new AuditoriaException("La fecha de auditoría no es válida.");
             }

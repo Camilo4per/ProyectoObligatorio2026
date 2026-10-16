@@ -57,12 +57,6 @@ namespace Presentacion.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(CapituloDTO capitulo)
         {
-            string? rolUsuario = HttpContext.Session.GetString("Rol");
-            if (rolUsuario != "Administrador")
-            {
-                return RedirectToAction("Login", "Usuario");
-            }
-
             try
             {
                 int? idAdmin = HttpContext.Session.GetInt32("IdUsuario");

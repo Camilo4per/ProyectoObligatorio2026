@@ -1,6 +1,7 @@
 using Dominio.Entidades;
 using Dominio.Excepciones;
 using Dominio.InterfaceDeRepositorio;
+using Microsoft.EntityFrameworkCore;
 
 namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 {
@@ -58,6 +59,16 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
         public List<Lectura> FindAll()
         {
             return _context.Lecturas.ToList();
+        }
+
+        // Lecturas finalizadas (con FechaFin, lo que por Validar() implica final alcanzado)
+        // con su historia cargada, para el ranking de historias más leídas (RF09).
+        public List<Lectura> FindAllCompletadas()
+        {
+            return _context.Lecturas
+                .Include(l => l.Historia)
+                .Where(l => l.FechaFin != null)
+                .ToList();
         }
 
         public Lectura FindById(int id)

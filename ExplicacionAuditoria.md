@@ -111,7 +111,7 @@ flowchart TD
     * **Decisión de Diseño**: Se utiliza `DeleteBehavior.Restrict` para evitar borrados en cascada que destruirían la pista de auditoría y prevenir errores de múltiples rutas en cascada en SQL Server.
 * **Repositorio EF (`RepositorioAuditoriasEF.cs`)**:
   * **`Add(Auditoria nuevo)`**: Valida la entidad en el dominio y la inserta en la base de datos.
-  * **`Buscar(int? idHistoria, int? idUsuario)`**: Construye una consulta `IQueryable` con `.Include(a => a.Usuario)` e `.Include(a => a.Historia)`. Aplica los filtros de historia y usuario si vienen con valor, y ordena de forma cronológica descendente (`OrderByDescending(a => a.Fecha)`).
+  * **`Buscar(int? idHistoria, int? idUsuario)`**: Devuelve la lista filtrada con una cadena única sobre el `DbSet`: `.Include(a => a.Usuario)` e `.Include(a => a.Historia)` para traer las relaciones, un `.Where(...)` con los filtros de historia y usuario solo si vienen con valor mayor a cero (si vienen `null` o `<= 0` no filtran), y `.OrderByDescending(a => a.Fecha)` para ordenar de forma cronológica descendente. El resultado se materializa con `.ToList()`.
   * **Inmutabilidad**: Los métodos `Update` y `Remove` lanzan `NotSupportedException` para garantizar que nadie pueda alterar ni eliminar registros de auditoría existentes.
 * **Migración de Base de Datos**:
   * Se generó y aplicó la migración `20261015180900_AgregacionAuditoria`, creando la tabla `Auditorias` con índices en `idHistoria` e `idUsuario`.

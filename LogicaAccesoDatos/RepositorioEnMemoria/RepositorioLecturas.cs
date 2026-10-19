@@ -58,6 +58,20 @@ namespace LogicaAccesoDatos.RepositorioEnMemoria
             return new List<Lectura>(lecturas);
         }
 
+        public List<Lectura> FindAllCompletadas()
+        {
+            List<Lectura> completadas = new List<Lectura>();
+            foreach (Lectura item in lecturas)
+            {
+                if (item.FechaFin != null)
+                {
+                    completadas.Add(item);
+                }
+            }
+
+            return completadas;
+        }
+
         public void Update(Lectura nueva)
         {
             throw new NotImplementedException();

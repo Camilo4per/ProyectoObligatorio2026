@@ -31,21 +31,13 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public List<Auditoria> Buscar(int? idHistoria, int? idUsuario)
         {
-            IQueryable<Auditoria> query = _context.Auditorias
+            return _context.Auditorias
                 .Include(a => a.Usuario)
-                .Include(a => a.Historia);
-
-            if (idHistoria.HasValue && idHistoria.Value > 0)
-            {
-                query = query.Where(a => a.idHistoria == idHistoria.Value);
-            }
-
-            if (idUsuario.HasValue && idUsuario.Value > 0)
-            {
-                query = query.Where(a => a.idUsuario == idUsuario.Value);
-            }
-
-            return query.OrderByDescending(a => a.Fecha).ToList();
+                .Include(a => a.Historia)
+                .Where(a => (idHistoria == null || idHistoria <= 0 || a.idHistoria == idHistoria)
+                         && (idUsuario == null || idUsuario <= 0 || a.idUsuario == idUsuario))
+                .OrderByDescending(a => a.Fecha)
+                .ToList();
         }
 
         public List<Auditoria> FindAll()

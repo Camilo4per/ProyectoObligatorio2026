@@ -56,6 +56,7 @@ builder.Services.AddScoped<ILoginCU, LoginCU>();
 builder.Services.AddScoped<IAgregarLectura, AgregarLecturaCU>();
 builder.Services.AddScoped<IObtenerLecturasPorId, ObtenerLecturasPorIdCU>();
 builder.Services.AddScoped<IEncontrarTodasLasLecturas, EncontrarTodasLasLecturasCU>();
+builder.Services.AddScoped<IRankingHistorias, RankingHistoriasCU>();
 
 builder.Services.AddScoped<IAgregarCapitulo, AgregarCapituloCU>();
 builder.Services.AddScoped<IRegistrarAuditoria, RegistrarAuditoriaCU>();

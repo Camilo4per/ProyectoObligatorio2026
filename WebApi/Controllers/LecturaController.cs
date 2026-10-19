@@ -15,15 +15,18 @@ namespace ApiWeb.Controllers
         private IEncontrarTodasLasLecturas _encontrarTodasLasLecturasCu;
         private IObtenerLecturasPorId _obtenerLecturasPorIdCu;
         private IAgregarLectura _agregarLecturaCu;
+        private IRankingHistorias _rankingHistoriasCu;
         public LecturaController(
             IEncontrarTodasLasLecturas encontrarTodasLasLecturas,
             IObtenerLecturasPorId obtenerLecturasPorId,
-            IAgregarLectura agregarLectura
+            IAgregarLectura agregarLectura,
+            IRankingHistorias rankingHistorias
             )
         {
             _encontrarTodasLasLecturasCu = encontrarTodasLasLecturas;
             _obtenerLecturasPorIdCu = obtenerLecturasPorId;
             _agregarLecturaCu = agregarLectura;
+            _rankingHistoriasCu = rankingHistorias;
         }
 
         // GET: api/<LecturaController>
@@ -63,7 +66,22 @@ namespace ApiWeb.Controllers
             }
         }
 
-        /*
+        // GET api/<LecturaController>/Ranking
+        [HttpGet("Ranking")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public ActionResult<IEnumerable<RankingHistoriaDTO>> GetRanking()
+        {
+            try
+            {
+                return Ok(_rankingHistoriasCu.Ejecutar());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         // POST api/<LecturaController>
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
@@ -85,6 +103,5 @@ namespace ApiWeb.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        */
     }
 }

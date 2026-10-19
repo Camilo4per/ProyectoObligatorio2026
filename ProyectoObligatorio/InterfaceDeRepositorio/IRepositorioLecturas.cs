@@ -7,5 +7,7 @@ namespace Dominio.InterfaceDeRepositorio
         public void ExisteLectura(Lectura aVerificar);
 
         bool TieneLecturasDeHistoria(int idHistoria);
+
+        List<Lectura> FindAllCompletadas();
     }
 }

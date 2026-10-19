@@ -52,8 +52,14 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
         {
             if (nueva == null) { throw new LecturaException("La lectura esta vacia"); }
             nueva.Validar();
-            _context.Lecturas.Update(nueva);
-            _context.SaveChanges();
+
+            // Solo se actualizan las columnas modificables de la lectura (final alcanzado y
+            // fecha de fin). Es tracker-free a proposito: si se usara Update(grafo) se volverian
+            // a marcar Usuario, Historia y sus capitulos como Modified y EF intentaria
+            // volver a guardarlos.
+            _context.Lecturas.Where(l => l.Id == nueva.Id).ExecuteUpdate(s => s
+                .SetProperty(l => l.idFinal, nueva.idFinal)
+                .SetProperty(l => l.FechaFin, nueva.FechaFin));
         }
 
         public List<Lectura> FindAll()
@@ -73,7 +79,13 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public Lectura FindById(int id)
         {
-            return _context.Lecturas.Where(l => l.Id == id).FirstOrDefault()
+            // Las navegaciones se cargan con Include: sin ellas, LecturaMapper.ToDTO
+            // trabajaria con Usuario/Historia nulos.
+            return _context.Lecturas
+                .Include(l => l.Usuario)
+                .Include(l => l.Historia)
+                .Include(l => l.FinalAlcanzado)
+                .Where(l => l.Id == id).FirstOrDefault()
                 ?? throw new LecturaException("Lectura inexistente");
         }
     }

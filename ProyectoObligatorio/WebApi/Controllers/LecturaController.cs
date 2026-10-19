@@ -15,17 +15,20 @@ namespace ApiWeb.Controllers
         private IEncontrarTodasLasLecturas _encontrarTodasLasLecturasCu;
         private IObtenerLecturasPorId _obtenerLecturasPorIdCu;
         private IAgregarLectura _agregarLecturaCu;
+        private IActualizarLectura _actualizarLecturaCu;
         private IRankingHistorias _rankingHistoriasCu;
         public LecturaController(
             IEncontrarTodasLasLecturas encontrarTodasLasLecturas,
             IObtenerLecturasPorId obtenerLecturasPorId,
             IAgregarLectura agregarLectura,
+            IActualizarLectura actualizarLectura,
             IRankingHistorias rankingHistorias
             )
         {
             _encontrarTodasLasLecturasCu = encontrarTodasLasLecturas;
             _obtenerLecturasPorIdCu = obtenerLecturasPorId;
             _agregarLecturaCu = agregarLectura;
+            _actualizarLecturaCu = actualizarLectura;
             _rankingHistoriasCu = rankingHistorias;
         }
 
@@ -117,8 +120,8 @@ namespace ApiWeb.Controllers
                 {
                     return BadRequest("El ID en la URL no coincide con el ID en el cuerpo de la solicitud.");
                 }
-                // _actualizarLecturaCu.Ejecutar(id, dto);
-                return Ok("Lectura actualizada correctamente.");
+                _actualizarLecturaCu.Ejecutar(id, dto);
+                return NoContent();
             }
             catch (LecturaException lex)
             {

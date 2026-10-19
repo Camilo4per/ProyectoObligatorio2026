@@ -27,7 +27,7 @@ namespace Dominio.Entidades
             if (Historia == null) throw new LecturaException("La historia no puede ser nula");
             Historia.Validar();
             ValidarFechaInicio();
-            if (FechaFin != null) ValidarFechaFin();
+            ValidarFechaFin();
             if (FinalAlcanzado != null)
             {
                 if (FinalAlcanzado is not Final)
@@ -42,6 +42,13 @@ namespace Dominio.Entidades
                 throw new LecturaException("La fecha de inicio es requerida");
             if (FechaInicio > DateTime.Now)
                 throw new LecturaException("La fecha de inicio no puede ser en el futuro");
+        }
+
+        // Regla de negocio: una lectura ya finalizada es inmutable.
+        public void ValidarModificacion()
+        {
+            if (FechaFin != null)
+                throw new LecturaException("La lectura ya fue finalizada y no se puede modificar.");
         }
 
         public void ValidarFechaFin()

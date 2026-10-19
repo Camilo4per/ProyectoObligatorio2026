@@ -13,7 +13,22 @@ namespace ProyectoSecundario.Controllers
 
         public IActionResult Index()
         {
-            
+            return View();
+        }
+
+        // POST: api/<LecturaController>
+        public IActionResult Create(LecturaModel model)
+        {
+            HttpResponseMessage respuesta = ClienteHttpAuxiliar.EnviarSolicitud(
+                baseUrl,
+                VerbosHttp.POST,
+                model
+            );
+            if (respuesta.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index", "Historia");
+            }
+            ViewBag.Error = "No se pudo crear la lectura";
             return View();
         }
 
@@ -31,6 +46,24 @@ namespace ProyectoSecundario.Controllers
             }
 
             ViewBag.Error = "No se pudo actualizar la lectura";
+            return View();
+        }
+
+        // GET api/<LecturaController>/Ranking
+        [HttpGet]
+        public IActionResult GetRanking()
+        {
+            HttpResponseMessage respuesta = ClienteHttpAuxiliar.EnviarSolicitud(
+                baseUrl + "/Ranking",
+                VerbosHttp.GET
+            );
+            if (respuesta.IsSuccessStatusCode)
+            {
+                string contenido = respuesta.Content.ReadAsStringAsync().Result;
+                var ranking = JsonConvert.DeserializeObject<List<LecturaModel>>(contenido);
+                return View(ranking);
+            }
+            ViewBag.Error = "No se pudo obtener el ranking";
             return View();
         }
     }

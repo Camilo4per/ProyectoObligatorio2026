@@ -24,12 +24,6 @@ namespace Presentacion.Controllers
         // GET: Capitulo/Create?idHistoria=5
         public ActionResult Create(int idHistoria)
         {
-            string? rolUsuario = HttpContext.Session.GetString("Rol");
-            if (rolUsuario != "Administrador")
-            {
-                return RedirectToAction("Login", "Usuario");
-            }
-
             if (idHistoria <= 0)
             {
                 return NotFound();

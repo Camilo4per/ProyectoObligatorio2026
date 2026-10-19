@@ -103,5 +103,31 @@ namespace ApiWeb.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        // PUT api/<LecturaController>/5
+        [HttpPut("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public ActionResult Put(int id, [FromBody] LecturaDTO dto)
+        {
+            try
+            {
+                if (id != dto.Id)
+                {
+                    return BadRequest("El ID en la URL no coincide con el ID en el cuerpo de la solicitud.");
+                }
+                // _actualizarLecturaCu.Ejecutar(id, dto);
+                return Ok("Lectura actualizada correctamente.");
+            }
+            catch (LecturaException lex)
+            {
+                return BadRequest(lex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

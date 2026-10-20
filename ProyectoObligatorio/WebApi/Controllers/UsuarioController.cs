@@ -1,7 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
-using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
-using DTOs.DTOs;
+using ApiWeb.TokenHandler;
 using Dominio.Excepciones;
+using DTOs.DTOs;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,15 +17,18 @@ namespace ApiWeb.Controllers
         private IEncontrarTodosUsuarios _encontrarTodosUsuariosCu;
         private IObtenerUsuarioPorId _obtenerUsuarioPorIdCu;
         private ILoginCU _loginCu;
+        private readonly IConfiguration _configuration;
         public UsuarioController(
             IEncontrarTodosUsuarios encontrarTodosUsuarios, 
             IObtenerUsuarioPorId obtenerUsuarioPorId,
-            ILoginCU loginCu
+            ILoginCU loginCu,
+            IConfiguration configuration
             )
         {
             _encontrarTodosUsuariosCu = encontrarTodosUsuarios;
             _obtenerUsuarioPorIdCu = obtenerUsuarioPorId;
             _loginCu = loginCu;
+            _configuration = configuration;
         }
 
         // GET: api/<UsuarioController>
@@ -65,14 +70,22 @@ namespace ApiWeb.Controllers
 
         // POST api/<UsuarioController>/Login
         [HttpPost("Login")]
+        [AllowAnonymous]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        public ActionResult Login([FromBody] UsuarioDTO dto)
+        public ActionResult Login([FromBody] LoginDTO dto)
         {
             try
             {
-                return Ok(_loginCu.Ejecutar(dto.NombreUsuario, dto.Password));
+                var usuarioDto = _loginCu.Ejecutar(dto);
+                string token = JWTHandler.GenerarToken(usuarioDto, _configuration);
+                return Ok(
+                    new
+                    {
+                        Token = token,
+                        Usuario = usuarioDto
+                    });
             }
             catch (UsuarioException uex)
             {

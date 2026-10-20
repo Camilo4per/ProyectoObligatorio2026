@@ -35,6 +35,7 @@ namespace ProyectoSecundario.Auxiliar
                     break;
                 default:
                     throw new Exception("Http Method incorrecto.");
+                    break;
             }
             tarea.Wait();
             return tarea.Result;

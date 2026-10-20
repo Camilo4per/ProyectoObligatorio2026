@@ -4,6 +4,6 @@ namespace LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios
 {
     public interface ILoginCU
     {
-        public UsuarioDTO Ejecutar(string usuario, string password);
+        public UsuarioDTO Ejecutar(LoginDTO dto);
     }
 }

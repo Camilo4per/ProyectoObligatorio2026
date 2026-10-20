@@ -1,8 +1,9 @@
+using Dominio.Entidades;
+using DTOs.DTOs;
+using LogicaAplicacion.CasosDeUso.Usuarios;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
-using DTOs.DTOs;
-using Dominio.Entidades;
 
 namespace Presentacion.Controllers
 {
@@ -46,21 +47,21 @@ namespace Presentacion.Controllers
         // POST: UsuarioController/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(string usuario, string password)
+        public ActionResult Login(LoginDTO dto)
         {
             try
             {
-                UsuarioDTO dto = loginCU.Ejecutar(usuario, password);
+                UsuarioDTO usuDto = loginCU.Ejecutar(dto);
 
-                if (dto.Rol != (int)RolesUsuario.Administrador)
+                if (usuDto.Rol != (int)RolesUsuario.Administrador)
                 {
                     ViewBag.Error = "Solo los administradores pueden iniciar sesión.";
                     return View();
                 }
 
-                HttpContext.Session.SetInt32("IdUsuario", dto.Id);
-                HttpContext.Session.SetString("Rol", ((RolesUsuario)dto.Rol).ToString());
-                HttpContext.Session.SetString("NombreUsuario", dto.NombreUsuario);
+                HttpContext.Session.SetInt32("IdUsuario", usuDto.Id);
+                HttpContext.Session.SetString("Rol", ((RolesUsuario)usuDto.Rol).ToString());
+                HttpContext.Session.SetString("NombreUsuario", usuDto.NombreUsuario);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

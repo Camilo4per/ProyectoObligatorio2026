@@ -9,7 +9,7 @@ namespace ProyectoSecundario.Controllers
 {
     public class AuthController : Controller
     {
-        private string baseUrl = "http://localhost:5209/api/Auth/login";
+        private string baseUrl = "http://localhost:5281/api/Usuario/Login";
 
         // GET: /Auth/Login
         public IActionResult Login()
@@ -19,7 +19,6 @@ namespace ProyectoSecundario.Controllers
 
         // POST: /Auth/Login
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Login(LoginModel model)
         {
             HttpResponseMessage respuesta = ClienteHttpAuxiliar.EnviarSolicitud(
@@ -32,7 +31,7 @@ namespace ProyectoSecundario.Controllers
                 string objetoJson = ClienteHttpAuxiliar.ObtenerBody(respuesta);
                 TokenModel tokenModel = JsonConvert.DeserializeObject<TokenModel>(objetoJson);
                 HttpContext.Session.SetString("token", tokenModel.Token);
-                return RedirectToAction("Create", "Categoria"); 
+                return RedirectToAction("Index", "Historia"); 
             }
 
             ViewBag.Error = "Usuario o contraseña incorrectos";
@@ -41,10 +40,9 @@ namespace ProyectoSecundario.Controllers
 
         // POST: /Auth/Logout
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Logout()
         {
-            HttpContext.Session.Remove("Usuario");
+            HttpContext.Session.Remove("token");
             return RedirectToAction("Login");
         }
     }

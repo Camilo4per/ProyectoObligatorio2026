@@ -16,11 +16,11 @@ namespace LogicaAplicacion.CasosDeUso.Usuarios
             repositorio = repo;
         }
 
-        public UsuarioDTO Ejecutar(string usuario, string password)
+        public UsuarioDTO Ejecutar(LoginDTO dto)
         {
-            Usuario? u = repositorio.FindByNombreUsuario(usuario);
+            Usuario? u = repositorio.FindByNombreUsuario(dto.NombreUsuario);
 
-            if (u != null && u.Password.Verify(password))
+            if (u != null && u.Password.Verify(dto.Password))
             {
                 return UsuarioMapper.ToDTO(u);
             }

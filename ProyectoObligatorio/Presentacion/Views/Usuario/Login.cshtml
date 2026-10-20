@@ -1,3 +1,5 @@
+@model DTOs.DTOs.LoginDTO
+
 @{
     ViewData["Title"] = "Login";
 }
@@ -6,12 +8,12 @@
 
 <form asp-action="Login" method="post">
     <div class="form-group">
-        <label for="usuario" class="control-label">Usuario</label>
-        <input name="usuario" id="usuario" class="form-control" type="text" />
+        <label asp-for="NombreUsuario" class="control-label">Usuario</label>
+        <input asp-for="NombreUsuario" class="form-control" />
     </div>
     <div class="form-group">
-        <label for="password" class="control-label">Password</label>
-        <input name="password" id="password" class="form-control" type="password" />
+        <label asp-for="Password" class="control-label">Password</label>
+        <input asp-for="Password" class="form-control" type="password" />
     </div>
 
     <div class="form-group mt-2">
@@ -24,3 +26,11 @@
 {
     <div class="alert alert-danger">@ViewBag.Error</div>
 }
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+

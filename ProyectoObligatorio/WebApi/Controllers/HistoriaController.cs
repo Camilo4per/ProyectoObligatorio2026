@@ -12,11 +12,11 @@ namespace ApiWeb.Controllers
     [ApiController]
     public class HistoriaController : ControllerBase
     {
-        private IEncontrarTodasHistorias _encontrarTodasLasHistoriasCu;
+        private IEncontrarTodasLasHistorias _encontrarTodasLasHistoriasCu;
         private IObtenerHistoriaPorId _obtenerHistoriaPorIdCu;
 
         public HistoriaController(
-            IEncontrarTodasHistorias encontrarTodasLasHistorias,
+            IEncontrarTodasLasHistorias encontrarTodasLasHistorias,
             IObtenerHistoriaPorId obtenerHistoriaPorId
             )
         {

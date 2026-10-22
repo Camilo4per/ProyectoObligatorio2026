@@ -2,7 +2,7 @@ using DTOs.DTOs;
 
 namespace LogicaAplicacion.InterfacesDeCasoDeUso.Historias
 {
-    public interface IEncontrarTodasHistorias
+    public interface IEncontrarTodasLasHistorias
     {
         public List<HistoriaDTO> Ejecutar();
     }

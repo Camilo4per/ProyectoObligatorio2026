@@ -22,7 +22,7 @@ dotnet run --project Presentacion                   # levanta la app MVC (http l
 dotnet run --project WebApi                          # levanta la API REST (http localhost:5281, Swagger en /swagger)
 ```
 - Ambos frontends (`Presentacion/Program.cs` y `WebApi/Program.cs`) registran el mismo DI: `builder.Services.AddDbContext<DominioContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ObligatorioDB")))` y los 6 `IRepositorio*` → `Repositorio*EF` (SQL Server, base local `ObligatorioDB`). Los repos en memoria NO están registrados.
-- Casos de uso registrados: Historias (`IAgregarHistoria`, `IEncontrarTodasHistorias`, `IObtenerHistoriaPorId`, `IModificarHistoria`, `IEliminarHistoria`), Categorías (`IEncontrarTodasCategorias`), Usuarios (`IAgregarUsuario`, `IEncontrarTodosUsuarios`, `IObtenerUsuarioPorId`, `ILoginApi`; en `Presentacion` además `ILoginAdministrador`).
+- Casos de uso registrados: Historias (`IAgregarHistoria`, `IEncontrarTodasLasHistorias`, `IObtenerHistoriaPorId`, `IModificarHistoria`, `IEliminarHistoria`), Categorías (`IEncontrarTodasCategorias`), Usuarios (`IAgregarUsuario`, `IEncontrarTodosUsuarios`, `IObtenerUsuarioPorId`, `ILoginApi`; en `Presentacion` además `ILoginAdministrador`).
 - **`dotnet ef` NO está instalado en el shell del agente** (y no instalar herramientas sin autorización). Para operaciones de DB (drop/update) usar un proyecto temporal que referencie `LogicaAccesoDatos` y llame `context.Database.EnsureDeleted()`/`Migrate()`, o pedirle al usuario que corra `dotnet ef`.
 
 ## Testing

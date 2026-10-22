@@ -12,7 +12,7 @@ namespace Presentacion.Controllers
     public class HistoriaController : Controller
     {
         private IAgregarHistoria agregarHistoria;
-        private IEncontrarTodasHistorias encontrarTodasHistorias;
+        private IEncontrarTodasLasHistorias encontrarTodasLasHistorias;
         private IObtenerHistoriaPorId obtenerHistoriaPorId;
         private IModificarHistoria modificarHistoria;
         private IEliminarHistoria eliminarHistoria;
@@ -20,7 +20,7 @@ namespace Presentacion.Controllers
 
         public HistoriaController(
             IAgregarHistoria agregarHistoriaCu,
-            IEncontrarTodasHistorias encontrarTodasHistoriasCu,
+            IEncontrarTodasLasHistorias encontrarTodasLasHistoriasCu,
             IObtenerHistoriaPorId obtenerHistoriaPorIdCu,
             IModificarHistoria modificarHistoriaCu,
             IEliminarHistoria eliminarHistoriaCu,
@@ -28,7 +28,7 @@ namespace Presentacion.Controllers
             )
         {
             agregarHistoria = agregarHistoriaCu;
-            encontrarTodasHistorias = encontrarTodasHistoriasCu;
+            encontrarTodasLasHistorias = encontrarTodasLasHistoriasCu;
             obtenerHistoriaPorId = obtenerHistoriaPorIdCu;
             modificarHistoria = modificarHistoriaCu;
             eliminarHistoria = eliminarHistoriaCu;
@@ -39,7 +39,7 @@ namespace Presentacion.Controllers
         // GET: HistoriaController
         public ActionResult Index()
         {
-            return View(encontrarTodasHistorias.Ejecutar());
+            return View(encontrarTodasLasHistorias.Ejecutar());
         }
 
         // GET: HistoriaController/Details/5

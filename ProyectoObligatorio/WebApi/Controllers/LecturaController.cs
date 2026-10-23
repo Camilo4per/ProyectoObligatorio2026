@@ -1,6 +1,7 @@
 ﻿using LogicaAplicacion.InterfacesDeCasoDeUso.Lecturas;
 using DTOs.DTOs;
 using Dominio.Excepciones;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -10,6 +11,7 @@ namespace ApiWeb.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LecturaController : ControllerBase
     {
         private IEncontrarTodasLasLecturas _encontrarTodasLasLecturasCu;
@@ -71,7 +73,10 @@ namespace ApiWeb.Controllers
 
         // GET api/<LecturaController>/Ranking
         [HttpGet("Ranking")]
+        [Authorize(Roles = "Administrador")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public ActionResult<IEnumerable<RankingHistoriaDTO>> GetRanking()
         {

@@ -33,7 +33,10 @@ namespace ApiWeb.Controllers
 
         // GET: api/<UsuarioController>
         [HttpGet]
+        [Authorize(Roles = "Administrador")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public ActionResult<IEnumerable<UsuarioDTO>> Get()
         {
@@ -49,6 +52,7 @@ namespace ApiWeb.Controllers
 
         // GET api/<UsuarioController>/5
         [HttpGet("{id}")]
+        [Authorize(Roles = "Administrador")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]

@@ -1,5 +1,6 @@
 using DTOs.DTOs;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Categorias;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -9,6 +10,7 @@ namespace ApiWeb.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CategoriaController : ControllerBase
     {
         private IEncontrarTodasCategorias _encontrarTodasCategoriasCu;

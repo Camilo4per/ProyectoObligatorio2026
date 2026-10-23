@@ -20,17 +20,36 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Historia" asp-action="Index">Home</a>
-                        </li>
+                   
+                        @if (Context.Session.GetString("Rol") == null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Login">Login</a>
+                            </li>
+                        }
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Login">Login</a>
-                        </li>
+                        @if (Context.Session.GetString("Rol") != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Historia" asp-action="Index">Home</a>
+                            </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Logout">Logout</a>   
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Logout">Logout</a>
+                            </li>
+                        }
+
+                        @if (Context.Session.GetString("Rol") == "Administrador")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Lecturas" asp-action="Index">Ranking Lecturas</a>
+                            </li>
+                        }
+                        
+                        @if (Context.Session.GetString("Rol") == "Usuario")
+                        {
+                            // Falta hacer
+                        }
                     </ul>
                 </div>
             </div>
@@ -43,9 +62,14 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - ProyectoSecundario - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+        <p>
+            &copy; 2026 - Obligatorio / Desarrollo Web Asistido con IA - Camilo Pereira, Ignacio Alvez
+            @if (Context.Session.GetString("token") != null)
+            {
+                <span> | </span>
+                <span class="text-primary">Logeado: @Context.Session.GetString("NombreUsuario")</span>
+            }
+        </p>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

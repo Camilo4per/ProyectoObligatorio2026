@@ -31,6 +31,8 @@ namespace ProyectoSecundario.Controllers
                 string objetoJson = ClienteHttpAuxiliar.ObtenerBody(respuesta);
                 TokenModel tokenModel = JsonConvert.DeserializeObject<TokenModel>(objetoJson);
                 HttpContext.Session.SetString("token", tokenModel.Token);
+                HttpContext.Session.SetString("NombreUsuario", tokenModel.Usuario.NombreUsuario);
+                HttpContext.Session.SetString("Rol", tokenModel.Usuario.Rol == 0 ? "Administrador" : "Usuario");
                 return RedirectToAction("Index", "Historia"); 
             }
 
@@ -38,11 +40,12 @@ namespace ProyectoSecundario.Controllers
             return View();
         }
 
-        // POST: /Auth/Logout
-        [HttpPost]
+        // GET: /Auth/Logout
+        [HttpGet]
         public IActionResult Logout()
         {
             HttpContext.Session.Remove("token");
+            HttpContext.Session.Remove("NombreUsuario");
             return RedirectToAction("Login");
         }
     }

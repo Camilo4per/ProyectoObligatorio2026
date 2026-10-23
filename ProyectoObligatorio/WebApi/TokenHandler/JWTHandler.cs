@@ -2,6 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Dominio.Entidades;
 using DTOs.DTOs;
 
 namespace ApiWeb.TokenHandler
@@ -19,7 +20,7 @@ namespace ApiWeb.TokenHandler
                 {
                     new Claim(ClaimTypes.Name, usuario.NombreUsuario),
                     new Claim(ClaimTypes.Email, usuario.Email),
-                    new Claim(ClaimTypes.Role, "Usuario")
+                    new Claim(ClaimTypes.Role, ((RolesUsuario)usuario.Rol).ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMonths(1),
                 SigningCredentials = new SigningCredentials(

@@ -60,5 +60,17 @@ namespace DTOs.Mappers
                 Estado = (int) historia.Estado
             };
         }
+
+        // Proyección para el catálogo del lector: sólo datos de presentación.
+        public static HistoriaCatalogoDTO ToCatalogoDTO(Historia historia)
+        {
+            return new HistoriaCatalogoDTO
+            {
+                Id = historia.Id,
+                Titulo = historia.Titulo.Valor,
+                Sinopsis = historia.Sinopsis.Valor,
+                Categorias = historia.Categorias.Select(CategoriaMapper.ToDTO).ToList()
+            };
+        }
     }
 }

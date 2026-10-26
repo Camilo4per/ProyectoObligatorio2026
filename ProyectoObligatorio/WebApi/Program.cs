@@ -45,6 +45,7 @@ builder.Services.AddScoped<IRepositorioAuditorias, RepositorioAuditoriasEF>();
 
 builder.Services.AddScoped<IAgregarHistoria, AgregarHistoriaCU>();
 builder.Services.AddScoped<IEncontrarTodasLasHistorias, EncontrarTodasLasHistoriasCU>();
+builder.Services.AddScoped<IEncontrarHistoriasPublicadas, EncontrarHistoriasPublicadasCU>();
 builder.Services.AddScoped<IObtenerHistoriaPorId, ObtenerHistoriaPorIdCU>();
 builder.Services.AddScoped<IModificarHistoria, ModificarHistoriaCU>();
 builder.Services.AddScoped<IEliminarHistoria, EliminarHistoriaCU>();
@@ -60,7 +61,8 @@ builder.Services.AddScoped<IAgregarLectura, AgregarLecturaCU>();
 builder.Services.AddScoped<IActualizarLectura, ActualizarLecturaCU>();
 builder.Services.AddScoped<IObtenerLecturasPorId, ObtenerLecturasPorIdCU>();
 builder.Services.AddScoped<IEncontrarTodasLasLecturas, EncontrarTodasLasLecturasCU>();
-builder.Services.AddScoped<IRankingHistorias, RankingHistoriasCU>();
+builder.Services.AddScoped<IObtenerPasoLectura, ObtenerPasoLecturaCU>();
+builder.Services.AddScoped<IAvanzarLectura, AvanzarLecturaCU>();
 
 builder.Services.AddScoped<IAgregarCapitulo, AgregarCapituloCU>();
 builder.Services.AddScoped<IRegistrarAuditoria, RegistrarAuditoriaCU>();

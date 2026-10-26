@@ -1,0 +1,37 @@
+@model PasoLecturaModel
+
+@{
+    ViewData["Title"] = Model.Capitulo.Titulo;
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["Error"]
+    </div>
+}
+
+<p class="text-muted mb-1">@Model.TituloHistoria</p>
+<h2>@Model.Capitulo.Titulo</h2>
+
+<p class="lead">@Model.Capitulo.Texto</p>
+
+@if (Model.Capitulo.Opciones != null && Model.Capitulo.Opciones.Count > 0)
+{
+    <h4 class="mt-4">¿Qué haces?</h4>
+    foreach (OpcionLecturaModel opcion in Model.Capitulo.Opciones)
+    {
+        <form asp-action="Avanzar" method="post" class="mb-2">
+            <input type="hidden" name="idLectura" value="@Model.IdLectura" />
+            <input type="hidden" name="idCapituloOrigen" value="@Model.Capitulo.Id" />
+            <input type="hidden" name="idCapDestino" value="@opcion.idCapDestino" />
+            <button type="submit" class="btn btn-outline-primary w-100 text-start">@opcion.Texto</button>
+        </form>
+    }
+}
+else
+{
+    <div class="alert alert-warning" role="alert">
+        Este capítulo no tiene opciones para continuar.
+    </div>
+}

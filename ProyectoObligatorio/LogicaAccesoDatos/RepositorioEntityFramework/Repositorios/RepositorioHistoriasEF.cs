@@ -129,6 +129,19 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
             return historias;
         }
 
+        // Catálogo del lector: sólo publicadas, con las categorías para el filtro.
+        // El IQueryable no sale del repositorio: se materializa con ToList().
+        public List<Historia> FindPublicadas(int? idCategoria)
+        {
+            return _context.Historias
+                .AsNoTracking()
+                .Include(h => h.Categorias)
+                .Where(h => h.Estado == EstadoHistoria.Publicada)
+                .Where(h => !idCategoria.HasValue || idCategoria.Value <= 0
+                            || h.Categorias.Any(c => c.Id == idCategoria.Value))
+                .ToList();
+        }
+
         public Historia FindById(int id)
         {
             Historia historia = _context.Historias

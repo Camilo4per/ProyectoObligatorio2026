@@ -15,5 +15,14 @@ namespace Dominio.Entidades
             if (CantLlegaron == null) throw new FinalException("El valor de CantLlegaron no puede ser nulo.");
             CantLlegaron.Validar();
         }
+
+        // Contabiliza un lector que alcanzó este final.
+        public void RegistrarLlegada()
+        {
+            if (CantLlegaron == null)
+                throw new FinalException("El valor de CantLlegaron no puede ser nulo.");
+
+            CantLlegaron = new CantLlegaron(CantLlegaron.Valor + 1);
+        }
     }
 }

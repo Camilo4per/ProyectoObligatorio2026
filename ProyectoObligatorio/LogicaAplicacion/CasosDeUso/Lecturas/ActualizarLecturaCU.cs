@@ -22,10 +22,7 @@ namespace LogicaAplicacion.CasosDeUso.Lecturas
             _repositorioFinales = repoFinales;
         }
 
-        // Actualiza los unicos datos modificables de una lectura: el final alcanzado
-        // y la fecha de fin. Usuario, Historia y FechaInicio se toman siempre de la
-        // lectura existente (son inmutables) y el resto del DTO se ignora.
-        public void Ejecutar(int id, LecturaDTO dto)
+        public void Ejecutar(int id, LecturaDTO dto, bool esAdmin)
         {
             if (dto == null)
                 throw new LecturaException("Los datos de la lectura no pueden ser nulos.");
@@ -40,7 +37,15 @@ namespace LogicaAplicacion.CasosDeUso.Lecturas
             // 2. Regla de dominio: una lectura ya finalizada es inmutable.
             existente.ValidarModificacion();
 
-            // 3. Final alcanzado: debe existir y ser un final de la MISMA historia.
+            // 3. Solo el dueño de la lectura (o un administrador) puede modificarla.
+            if (!esAdmin && (!dto.idUsuario.HasValue || existente.idUsuario != dto.idUsuario.Value))
+                throw new LecturaException("La lectura no pertenece al usuario autenticado.");
+
+            if (!existente.idHistoria.HasValue)
+                throw new LecturaException("La lectura no tiene una historia asociada.");
+            int idHistoriaExistente = existente.idHistoria.Value;
+
+            // 4. Final alcanzado: debe existir y ser un final de la MISMA historia.
             Final? finalAlcanzado = null;
             if (dto.idFinal.HasValue)
             {
@@ -53,17 +58,17 @@ namespace LogicaAplicacion.CasosDeUso.Lecturas
                     throw new LecturaException("El final alcanzado indicado no existe.");
                 }
 
-                if (finalAlcanzado.idHistoria != existente.idHistoria)
+                if (finalAlcanzado.idHistoria != idHistoriaExistente)
                     throw new LecturaException("El final alcanzado no pertenece a la historia de la lectura.");
             }
 
-            // 4. Armo la entidad con las referencias YA trackeadas de los repositorios.
+            // 5. Armo la entidad con las referencias YA trackeadas de los repositorios.
             //    No uso LecturaMapper.FromDTO(dto) porque crearia un grafo nuevo de
             //    Usuario e Historia y EF intentaria volver a guardarlo.
             Historia historia;
             try
             {
-                historia = _repositorioHistorias.FindById(existente.idHistoria.Value);
+                historia = _repositorioHistorias.FindById(idHistoriaExistente);
             }
             catch (HistoriaException)
             {

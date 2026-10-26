@@ -57,5 +57,37 @@ namespace DTOs.Mappers
                     .ToList()
             };
         }
+
+        // Proyección de lectura: sin ids de administración ni cantidades.
+        public static CapituloLecturaDTO ToLecturaDTO(Capitulo capitulo)
+        {
+            if (capitulo is Final final)
+            {
+                return new CapituloLecturaDTO
+                {
+                    Id = final.Id,
+                    Tipo = (int) TipoCapitulo.Final,
+                    Titulo = final.Titulo.Valor,
+                    Texto = final.Texto.Valor,
+                    Opciones = null
+                };
+            }
+
+            Intermedio intermedio = (Intermedio) capitulo;
+            return new CapituloLecturaDTO
+            {
+                Id = intermedio.Id,
+                Tipo = (int) TipoCapitulo.Intermedio,
+                Titulo = intermedio.Titulo.Valor,
+                Texto = intermedio.Texto.Valor,
+                Opciones = (intermedio.Opciones ?? new List<Opcion>())
+                    .Select(o => new OpcionLecturaDTO
+                    {
+                        Texto = o.Texto,
+                        idCapDestino = o.idCapDestino
+                    })
+                    .ToList()
+            };
+        }
     }
 }

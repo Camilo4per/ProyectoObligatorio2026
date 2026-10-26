@@ -52,5 +52,28 @@ namespace DTOs.Mappers
 
             throw new LecturaException("El capítulo alcanzado en una lectura debe ser de tipo final");
         }
+
+        public static LecturaIniciadaDTO ToIniciadaDTO(Lectura lectura, Historia historia)
+        {
+            return new LecturaIniciadaDTO
+            {
+                IdLectura = lectura.Id,
+                IdHistoria = historia.Id,
+                TituloHistoria = historia.Titulo.Valor,
+                IdCapituloInicial = historia.CapituloInicial.Id
+            };
+        }
+
+        public static PasoLecturaDTO ToPasoDTO(Lectura lectura, Historia historia, Capitulo capitulo)
+        {
+            return new PasoLecturaDTO
+            {
+                IdLectura = lectura.Id,
+                IdHistoria = historia.Id,
+                TituloHistoria = historia.Titulo.Valor,
+                Capitulo = CapituloMapper.ToLecturaDTO(capitulo),
+                LecturaFinalizada = lectura.FechaFin != null
+            };
+        }
     }
 }

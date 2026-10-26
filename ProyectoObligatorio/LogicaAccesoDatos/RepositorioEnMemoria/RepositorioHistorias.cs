@@ -27,6 +27,21 @@ namespace LogicaAccesoDatos.RepositorioEnMemoria
             }
         }
 
+        public List<Historia> FindPublicadas(int? idCategoria)
+        {
+            List<Historia> publicadas = new List<Historia>();
+            foreach (Historia historia in historias)
+            {
+                if (historia.Estado != EstadoHistoria.Publicada) continue;
+                if (idCategoria.HasValue && idCategoria.Value > 0 &&
+                    !historia.Categorias.Any(c => c.Id == idCategoria.Value)) continue;
+
+                publicadas.Add(historia);
+            }
+
+            return publicadas;
+        }
+
         public Historia FindById(int id)
         {
             foreach (Historia historia in historias)

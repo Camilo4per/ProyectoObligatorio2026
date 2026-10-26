@@ -53,6 +53,14 @@ namespace LogicaAplicacion.CasosDeUso.Capitulos
                 throw new HistoriaException("Historia inexistente");
             }
 
+            // Una historia publicada es de sólo lectura: agregar un capítulo podría dejarla
+            // publicada pero inválida (por ejemplo un intermedio nuevo sin opciones).
+            if (historia.Estado == EstadoHistoria.Publicada)
+            {
+                throw new HistoriaException(
+                    "No se pueden agregar capítulos a una historia publicada. Vuelva a ponerla en borrador para editarla.");
+            }
+
             // 2. Verificar que el capítulo antecedente exista en la historia y sea intermedio
             Capitulo? capituloAntecedente = historia.Capitulos.FirstOrDefault(c => c.Id == idCapituloAntecedente);
             if (capituloAntecedente == null)

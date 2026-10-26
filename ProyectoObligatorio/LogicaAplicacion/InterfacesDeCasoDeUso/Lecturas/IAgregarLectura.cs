@@ -4,6 +4,6 @@ namespace LogicaAplicacion.InterfacesDeCasoDeUso.Lecturas
 {
     public interface IAgregarLectura
     {
-        public void Ejecutar(LecturaDTO dto);
+        public LecturaIniciadaDTO Ejecutar(IniciarLecturaDTO dto);
     }
 }

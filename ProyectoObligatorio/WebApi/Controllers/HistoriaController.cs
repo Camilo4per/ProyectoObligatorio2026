@@ -15,14 +15,17 @@ namespace ApiWeb.Controllers
     public class HistoriaController : ControllerBase
     {
         private IEncontrarTodasLasHistorias _encontrarTodasLasHistoriasCu;
+        private IEncontrarHistoriasPublicadas _encontrarHistoriasPublicadasCu;
         private IObtenerHistoriaPorId _obtenerHistoriaPorIdCu;
 
         public HistoriaController(
             IEncontrarTodasLasHistorias encontrarTodasLasHistorias,
+            IEncontrarHistoriasPublicadas encontrarHistoriasPublicadas,
             IObtenerHistoriaPorId obtenerHistoriaPorId
             )
         {
             _encontrarTodasLasHistoriasCu = encontrarTodasLasHistorias;
+            _encontrarHistoriasPublicadasCu = encontrarHistoriasPublicadas;
             _obtenerHistoriaPorIdCu = obtenerHistoriaPorId;
         }
 
@@ -43,15 +46,41 @@ namespace ApiWeb.Controllers
             }
         }
 
+        // GET api/<HistoriaController>/Catalogo?idCategoria=2
+        [HttpGet("Catalogo")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public ActionResult<IEnumerable<HistoriaCatalogoDTO>> GetCatalogo([FromQuery] int? idCategoria)
+        {
+            try
+            {
+                return Ok(_encontrarHistoriasPublicadasCu.Ejecutar(idCategoria));
+            }
+            catch (HistoriaException hex)
+            {
+                return BadRequest(hex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         // GET api/<HistoriaController>/5
         [HttpGet("{id}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public ActionResult<HistoriaDTO> Get(int id)
         {
             try
             {
                 return Ok(_obtenerHistoriaPorIdCu.Ejecutar(id));
+            }
+            catch (HistoriaException hex)
+            {
+                return BadRequest(hex.Message);
             }
             catch (Exception ex)
             {

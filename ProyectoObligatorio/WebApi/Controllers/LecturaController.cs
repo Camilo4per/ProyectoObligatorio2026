@@ -1,4 +1,4 @@
-﻿using LogicaAplicacion.InterfacesDeCasoDeUso.Lecturas;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Lecturas;
 using DTOs.DTOs;
 using Dominio.Excepciones;
 using Microsoft.AspNetCore.Authorization;
@@ -18,25 +18,31 @@ namespace ApiWeb.Controllers
         private IObtenerLecturasPorId _obtenerLecturasPorIdCu;
         private IAgregarLectura _agregarLecturaCu;
         private IActualizarLectura _actualizarLecturaCu;
-        private IRankingHistorias _rankingHistoriasCu;
+        private IObtenerPasoLectura _obtenerPasoLecturaCu;
+        private IAvanzarLectura _avanzarLecturaCu;
         public LecturaController(
             IEncontrarTodasLasLecturas encontrarTodasLasLecturas,
             IObtenerLecturasPorId obtenerLecturasPorId,
             IAgregarLectura agregarLectura,
             IActualizarLectura actualizarLectura,
-            IRankingHistorias rankingHistorias
+            IObtenerPasoLectura obtenerPasoLectura,
+            IAvanzarLectura avanzarLectura
             )
         {
             _encontrarTodasLasLecturasCu = encontrarTodasLasLecturas;
             _obtenerLecturasPorIdCu = obtenerLecturasPorId;
             _agregarLecturaCu = agregarLectura;
             _actualizarLecturaCu = actualizarLectura;
-            _rankingHistoriasCu = rankingHistorias;
+            _obtenerPasoLecturaCu = obtenerPasoLectura;
+            _avanzarLecturaCu = avanzarLectura;
         }
 
         // GET: api/<LecturaController>
         [HttpGet]
+        [Authorize(Roles = "Administrador")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public ActionResult<IEnumerable<LecturaDTO>> Get()
         {
@@ -50,39 +56,20 @@ namespace ApiWeb.Controllers
             }
         }
 
-        // GET api/<LecturaController>/5
+        // GET api/<LecturaController>/5?idUsuario=3
         [HttpGet("{id}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        public ActionResult<LecturaDTO> Get(int id)
+        public ActionResult<LecturaDTO> Get(int id, [FromQuery] int idUsuario)
         {
             try
             {
-                return Ok(_obtenerLecturasPorIdCu.Ejecutar(id));
+                return Ok(_obtenerLecturasPorIdCu.Ejecutar(id, idUsuario, User.IsInRole("Administrador")));
             }
             catch (LecturaException lex)
             {
                 return BadRequest(lex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        // GET api/<LecturaController>/Ranking
-        [HttpGet("Ranking")]
-        [Authorize(Roles = "Administrador")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
-        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        public ActionResult<IEnumerable<RankingHistoriaDTO>> GetRanking()
-        {
-            try
-            {
-                return Ok(_rankingHistoriasCu.Ejecutar());
             }
             catch (Exception ex)
             {
@@ -95,12 +82,54 @@ namespace ApiWeb.Controllers
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        public ActionResult Post([FromBody] LecturaDTO dto)
+        public ActionResult Post([FromBody] IniciarLecturaDTO dto)
         {
             try
             {
-                _agregarLecturaCu.Ejecutar(dto);
-                return Created("api/Lectura", dto);
+                LecturaIniciadaDTO creada = _agregarLecturaCu.Ejecutar(dto);
+                return CreatedAtAction(nameof(Get), new { id = creada.IdLectura, idUsuario = dto.idUsuario }, creada);
+            }
+            catch (LecturaException lex)
+            {
+                return BadRequest(lex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        // GET api/<LecturaController>/5/Capitulo/12?idUsuario=3
+        [HttpGet("{id}/Capitulo/{idCapitulo}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public ActionResult<PasoLecturaDTO> GetCapitulo(int id, int idCapitulo, [FromQuery] int idUsuario)
+        {
+            try
+            {
+                return Ok(_obtenerPasoLecturaCu.Ejecutar(id, idCapitulo, idUsuario, User.IsInRole("Administrador")));
+            }
+            catch (LecturaException lex)
+            {
+                return BadRequest(lex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        // POST api/<LecturaController>/5/Avanzar
+        [HttpPost("{id}/Avanzar")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public ActionResult<PasoLecturaDTO> Avanzar(int id, [FromBody] AvanzarLecturaDTO dto)
+        {
+            try
+            {
+                return Ok(_avanzarLecturaCu.Ejecutar(id, dto, User.IsInRole("Administrador")));
             }
             catch (LecturaException lex)
             {
@@ -121,11 +150,11 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                if (id != dto.Id)
+                if (dto == null || id != dto.Id)
                 {
                     return BadRequest("El ID en la URL no coincide con el ID en el cuerpo de la solicitud.");
                 }
-                _actualizarLecturaCu.Ejecutar(id, dto);
+                _actualizarLecturaCu.Ejecutar(id, dto, User.IsInRole("Administrador"));
                 return NoContent();
             }
             catch (LecturaException lex)

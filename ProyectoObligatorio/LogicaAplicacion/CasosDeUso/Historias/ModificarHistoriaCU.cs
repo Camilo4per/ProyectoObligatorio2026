@@ -6,6 +6,7 @@ using DTOs.Mappers;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Auditorias;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LogicaAplicacion.CasosDeUso.Historias
 {
@@ -27,8 +28,24 @@ namespace LogicaAplicacion.CasosDeUso.Historias
 
         public void Ejecutar(HistoriaDTO dto, int? idUsuarioAdmin = null)
         {
+            if (dto == null)
+                throw new HistoriaException("Los datos de la historia no pueden ser nulos.");
+            if (dto.Estado != (int)EstadoHistoria.Borrador && dto.Estado != (int)EstadoHistoria.Publicada)
+                throw new HistoriaException("El estado de la historia es inválido.");
+
             HistoriaDTO completo = HistoriaMapper.ToDTO(repositorioHistorias.FindById(dto.Id));
             int estadoAnterior = completo.Estado;
+
+            // Una historia publicada es de sólo lectura: se permite Publicada -> Borrador
+            // (despublicar), pero no cambiar el contenido mientras siga publicada.
+            bool siguePublicada = estadoAnterior == (int)EstadoHistoria.Publicada
+                && dto.Estado == (int)EstadoHistoria.Publicada;
+
+            if (siguePublicada && HayCambiosDeContenido(dto, completo))
+            {
+                throw new HistoriaException(
+                    "Una historia publicada no se puede modificar. Vuelva a ponerla en borrador para editarla.");
+            }
 
             if (dto.CapituloInicial != null && completo.CapituloInicial != null)
             {
@@ -70,6 +87,23 @@ namespace LogicaAplicacion.CasosDeUso.Historias
 
                 _registrarAuditoria.Ejecutar(accion, dto.Id, idUsuarioAdmin.Value);
             }
+        }
+
+        private bool HayCambiosDeContenido(HistoriaDTO dto, HistoriaDTO actual)
+        {
+            if (!string.Equals(dto.Titulo, actual.Titulo)) return true;
+            if (!string.Equals(dto.Sinopsis, actual.Sinopsis)) return true;
+
+            if (dto.CapituloInicial != null && actual.CapituloInicial != null)
+            {
+                if (!string.Equals(dto.CapituloInicial.Titulo, actual.CapituloInicial.Titulo)) return true;
+                if (!string.Equals(dto.CapituloInicial.Texto, actual.CapituloInicial.Texto)) return true;
+            }
+
+            List<int> idsActuales = actual.Categorias?.Select(c => c.Id).OrderBy(id => id).ToList() ?? new List<int>();
+            List<int> idsNuevos = dto.CategoriaIds?.OrderBy(id => id).ToList() ?? new List<int>();
+
+            return !idsActuales.SequenceEqual(idsNuevos);
         }
 
         private List<CategoriaDTO> ResolverCategorias(List<int> ids)

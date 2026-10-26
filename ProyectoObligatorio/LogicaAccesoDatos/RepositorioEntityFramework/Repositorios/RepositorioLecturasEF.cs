@@ -64,7 +64,15 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public List<Lectura> FindAll()
         {
-            return _context.Lecturas.ToList();
+            // HistoriaMapper.ToDTO recorre los capitulos y las categorias de la historia:
+            // sin los ThenInclude, GET /api/Lectura lanza NullReferenceException.
+            return _context.Lecturas
+                .Include(l => l.Usuario)
+                .Include(l => l.Historia).ThenInclude(h => h.Categorias)
+                .Include(l => l.Historia).ThenInclude(h => h.Capitulos)
+                .Include(l => l.Historia).ThenInclude(h => h.CapituloInicial)
+                .Include(l => l.FinalAlcanzado)
+                .ToList();
         }
 
         // Lecturas finalizadas (con FechaFin, lo que por Validar() implica final alcanzado)
@@ -79,11 +87,13 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public Lectura FindById(int id)
         {
-            // Las navegaciones se cargan con Include: sin ellas, LecturaMapper.ToDTO
-            // trabajaria con Usuario/Historia nulos.
+            // HistoriaMapper.ToDTO necesita el grafo de la historia (capitulos y categorias);
+            // sin estos Include, GET /api/Lectura/{id} tambien lanza NullReferenceException.
             return _context.Lecturas
                 .Include(l => l.Usuario)
-                .Include(l => l.Historia)
+                .Include(l => l.Historia).ThenInclude(h => h.Categorias)
+                .Include(l => l.Historia).ThenInclude(h => h.Capitulos)
+                .Include(l => l.Historia).ThenInclude(h => h.CapituloInicial)
                 .Include(l => l.FinalAlcanzado)
                 .Where(l => l.Id == id).FirstOrDefault()
                 ?? throw new LecturaException("Lectura inexistente");

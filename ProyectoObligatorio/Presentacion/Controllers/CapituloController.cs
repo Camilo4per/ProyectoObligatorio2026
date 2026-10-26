@@ -5,11 +5,13 @@ using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Presentacion.Filters;
 using System;
 using System.Collections.Generic;
 
 namespace Presentacion.Controllers
 {
+    [Administrador]
     public class CapituloController : Controller
     {
         private IAgregarCapitulo _agregarCapituloCU;

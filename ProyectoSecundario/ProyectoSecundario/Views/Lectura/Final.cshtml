@@ -1,0 +1,22 @@
+@model PasoLecturaModel
+
+@{
+    ViewData["Title"] = "Final de la historia";
+}
+
+<p class="text-muted mb-1">@Model.TituloHistoria</p>
+<h2>@Model.Capitulo.Titulo</h2>
+
+<p class="lead">@Model.Capitulo.Texto</p>
+
+<div class="alert alert-success" role="alert">
+    Has llegado a un final de la historia. La lectura quedó registrada.
+</div>
+
+<div class="d-flex gap-2">
+    <form asp-action="Comenzar" method="post">
+        <input type="hidden" name="idHistoria" value="@Model.IdHistoria" />
+        <button type="submit" class="btn btn-warning">Iniciar una nueva lectura</button>
+    </form>
+    <a asp-controller="Historia" asp-action="Index" class="btn btn-secondary">Volver al catálogo</a>
+</div>

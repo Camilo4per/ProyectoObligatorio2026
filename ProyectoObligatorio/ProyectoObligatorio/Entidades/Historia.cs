@@ -128,6 +128,22 @@ namespace Dominio.Entidades
                 throw new HistoriaException("El capítulo inicial debe estar en la lista de capítulos");
         }
 
+        // Resolución de capítulos del agregado: la usan los casos de uso de lectura
+        // para no repetir búsquedas sobre la colección.
+        public Capitulo? ObtenerCapitulo(int idCapitulo)
+        {
+            return Capitulos.FirstOrDefault(c => c.Id == idCapitulo);
+        }
+
+        // Una lectura sólo puede avanzar de un intermedio a un capítulo alcanzable
+        // mediante una de sus opciones.
+        public bool TieneOpcion(int idCapituloOrigen, int idCapDestino)
+        {
+            if (ObtenerCapitulo(idCapituloOrigen) is not Intermedio intermedio) return false;
+            return intermedio.Opciones != null &&
+                   intermedio.Opciones.Any(o => o.idCapDestino == idCapDestino);
+        }
+
         #endregion
     }
 }

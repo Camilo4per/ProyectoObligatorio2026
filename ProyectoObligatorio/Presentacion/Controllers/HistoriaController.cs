@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Presentacion.Filters;
 
 namespace Presentacion.Controllers
 {
+    [Administrador]
     public class HistoriaController : Controller
     {
         private IAgregarHistoria agregarHistoria;

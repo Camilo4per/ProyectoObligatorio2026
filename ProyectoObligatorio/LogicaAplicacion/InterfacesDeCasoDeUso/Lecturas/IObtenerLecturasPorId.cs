@@ -4,6 +4,6 @@ namespace LogicaAplicacion.InterfacesDeCasoDeUso.Lecturas
 {
     public interface IObtenerLecturasPorId
     {
-        public LecturaDTO Ejecutar(int id);
+        public LecturaDTO Ejecutar(int id, int idUsuario, bool esAdmin);
     }
 }

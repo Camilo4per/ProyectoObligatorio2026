@@ -13,9 +13,9 @@ namespace Dominio.Entidades
         [ForeignKey(nameof(Historia))] public int? idHistoria { get; set; }
         public Historia Historia { get; init; }
         public DateTime FechaInicio { get; init; }
-        public DateTime? FechaFin { get; init; }
+        public DateTime? FechaFin { get; set; }
         [ForeignKey(nameof(FinalAlcanzado))] public int? idFinal { get; set; }
-        public Final? FinalAlcanzado { get; init; }
+        public Final? FinalAlcanzado { get; set; }
 
         #endregion
 
@@ -49,6 +49,26 @@ namespace Dominio.Entidades
         {
             if (FechaFin != null)
                 throw new LecturaException("La lectura ya fue finalizada y no se puede modificar.");
+        }
+
+        // Registra el desenlace alcanzado. Centraliza la regla de que el final debe
+        // pertenecer a la historia de la lectura y de que sólo se finaliza una vez.
+        public void RegistrarFinal(Final final)
+        {
+            if (final == null)
+                throw new LecturaException("El final alcanzado es requerido");
+
+            ValidarModificacion();
+
+            if (Historia == null)
+                throw new LecturaException("La lectura no tiene una historia asociada.");
+            if (final.idHistoria != Historia.Id)
+                throw new LecturaException("El final alcanzado no pertenece a la historia de la lectura.");
+
+            FinalAlcanzado = final;
+            idFinal = final.Id;
+            FechaFin = DateTime.Now;
+            ValidarFechaFin();
         }
 
         public void ValidarFechaFin()

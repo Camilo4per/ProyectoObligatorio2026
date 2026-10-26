@@ -1,4 +1,4 @@
-﻿using ProyectoSecundario.Auxiliar;
+using ProyectoSecundario.Auxiliar;
 using ProyectoSecundario.Enum;
 using ProyectoSecundario.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -29,10 +29,17 @@ namespace ProyectoSecundario.Controllers
             if (respuesta.IsSuccessStatusCode)
             {
                 string objetoJson = ClienteHttpAuxiliar.ObtenerBody(respuesta);
-                TokenModel tokenModel = JsonConvert.DeserializeObject<TokenModel>(objetoJson);
+                TokenModel? tokenModel = JsonConvert.DeserializeObject<TokenModel>(objetoJson);
+                if (tokenModel?.Usuario == null)
+                {
+                    ViewBag.Error = "No se pudo obtener la información del usuario";
+                    return View();
+                }
+
                 HttpContext.Session.SetString("token", tokenModel.Token);
                 HttpContext.Session.SetString("NombreUsuario", tokenModel.Usuario.NombreUsuario);
                 HttpContext.Session.SetString("Rol", tokenModel.Usuario.Rol == 0 ? "Administrador" : "Usuario");
+                HttpContext.Session.SetInt32("IdUsuario", tokenModel.Usuario.Id);
                 return RedirectToAction("Index", "Historia"); 
             }
 
@@ -44,8 +51,9 @@ namespace ProyectoSecundario.Controllers
         [HttpGet]
         public IActionResult Logout()
         {
-            HttpContext.Session.Remove("token");
-            HttpContext.Session.Remove("NombreUsuario");
+            // Limpia toda la sesión (token, Rol, NombreUsuario e IdUsuario): si sólo se
+            // borraba el token, el layout seguía mostrando la sesión como activa.
+            HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
     }

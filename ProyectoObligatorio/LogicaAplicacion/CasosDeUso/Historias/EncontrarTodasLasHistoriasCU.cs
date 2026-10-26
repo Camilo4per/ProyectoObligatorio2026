@@ -6,7 +6,7 @@ using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
 
 namespace LogicaAplicacion.CasosDeUso.Historias
 {
-    public class EncontrarTodasLasHistoriasCU : IEncontrarTodasHistorias
+    public class EncontrarTodasLasHistoriasCU : IEncontrarTodasLasHistorias
     {
         private IRepositorioHistorias repositorio;
         public EncontrarTodasLasHistoriasCU(IRepositorioHistorias repo)

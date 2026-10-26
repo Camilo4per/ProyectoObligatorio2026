@@ -36,7 +36,7 @@ builder.Services.AddScoped<IRepositorioAuditorias, RepositorioAuditoriasEF>();
 //INICIALIZAMOS LOS CASOS DE USO
 
 builder.Services.AddScoped<IAgregarHistoria, AgregarHistoriaCU>();
-builder.Services.AddScoped<IEncontrarTodasHistorias, EncontrarTodasLasHistoriasCU>();
+builder.Services.AddScoped<IEncontrarTodasLasHistorias, EncontrarTodasLasHistoriasCU>();
 builder.Services.AddScoped<IObtenerHistoriaPorId, ObtenerHistoriaPorIdCU>();
 builder.Services.AddScoped<IModificarHistoria, ModificarHistoriaCU>();
 builder.Services.AddScoped<IEliminarHistoria, EliminarHistoriaCU>();

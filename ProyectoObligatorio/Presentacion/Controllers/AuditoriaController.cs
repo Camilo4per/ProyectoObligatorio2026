@@ -13,16 +13,16 @@ namespace Presentacion.Controllers
     public class AuditoriaController : Controller
     {
         private IConsultarAuditorias _consultarAuditoriasCU;
-        private IEncontrarTodasHistorias _encontrarTodasHistoriasCU;
+        private IEncontrarTodasLasHistorias _encontrarTodasLasHistoriasCU;
         private IEncontrarTodosUsuarios _encontrarTodosUsuariosCU;
 
         public AuditoriaController(
             IConsultarAuditorias consultarAuditoriasCU,
-            IEncontrarTodasHistorias encontrarTodasHistoriasCU,
+            IEncontrarTodasLasHistorias encontrarTodasLasHistoriasCU,
             IEncontrarTodosUsuarios encontrarTodosUsuariosCU)
         {
             _consultarAuditoriasCU = consultarAuditoriasCU;
-            _encontrarTodasHistoriasCU = encontrarTodasHistoriasCU;
+            _encontrarTodasLasHistoriasCU = encontrarTodasLasHistoriasCU;
             _encontrarTodosUsuariosCU = encontrarTodosUsuariosCU;
         }
 
@@ -38,7 +38,7 @@ namespace Presentacion.Controllers
             List<AuditoriaDTO> auditorias = _consultarAuditoriasCU.Ejecutar(idHistoria, idUsuario);
 
             // Cargar historias para el filtro
-            List<HistoriaDTO> historias = _encontrarTodasHistoriasCU.Ejecutar();
+            List<HistoriaDTO> historias = _encontrarTodasLasHistoriasCU.Ejecutar();
             ViewBag.Historias = new SelectList(historias, "Id", "Titulo", idHistoria);
 
             // Cargar usuarios administradores para el filtro

@@ -1,6 +1,7 @@
 ﻿using Dominio.Excepciones;
 using DTOs.DTOs;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Lecturas;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -17,16 +18,19 @@ namespace ApiWeb.Controllers
         private IEncontrarTodasLasHistorias _encontrarTodasLasHistoriasCu;
         private IEncontrarHistoriasPublicadas _encontrarHistoriasPublicadasCu;
         private IObtenerHistoriaPorId _obtenerHistoriaPorIdCu;
+        private IObtenerRankingHistorias _obtenerRankingHistoriasCu;
 
         public HistoriaController(
             IEncontrarTodasLasHistorias encontrarTodasLasHistorias,
             IEncontrarHistoriasPublicadas encontrarHistoriasPublicadas,
-            IObtenerHistoriaPorId obtenerHistoriaPorId
+            IObtenerHistoriaPorId obtenerHistoriaPorId,
+            IObtenerRankingHistorias obtenerRankingHistorias
             )
         {
             _encontrarTodasLasHistoriasCu = encontrarTodasLasHistorias;
             _encontrarHistoriasPublicadasCu = encontrarHistoriasPublicadas;
             _obtenerHistoriaPorIdCu = obtenerHistoriaPorId;
+            _obtenerRankingHistoriasCu = obtenerRankingHistorias;
         }
 
 
@@ -60,6 +64,24 @@ namespace ApiWeb.Controllers
             catch (HistoriaException hex)
             {
                 return BadRequest(hex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        // GET api/<HistoriaController>/Ranking
+        [HttpGet("Ranking")]
+        [Authorize(Roles = "Administrador")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public ActionResult<IEnumerable<HistoriaRankingDTO>> GetRanking()
+        {
+            try
+            {
+                return Ok(_obtenerRankingHistoriasCu.Ejecutar());
             }
             catch (Exception ex)
             {

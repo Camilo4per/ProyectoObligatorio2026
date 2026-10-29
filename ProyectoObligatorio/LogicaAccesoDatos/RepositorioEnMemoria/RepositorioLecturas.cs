@@ -72,6 +72,19 @@ namespace LogicaAccesoDatos.RepositorioEnMemoria
             return completadas;
         }
 
+        public List<Lectura> FindByUsuarioAndMonth(int idUsuario, int mes, int anio)
+        {
+            DateTime desde = new DateTime(anio, mes, 1);
+            DateTime hasta = desde.AddMonths(1);
+
+            return lecturas
+                .Where(l => l.idUsuario == idUsuario &&
+                            l.FechaInicio >= desde &&
+                            l.FechaInicio < hasta)
+                .OrderByDescending(l => l.FechaInicio)
+                .ToList();
+        }
+
         public void Update(Lectura nueva)
         {
             throw new NotImplementedException();

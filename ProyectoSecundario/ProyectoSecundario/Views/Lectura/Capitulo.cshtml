@@ -1,13 +1,13 @@
-@model PasoLecturaModel
+﻿@model PasoLecturaModel
 
 @{
     ViewData["Title"] = Model.Capitulo.Titulo;
 }
 
-@if (TempData["Error"] != null)
+@if (ViewBag.Error != null)
 {
     <div class="alert alert-danger" role="alert">
-        @TempData["Error"]
+        @ViewBag.Error
     </div>
 }
 

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ProyectoSecundario.Auxiliar;
 using ProyectoSecundario.Enum;
@@ -9,6 +9,54 @@ namespace ProyectoSecundario.Controllers
     public class LecturaController : Controller
     {
         private string baseUrlLectura = "http://localhost:5281/api/Lectura";
+
+        // GET: /Lectura/Historial?mes=10&anio=2026
+        [HttpGet]
+        public IActionResult Historial(int? mes, int? anio)
+        {
+            string? token = HttpContext.Session.GetString("token");
+            int? idUsuario = HttpContext.Session.GetInt32("IdUsuario");
+
+            if (string.IsNullOrEmpty(token) || !idUsuario.HasValue)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            int mesSeleccionado = mes ?? DateTime.Now.Month;
+            int anioSeleccionado = anio ?? DateTime.Now.Year;
+
+            string url = baseUrlLectura + "/Historial"
+                + "?idUsuario=" + idUsuario.Value
+                + "&mes=" + mesSeleccionado
+                + "&anio=" + anioSeleccionado;
+
+            HttpResponseMessage respuesta = ClienteHttpAuxiliar.EnviarSolicitud(
+                url,
+                VerbosHttp.GET,
+                token: token
+            );
+
+            List<HistorialLecturaModel> historial =
+                new List<HistorialLecturaModel>();
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                historial = JsonConvert.DeserializeObject<
+                    List<HistorialLecturaModel>>(
+                        ClienteHttpAuxiliar.ObtenerBody(respuesta))
+                    ?? new List<HistorialLecturaModel>();
+            }
+            else
+            {
+                ViewBag.Error =
+                    "No se pudo obtener el historial de lecturas.";
+            }
+
+            ViewBag.Mes = mesSeleccionado;
+            ViewBag.Anio = anioSeleccionado;
+
+            return View(historial);
+        }
 
         // POST: /Lectura/Comenzar
         // Inicia una lectura nueva desde el capítulo inicial de la historia elegida.
@@ -25,8 +73,8 @@ namespace ProyectoSecundario.Controllers
             }
             if (idHistoria <= 0 || !idUsuario.HasValue)
             {
-                TempData["Error"] = "No se pudo iniciar la lectura: faltan datos de la historia o del usuario.";
-                return RedirectToAction("Index", "Historia");
+                ViewBag.Error = "No se pudo iniciar la lectura: faltan datos de la historia o del usuario.";
+                return RedirectToAction("Index", "Historia", new { error = ViewBag.Error });
             }
 
             IniciarLecturaModel solicitud = new IniciarLecturaModel
@@ -43,16 +91,16 @@ namespace ProyectoSecundario.Controllers
             );
             if (!respuesta.IsSuccessStatusCode)
             {
-                TempData["Error"] = "No se pudo iniciar la lectura.";
-                return RedirectToAction("Index", "Historia");
+                ViewBag.Error = "No se pudo iniciar la lectura.";
+                return RedirectToAction("Index", "Historia", new { error = ViewBag.Error });
             }
 
             LecturaIniciadaModel? creada = JsonConvert.DeserializeObject<LecturaIniciadaModel>(
                 ClienteHttpAuxiliar.ObtenerBody(respuesta));
             if (creada == null)
             {
-                TempData["Error"] = "No se pudo iniciar la lectura.";
-                return RedirectToAction("Index", "Historia");
+                ViewBag.Error = "No se pudo iniciar la lectura.";
+                return RedirectToAction("Index", "Historia", new { error = ViewBag.Error });
             }
 
             return RedirectToAction("Leer", new
@@ -76,8 +124,8 @@ namespace ProyectoSecundario.Controllers
             }
             if (idLectura <= 0 || idCapitulo <= 0 || !idUsuario.HasValue)
             {
-                TempData["Error"] = "La lectura solicitada no es válida.";
-                return RedirectToAction("Index", "Historia");
+                ViewBag.Error = "La lectura solicitada no es válida.";
+                return RedirectToAction("Index", "Historia", new { error = ViewBag.Error });
             }
 
             string url = baseUrlLectura + "/" + idLectura + "/Capitulo/" + idCapitulo
@@ -90,16 +138,16 @@ namespace ProyectoSecundario.Controllers
             );
             if (!respuesta.IsSuccessStatusCode)
             {
-                TempData["Error"] = "No se pudo obtener el capítulo de la lectura.";
-                return RedirectToAction("Index", "Historia");
+                ViewBag.Error = "No se pudo obtener el capítulo de la lectura.";
+                return RedirectToAction("Index", "Historia", new { error = ViewBag.Error });
             }
 
             PasoLecturaModel? paso = JsonConvert.DeserializeObject<PasoLecturaModel>(
                 ClienteHttpAuxiliar.ObtenerBody(respuesta));
             if (paso == null || paso.Capitulo == null)
             {
-                TempData["Error"] = "No se pudo obtener el capítulo de la lectura.";
-                return RedirectToAction("Index", "Historia");
+                ViewBag.Error = "No se pudo obtener el capítulo de la lectura.";
+                return RedirectToAction("Index", "Historia", new { error = ViewBag.Error });
             }
 
             return paso.Capitulo.Tipo == 1 ? View("Final", paso) : View("Capitulo", paso);
@@ -121,8 +169,8 @@ namespace ProyectoSecundario.Controllers
             }
             if (idLectura <= 0 || idCapituloOrigen <= 0 || idCapDestino <= 0 || !idUsuario.HasValue)
             {
-                TempData["Error"] = "La opción elegida no es válida.";
-                return RedirectToAction("Index", "Historia");
+                ViewBag.Error = "La opción elegida no es válida.";
+                return RedirectToAction("Index", "Historia", new { error = ViewBag.Error });
             }
 
             AvanzarLecturaModel solicitud = new AvanzarLecturaModel
@@ -140,16 +188,16 @@ namespace ProyectoSecundario.Controllers
             );
             if (!respuesta.IsSuccessStatusCode)
             {
-                TempData["Error"] = "No se pudo avanzar en la lectura.";
-                return RedirectToAction("Index", "Historia");
+                ViewBag.Error = "No se pudo avanzar en la lectura.";
+                return RedirectToAction("Index", "Historia", new { error = ViewBag.Error });
             }
 
             PasoLecturaModel? paso = JsonConvert.DeserializeObject<PasoLecturaModel>(
                 ClienteHttpAuxiliar.ObtenerBody(respuesta));
             if (paso == null || paso.Capitulo == null)
             {
-                TempData["Error"] = "No se pudo avanzar en la lectura.";
-                return RedirectToAction("Index", "Historia");
+                ViewBag.Error = "No se pudo avanzar en la lectura.";
+                return RedirectToAction("Index", "Historia", new { error = ViewBag.Error });
             }
 
             return RedirectToAction("Leer", new

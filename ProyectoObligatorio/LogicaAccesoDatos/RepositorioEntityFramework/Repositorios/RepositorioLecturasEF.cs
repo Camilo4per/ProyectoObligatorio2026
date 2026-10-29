@@ -85,6 +85,22 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
                 .ToList();
         }
 
+        public List<Lectura> FindByUsuarioAndMonth(int idUsuario, int mes, int anio)
+        {
+            DateTime desde = new DateTime(anio, mes, 1);
+            DateTime hasta = desde.AddMonths(1);
+
+            return _context.Lecturas
+                .AsNoTracking()
+                .Include(l => l.Historia)
+                .Include(l => l.FinalAlcanzado)
+                .Where(l => l.idUsuario == idUsuario &&
+                            l.FechaInicio >= desde &&
+                            l.FechaInicio < hasta)
+                .OrderByDescending(l => l.FechaInicio)
+                .ToList();
+        }
+
         public Lectura FindById(int id)
         {
             // HistoriaMapper.ToDTO necesita el grafo de la historia (capitulos y categorias);

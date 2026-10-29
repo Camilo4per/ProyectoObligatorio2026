@@ -9,5 +9,7 @@ namespace Dominio.InterfaceDeRepositorio
         bool TieneLecturasDeHistoria(int idHistoria);
 
         List<Lectura> FindAllCompletadas();
+
+        List<Lectura> FindByUsuarioAndMonth(int idUsuario, int mes, int anio);
     }
 }

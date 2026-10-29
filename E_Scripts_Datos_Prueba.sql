@@ -1,4 +1,4 @@
--- ==========================================================================================
+﻿-- ==========================================================================================
 -- PROYECTO OBLIGATORIO
 -- ENTREGA: E. Scripts SQL con los juegos de datos de prueba
 -- Contenido:
@@ -252,7 +252,7 @@ SET IDENTITY_INSERT dbo.Historias OFF;
 GO
 
 -- ------------------------------------------------------------------------------------------
--- 2.4 TABLA: Capitulos (Total: 25 registros)
+-- 2.4 TABLA: Capitulos (Total: 39 registros)
 --     * TPH: Discriminator = 'Intermedio' (CantLlegaron = NULL) o 'Final' (CantLlegaron >= 0)
 --     * Precarga y generación progresiva de caminos de las historias
 -- ------------------------------------------------------------------------------------------
@@ -284,22 +284,48 @@ INSERT INTO dbo.Capitulos (Id, Titulo_Valor, Texto_Valor, idHistoria, Discrimina
 INSERT INTO dbo.Capitulos (Id, Titulo_Valor, Texto_Valor, idHistoria, Discriminator, CantLlegaron_Valor) VALUES
 (14, N'El Taller del Alquimista', N'Frascos humeantes y un reloj de péndulo roto marcan la escena del crimen.', 4, N'Intermedio', NULL),
 (15, N'La Cripta Subterránea', N'Sigues un pasadizo secreto bajo las alcantarillas de Londres hasta un laboratorio clandestino.', 4, N'Intermedio', NULL),
-(16, N'Caso Resuelto', N'Desvelas el complot y recuperas la fórmula antes de que caiga en manos de la hermandad.', 4, N'Final', 2);
+(16, N'Caso Resuelto', N'Desvelas el complot y recuperas la fórmula antes de que caiga en manos de la hermandad.', 4, N'Final', 2),
+(26, N'La Trampa del Alquimista', N'Una nube de gas somnífero se libera de un frasco oculto. Despiertas encadenado en la cripta sin la fórmula ni salida.', 4, N'Final', 1);
 
 -- Historia 5: Crónicas de Eldoria
 INSERT INTO dbo.Capitulos (Id, Titulo_Valor, Texto_Valor, idHistoria, Discriminator, CantLlegaron_Valor) VALUES
 (17, N'El Bosque de los Susurros', N'Los árboles parecen comunicarse mientras buscas la reliquia perdida de Eldoria.', 5, N'Intermedio', NULL),
 (18, N'El Guardián de Piedra', N'Un gólem ancestral despierta para juzgar la pureza de tu corazón.', 5, N'Final', 1);
 
--- Historias 6 a 10 (Capítulos iniciales e intermedios/finales)
+-- Historia 6: Bajo la Niebla de Chernóbil
 INSERT INTO dbo.Capitulos (Id, Titulo_Valor, Texto_Valor, idHistoria, Discriminator, CantLlegaron_Valor) VALUES
 (19, N'El Puesto de Avanzada', N'Los contadores Geiger aumentan su chasquido al cruzar el perímetro de exclusión.', 6, N'Intermedio', NULL),
+(27, N'El Reactor Abandonado', N'Te adentras en la sala de control del reactor. Las luces parpadean y un zumbido electromagnético te rodea.', 6, N'Intermedio', NULL),
 (20, N'Refugio Seguro', N'Alcanzas el búnker subterráneo con muestras intactas de la radiación anómala.', 6, N'Final', 2),
+(28, N'Contaminación Letal', N'La exposición supera los límites tolerables. Tu equipo de protección falla y la radiación te envuelve.', 6, N'Final', 1);
+
+-- Historia 7: El Manuscrito de Alejandría
+INSERT INTO dbo.Capitulos (Id, Titulo_Valor, Texto_Valor, idHistoria, Discriminator, CantLlegaron_Valor) VALUES
 (21, N'La Excavación', N'El viento del desierto descubre una tumba sellada desde la época de los Ptolomeos.', 7, N'Intermedio', NULL),
+(29, N'La Cámara del Faraón', N'Dentro de la tumba encuentras un sarcófago intacto rodeado de inscripciones jeroglíficas.', 7, N'Intermedio', NULL),
 (22, N'El Velo Levantado', N'El contenido del papiro cambia la historia conocida de la humanidad.', 7, N'Final', 1),
+(30, N'Sepultado en la Arena', N'Al intentar extraer el papiro se activa una trampa milenaria que sella la cámara para siempre.', 7, N'Final', 0);
+
+-- Historia 8: Rebelión en Neo-Tokio
+INSERT INTO dbo.Capitulos (Id, Titulo_Valor, Texto_Valor, idHistoria, Discriminator, CantLlegaron_Valor) VALUES
 (23, N'Conexión Ilegal', N'Te conectas a la red neuronal corporativa esquivando los firewalls de defensa.', 8, N'Intermedio', NULL),
+(31, N'El Servidor Central', N'Logras infiltrarte en el núcleo de datos de la megacorporación Zaibatsu Industries.', 8, N'Intermedio', NULL),
+(32, N'Liberación Digital', N'Filtras los archivos clasificados a la resistencia. La revolución digital ha comenzado.', 8, N'Final', 0),
+(33, N'Rastreado y Capturado', N'Los ICE del sistema te localizan. Agentes corporativos derriban tu puerta antes de que puedas desconectarte.', 8, N'Final', 0);
+
+-- Historia 9: El Vuelo del Halcón Perdido
+INSERT INTO dbo.Capitulos (Id, Titulo_Valor, Texto_Valor, idHistoria, Discriminator, CantLlegaron_Valor) VALUES
 (24, N'Encallados en el Arrecife', N'El barco encalla de madrugada y una playa salvaje se abre ante los supervivientes.', 9, N'Intermedio', NULL),
-(25, N'La Primera Sesión', N'El paciente se sienta en silencio, sosteniendo una cinta de casete grabada en 1994.', 10, N'Intermedio', NULL);
+(34, N'La Selva Interior', N'Te adentras en la jungla buscando agua dulce. Escuchas tambores tribales en la distancia.', 9, N'Intermedio', NULL),
+(35, N'Rescate en Alta Mar', N'Construyes una balsa con los restos del navío y un barco mercante te avista al tercer día.', 9, N'Final', 0),
+(36, N'El Tesoro de la Isla', N'Siguiendo un mapa tallado en roca descubres un cofre español repleto de doblones de oro.', 9, N'Final', 0);
+
+-- Historia 10: Ecos del Pasado
+INSERT INTO dbo.Capitulos (Id, Titulo_Valor, Texto_Valor, idHistoria, Discriminator, CantLlegaron_Valor) VALUES
+(25, N'La Primera Sesión', N'El paciente se sienta en silencio, sosteniendo una cinta de casete grabada en 1994.', 10, N'Intermedio', NULL),
+(37, N'La Cinta Reveladora', N'Reproduces la grabación y una confesión perturbadora llena la sala de consulta.', 10, N'Intermedio', NULL),
+(38, N'Caso Cerrado', N'Las piezas encajan. Entregas las pruebas a la fiscalía y el paciente confiesa ante el juez.', 10, N'Final', 0),
+(39, N'Manipulación Psicológica', N'El paciente te ha estado manipulando desde la primera sesión. Ahora eres tú el sospechoso.', 10, N'Final', 0);
 
 SET IDENTITY_INSERT dbo.Capitulos OFF;
 GO
@@ -320,7 +346,7 @@ UPDATE dbo.Historias SET idCapituloInicial = 25 WHERE Id = 10;
 GO
 
 -- ------------------------------------------------------------------------------------------
--- 2.6 TABLA: CategoriaHistoria (Total: 16 registros)
+-- 2.6 TABLA: CategoriaHistoria (Total: 19 registros)
 --     * Relación Muchos a Muchos entre Historias y Categorías
 -- ------------------------------------------------------------------------------------------
 INSERT INTO dbo.CategoriaHistoria (CategoriasId, HistoriasId) VALUES
@@ -339,11 +365,14 @@ INSERT INTO dbo.CategoriaHistoria (CategoriasId, HistoriasId) VALUES
 (6, 6),  -- Suspenso -> Bajo la Niebla de Chernóbil
 (4, 7),  -- Misterio -> El Manuscrito de Alejandría
 (7, 8),  -- Distopía -> Rebelión en Neo-Tokio
-(1, 9);  -- Aventura -> El Vuelo del Halcón Perdido
+(1, 9),  -- Aventura -> El Vuelo del Halcón Perdido
+(8, 9),  -- Histórica -> El Vuelo del Halcón Perdido
+(9, 10), -- Policial -> Ecos del Pasado
+(10, 10); -- Drama -> Ecos del Pasado
 GO
 
 -- ------------------------------------------------------------------------------------------
--- 2.7 TABLA: Opcion (Total: 18 registros)
+-- 2.7 TABLA: Opcion (Total: 40 registros)
 --     * Opciones de bifurcación de los capítulos intermedios hacia otros capítulos
 -- ------------------------------------------------------------------------------------------
 SET IDENTITY_INSERT dbo.Opcion ON;
@@ -390,9 +419,63 @@ INSERT INTO dbo.Opcion (idCapitulo, Id, Texto, idCapDestino) VALUES
 
 -- Opciones del Capítulo 17 (Bosque de los Susurros)
 INSERT INTO dbo.Opcion (idCapitulo, Id, Texto, idCapDestino) VALUES
-(17, 17, N'Seguir la melodía hasta el claro del claro de piedra.', 18),
+(17, 17, N'Seguir la melodía hasta el claro de piedra.', 18),
 (17, 18, N'Cruzar el río subterráneo remando con calma.', 18);
 
+-- Opciones del Capítulo 19 (El Puesto de Avanzada)
+INSERT INTO dbo.Opcion (idCapitulo, Id, Texto, idCapDestino) VALUES
+(19, 19, N'Avanzar hacia el reactor abandonado siguiendo las señales de radiación.', 27),
+(19, 20, N'Buscar el búnker subterráneo señalado en el mapa militar.', 20);
+
+-- Opciones del Capítulo 27 (El Reactor Abandonado)
+INSERT INTO dbo.Opcion (idCapitulo, Id, Texto, idCapDestino) VALUES
+(27, 21, N'Recoger las muestras y retirarte al búnker de emergencia.', 20),
+(27, 22, N'Investigar la fuente de la anomalía electromagnética en el núcleo.', 28);
+
+-- Opciones del Capítulo 21 (La Excavación)
+INSERT INTO dbo.Opcion (idCapitulo, Id, Texto, idCapDestino) VALUES
+(21, 23, N'Descender a la cámara funeraria con precaución.', 29),
+(21, 24, N'Fotografiar las inscripciones exteriores y enviar el informe a la universidad.', 22);
+
+-- Opciones del Capítulo 29 (La Cámara del Faraón)
+INSERT INTO dbo.Opcion (idCapitulo, Id, Texto, idCapDestino) VALUES
+(29, 25, N'Traducir los jeroglíficos antes de tocar nada.', 22),
+(29, 26, N'Intentar extraer el papiro del interior del sarcófago.', 30);
+
+-- Opciones del Capítulo 23 (Conexión Ilegal)
+INSERT INTO dbo.Opcion (idCapitulo, Id, Texto, idCapDestino) VALUES
+(23, 27, N'Escalar privilegios e infiltrarte en el servidor central.', 31),
+(23, 28, N'Copiar los datos del nodo periférico y desconectarte rápido.', 33);
+
+-- Opciones del Capítulo 31 (El Servidor Central)
+INSERT INTO dbo.Opcion (idCapitulo, Id, Texto, idCapDestino) VALUES
+(31, 29, N'Filtrar todos los archivos clasificados a la red abierta.', 32),
+(31, 30, N'Borrar los registros y cubrir tus huellas digitales.', 33);
+
+-- Opciones del Capítulo 24 (Encallados en el Arrecife)
+INSERT INTO dbo.Opcion (idCapitulo, Id, Texto, idCapDestino) VALUES
+(24, 31, N'Construir una balsa con los restos del barco y zarpar.', 35),
+(24, 32, N'Explorar la selva interior en busca de recursos.', 34);
+
+-- Opciones del Capítulo 34 (La Selva Interior)
+INSERT INTO dbo.Opcion (idCapitulo, Id, Texto, idCapDestino) VALUES
+(34, 33, N'Seguir el sonido de los tambores hasta la aldea nativa.', 35),
+(34, 34, N'Investigar las marcas talladas en la roca junto al arroyo.', 36);
+
+-- Opciones del Capítulo 25 (La Primera Sesión)
+INSERT INTO dbo.Opcion (idCapitulo, Id, Texto, idCapDestino) VALUES
+(25, 35, N'Reproducir la cinta de casete inmediatamente.', 37),
+(25, 36, N'Confrontar al paciente con las inconsistencias de su relato.', 39);
+
+-- Opciones del Capítulo 37 (La Cinta Reveladora)
+INSERT INTO dbo.Opcion (idCapitulo, Id, Texto, idCapDestino) VALUES
+(37, 37, N'Entregar la grabación como evidencia a la fiscalía.', 38),
+(37, 38, N'Guardar la cinta y continuar las sesiones para obtener más información.', 39);
+
+-- Opciones del Capítulo 15 (La Cripta Subterránea)
+INSERT INTO dbo.Opcion (idCapitulo, Id, Texto, idCapDestino) VALUES
+(15, 39, N'Analizar las sustancias del laboratorio clandestino.', 16),
+(15, 40, N'Tocar el frasco sellado con el símbolo alquímico.', 26);
 SET IDENTITY_INSERT dbo.Opcion OFF;
 GO
 

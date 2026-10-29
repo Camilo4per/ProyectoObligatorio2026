@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ProyectoSecundario.Auxiliar;
 using ProyectoSecundario.Enum;
@@ -10,10 +10,64 @@ namespace ProyectoSecundario.Controllers
     {
         private string baseUrlCatalogo = "http://localhost:5281/api/Historia/Catalogo";
         private string baseUrlCategorias = "http://localhost:5281/api/Categoria";
+        private string baseUrlRanking = "http://localhost:5281/api/Historia/Ranking";
 
-        // GET: /Historia?idCategoria=2
-        public IActionResult Index(int? idCategoria)
+        // GET: /Historia/Ranking
+        public IActionResult Ranking()
         {
+            string? token = HttpContext.Session.GetString("token");
+            string? rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            if (rol != "Administrador")
+            {
+                return RedirectToAction("Index", "Historia");
+            }
+
+            HttpResponseMessage respuesta = ClienteHttpAuxiliar.EnviarSolicitud(
+                baseUrlRanking,
+                VerbosHttp.GET,
+                token: token
+            );
+
+            List<HistoriaRankingModel> ranking =
+                new List<HistoriaRankingModel>();
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                ranking = JsonConvert.DeserializeObject<List<HistoriaRankingModel>>(
+                    ClienteHttpAuxiliar.ObtenerBody(respuesta))
+                    ?? new List<HistoriaRankingModel>();
+            }
+            else
+            {
+                ViewBag.Error = "No se pudo obtener el ranking de historias.";
+            }
+
+            return View(ranking);
+        }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        // GET: /Historia/Historias?idCategoria=2
+        public IActionResult Historias(int? idCategoria, string? error = null)
+        {
+            if (HttpContext.Session.GetString("Rol") != "Usuario")
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (!string.IsNullOrEmpty(error))
+            {
+                ViewBag.Error = error;
+            }
             string? token = HttpContext.Session.GetString("token");
             if (string.IsNullOrEmpty(token))
             {

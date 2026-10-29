@@ -18,6 +18,7 @@ namespace ApiWeb.Controllers
         private IObtenerLecturasPorId _obtenerLecturasPorIdCu;
         private IAgregarLectura _agregarLecturaCu;
         private IActualizarLectura _actualizarLecturaCu;
+        private IObtenerHistorialLecturas _obtenerHistorialLecturasCu;
         private IObtenerPasoLectura _obtenerPasoLecturaCu;
         private IAvanzarLectura _avanzarLecturaCu;
         public LecturaController(
@@ -25,6 +26,7 @@ namespace ApiWeb.Controllers
             IObtenerLecturasPorId obtenerLecturasPorId,
             IAgregarLectura agregarLectura,
             IActualizarLectura actualizarLectura,
+            IObtenerHistorialLecturas obtenerHistorialLecturas,
             IObtenerPasoLectura obtenerPasoLectura,
             IAvanzarLectura avanzarLectura
             )
@@ -33,6 +35,7 @@ namespace ApiWeb.Controllers
             _obtenerLecturasPorIdCu = obtenerLecturasPorId;
             _agregarLecturaCu = agregarLectura;
             _actualizarLecturaCu = actualizarLectura;
+            _obtenerHistorialLecturasCu = obtenerHistorialLecturas;
             _obtenerPasoLecturaCu = obtenerPasoLectura;
             _avanzarLecturaCu = avanzarLectura;
         }
@@ -88,6 +91,34 @@ namespace ApiWeb.Controllers
             {
                 LecturaIniciadaDTO creada = _agregarLecturaCu.Ejecutar(dto);
                 return CreatedAtAction(nameof(Get), new { id = creada.IdLectura, idUsuario = dto.idUsuario }, creada);
+            }
+            catch (LecturaException lex)
+            {
+                return BadRequest(lex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        // GET api/<LecturaController>/Historial?idUsuario=3&mes=10&anio=2026
+        [HttpGet("Historial")]
+        [Authorize(Roles = "Usuario")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public ActionResult<IEnumerable<HistorialLecturaDTO>> Historial(
+            [FromQuery] int idUsuario,
+            [FromQuery] int mes,
+            [FromQuery] int anio)
+        {
+            try
+            {
+                return Ok(_obtenerHistorialLecturasCu.Ejecutar(
+                    idUsuario,
+                    mes,
+                    anio));
             }
             catch (LecturaException lex)
             {

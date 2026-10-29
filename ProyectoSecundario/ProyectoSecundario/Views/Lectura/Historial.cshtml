@@ -1,0 +1,84 @@
+@model IEnumerable<ProyectoSecundario.Models.HistorialLecturaModel>
+
+@{
+    ViewData["Title"] = "Historial de lecturas";
+}
+
+<h1>Historial de lecturas</h1>
+
+<form asp-action="Historial" method="get" class="row g-3 mb-4">
+    <div class="col-md-3">
+        <label for="mes" class="form-label">Mes</label>
+        <input type="number"
+               id="mes"
+               name="mes"
+               min="1"
+               max="12"
+               value="@ViewBag.Mes"
+               class="form-control" />
+    </div>
+
+    <div class="col-md-3">
+        <label for="anio" class="form-label">Año</label>
+        <input type="number"
+               id="anio"
+               name="anio"
+               min="1"
+               value="@ViewBag.Anio"
+               class="form-control" />
+    </div>
+
+    <div class="col-md-3 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary">
+            Buscar
+        </button>
+    </div>
+</form>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Error
+    </div>
+}
+else if (Model != null && Model.Any())
+{
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Historia</th>
+                <th>Inicio</th>
+                <th>Completada</th>
+                <th>Final alcanzado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (HistorialLecturaModel lectura in Model)
+            {
+                <tr>
+                    <td>@lectura.Historia</td>
+                    <td>@lectura.FechaInicio.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>
+                        @if (lectura.Completada)
+                        {
+                            <span class="badge bg-success">Sí</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">No</span>
+                        }
+                    </td>
+                    <td>
+                        @(lectura.FinalAlcanzado ?? "No alcanzó un final")
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info" role="alert">
+        No existen lecturas para el mes y año seleccionados.
+    </div>
+}

@@ -21,6 +21,8 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                    
+                        
+
                         @if (Context.Session.GetString("Rol") == null)
                         {
                             <li class="nav-item">
@@ -42,13 +44,19 @@
                         @if (Context.Session.GetString("Rol") == "Administrador")
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Lecturas" asp-action="Index">Ranking Lecturas</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Historia" asp-action="Ranking">Ranking de historias</a>
                             </li>
                         }
                         
                         @if (Context.Session.GetString("Rol") == "Usuario")
                         {
-                            // Falta hacer
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Historia" asp-action="Historias">Historias</a>
+                            </li>   
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Lectura" asp-action="Historial">Historial Lecturas</a>
+                            </li>
                         }
                     </ul>
                 </div>

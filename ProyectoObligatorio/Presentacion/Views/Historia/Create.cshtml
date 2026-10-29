@@ -17,7 +17,12 @@
     </div>
     <div class="form-group">
         <label asp-for="CategoriaIds" class="control-label">Categorías</label>
-        <select asp-for="CategoriaIds" class="form-control" asp-items="ViewBag.Categorias" multiple></select>
+            <select asp-for="CategoriaIds" class="form-control" multiple>
+                @foreach (var categoria in ViewBag.Categorias)
+                {
+                    <option value="@categoria.Id">@categoria.Nombre</option>
+                }
+            </select>
     </div>
 
     <h4>Capítulo inicial</h4>

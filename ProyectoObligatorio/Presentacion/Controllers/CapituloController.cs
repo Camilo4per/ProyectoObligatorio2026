@@ -5,13 +5,11 @@ using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Presentacion.Filters;
 using System;
 using System.Collections.Generic;
 
 namespace Presentacion.Controllers
 {
-    [Administrador]
     public class CapituloController : Controller
     {
         private IAgregarCapitulo _agregarCapituloCU;
@@ -26,16 +24,13 @@ namespace Presentacion.Controllers
         // GET: Capitulo/Create?idHistoria=5
         public ActionResult Create(int idHistoria)
         {
-            if (idHistoria <= 0)
+            string? rolUsuario = HttpContext.Session.GetString("Rol");
+            if (rolUsuario != "Administrador")
             {
-                return NotFound();
+                return RedirectToAction("Login", "Usuario");
             }
 
             HistoriaDTO? historia = _obtenerHistoriaPorIdCU.Ejecutar(idHistoria);
-            if (historia == null)
-            {
-                return NotFound();
-            }
 
             CargarDatosVista(historia, null);
 
@@ -53,6 +48,12 @@ namespace Presentacion.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(CapituloDTO capitulo)
         {
+            string? rolUsuario = HttpContext.Session.GetString("Rol");
+            if (rolUsuario != "Administrador")
+            {
+                return RedirectToAction("Login", "Usuario");
+            }
+
             try
             {
                 int? idAdmin = HttpContext.Session.GetInt32("IdUsuario");

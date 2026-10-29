@@ -4,13 +4,10 @@ using LogicaAplicacion.InterfacesDeCasoDeUso.Categorias;
 using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Presentacion.Filters;
+using Presentacion.Auxiliares;
 
 namespace Presentacion.Controllers
 {
-    [Administrador]
     public class HistoriaController : Controller
     {
         private IAgregarHistoria agregarHistoria;
@@ -41,20 +38,45 @@ namespace Presentacion.Controllers
         // GET: HistoriaController
         public ActionResult Index()
         {
+            string? rolUsuario = HttpContext.Session.GetString("Rol");
+            if (rolUsuario != "Administrador")
+            {
+                return RedirectToAction("Login", "Usuario");
+            }
+
             return View(encontrarTodasLasHistorias.Ejecutar());
         }
 
         // GET: HistoriaController/Details/5
         public ActionResult Details(int id)
         {
-            return View(obtenerHistoriaPorId.Ejecutar(id));
+            string? rolUsuario = HttpContext.Session.GetString("Rol");
+            if (rolUsuario != "Administrador")
+            {
+                return RedirectToAction("Login", "Usuario");
+            }
+
+            HistoriaDTO historia = obtenerHistoriaPorId.Ejecutar(id);
+            ViewBag.ArbolCapitulos = MetodosAuxiliaresHistoria.ArbolCapitulosAuxiliar(historia);
+
+            return View(historia);
         }
 
         // GET: HistoriaController/Create
         public ActionResult Create()
         {
-            ViewBag.Categorias = CategoriasSelectList(null);
-            return View(new HistoriaDTO { CapituloInicial = new CapituloDTO() });
+            string? rolUsuario = HttpContext.Session.GetString("Rol");
+            if (rolUsuario != "Administrador")
+            {
+                return RedirectToAction("Login", "Usuario");
+            }
+
+            ViewBag.Categorias = encontrarTodasCategorias.Ejecutar();
+            return View(new HistoriaDTO
+            {
+                CapituloInicial = new CapituloDTO(),
+                CategoriaIds = new List<int>()
+            });
         }
 
         // POST: HistoriaController/Create
@@ -62,6 +84,12 @@ namespace Presentacion.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(HistoriaDTO dto)
         {
+            string? rolUsuario = HttpContext.Session.GetString("Rol");
+            if (rolUsuario != "Administrador")
+            {
+                return RedirectToAction("Login", "Usuario");
+            }
+
             try
             {
                 int? idAdmin = HttpContext.Session.GetInt32("IdUsuario");
@@ -71,7 +99,7 @@ namespace Presentacion.Controllers
             catch (Exception ex)
             {
                 ViewBag.Error = ex.Message;
-                ViewBag.Categorias = CategoriasSelectList(dto.CategoriaIds);
+                ViewBag.Categorias = encontrarTodasCategorias.Ejecutar();
                 if (dto.CapituloInicial == null) dto.CapituloInicial = new CapituloDTO();
                 return View(dto);
             }
@@ -80,8 +108,18 @@ namespace Presentacion.Controllers
         // GET: HistoriaController/Edit/5
         public ActionResult Edit(int id)
         {
+            string? rolUsuario = HttpContext.Session.GetString("Rol");
+            if (rolUsuario != "Administrador")
+            {
+                return RedirectToAction("Login", "Usuario");
+            }
+
             HistoriaDTO dto = obtenerHistoriaPorId.Ejecutar(id);
-            ViewBag.Categorias = CategoriasSelectList(dto.Categorias.Select(c => c.Id).ToList());
+            dto.CategoriaIds = dto.Categorias?
+                .Select(c => c.Id)
+                .ToList() ?? new List<int>();
+
+            ViewBag.Categorias = encontrarTodasCategorias.Ejecutar();
             return View(dto);
         }
 
@@ -90,6 +128,12 @@ namespace Presentacion.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, HistoriaDTO dto)
         {
+            string? rolUsuario = HttpContext.Session.GetString("Rol");
+            if (rolUsuario != "Administrador")
+            {
+                return RedirectToAction("Login", "Usuario");
+            }
+
             try
             {
                 dto.Id = id;
@@ -100,7 +144,7 @@ namespace Presentacion.Controllers
             catch (Exception ex)
             {
                 ViewBag.Error = ex.Message;
-                ViewBag.Categorias = CategoriasSelectList(dto.CategoriaIds);
+                ViewBag.Categorias = encontrarTodasCategorias.Ejecutar();
                 try
                 {
                     HistoriaDTO existente = obtenerHistoriaPorId.Ejecutar(id);
@@ -118,6 +162,12 @@ namespace Presentacion.Controllers
         // GET: HistoriaController/Delete/5
         public ActionResult Delete(int id)
         {
+            string? rolUsuario = HttpContext.Session.GetString("Rol");
+            if (rolUsuario != "Administrador")
+            {
+                return RedirectToAction("Login", "Usuario");
+            }
+
             return View(obtenerHistoriaPorId.Ejecutar(id));
         }
 
@@ -126,6 +176,12 @@ namespace Presentacion.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
         {
+            string? rolUsuario = HttpContext.Session.GetString("Rol");
+            if (rolUsuario != "Administrador")
+            {
+                return RedirectToAction("Login", "Usuario");
+            }
+
             try
             {
                 eliminarHistoria.Ejecutar(id);
@@ -140,16 +196,5 @@ namespace Presentacion.Controllers
             }
         }
 
-        private List<SelectListItem> CategoriasSelectList(List<int> seleccionadas)
-        {
-            return encontrarTodasCategorias.Ejecutar()
-                .Select(c => new SelectListItem
-                {
-                    Value = c.Id.ToString(),
-                    Text = c.Nombre,
-                    Selected = seleccionadas != null && seleccionadas.Contains(c.Id)
-                })
-                .ToList();
-        }
     }
 }

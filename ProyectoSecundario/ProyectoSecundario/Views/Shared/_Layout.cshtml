@@ -46,6 +46,12 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Historia" asp-action="Ranking">Ranking de historias</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Historia" asp-action="Finales">Final más alcanzado</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Historia" asp-action="RankingUsuarios">Ranking de usuarios</a>
+                            </li>
                         }
                         
                         @if (Context.Session.GetString("Rol") == "Usuario")

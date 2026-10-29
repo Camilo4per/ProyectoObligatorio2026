@@ -11,6 +11,71 @@ namespace ProyectoSecundario.Controllers
         private string baseUrlCatalogo = "http://localhost:5281/api/Historia/Catalogo";
         private string baseUrlCategorias = "http://localhost:5281/api/Categoria";
         private string baseUrlRanking = "http://localhost:5281/api/Historia/Ranking";
+        private string baseUrlHistorias = "http://localhost:5281/api/Historia";
+        private string baseUrlRankingUsuarios = "http://localhost:5281/api/Lectura/RankingUsuarios";
+
+        // GET: /Historia/Finales?idHistoria=5
+        [HttpGet]
+        public IActionResult Finales(int? idHistoria)
+        {
+            string? token = HttpContext.Session.GetString("token");
+            string? rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            if (rol != "Administrador")
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            FinalesHistoriaViewModel modelo = new FinalesHistoriaViewModel
+            {
+                IdHistoriaSeleccionada = idHistoria
+            };
+
+            HttpResponseMessage respuestaHistorias =
+                ClienteHttpAuxiliar.EnviarSolicitud(
+                    baseUrlHistorias,
+                    VerbosHttp.GET,
+                    token: token
+                );
+
+            if (!respuestaHistorias.IsSuccessStatusCode)
+            {
+                ViewBag.Error = "No se pudo obtener la lista de historias.";
+                return View(modelo);
+            }
+
+            modelo.Historias =
+                JsonConvert.DeserializeObject<List<HistoriaModel>>(
+                    ClienteHttpAuxiliar.ObtenerBody(respuestaHistorias))
+                ?? new List<HistoriaModel>();
+
+            if (idHistoria.HasValue && idHistoria.Value > 0)
+            {
+                HttpResponseMessage respuesta =
+                    ClienteHttpAuxiliar.EnviarSolicitud(
+                        baseUrlHistorias + "/" + idHistoria.Value + "/Finales",
+                        VerbosHttp.GET,
+                        token: token
+                    );
+
+                if (!respuesta.IsSuccessStatusCode)
+                {
+                    ViewBag.Error = "No se pudo obtener los finales de la historia.";
+                    return View(modelo);
+                }
+
+                modelo.Reporte =
+                    JsonConvert.DeserializeObject<FinalesHistoriaModel>(
+                        ClienteHttpAuxiliar.ObtenerBody(respuesta));
+            }
+
+            return View(modelo);
+        }
 
         // GET: /Historia/Ranking
         public IActionResult Ranking()
@@ -46,6 +111,46 @@ namespace ProyectoSecundario.Controllers
             else
             {
                 ViewBag.Error = "No se pudo obtener el ranking de historias.";
+            }
+
+            return View(ranking);
+        }
+
+        // GET: /Historia/RankingUsuarios
+        public IActionResult RankingUsuarios()
+        {
+            string? token = HttpContext.Session.GetString("token");
+            string? rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            if (rol != "Administrador")
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            HttpResponseMessage respuesta = ClienteHttpAuxiliar.EnviarSolicitud(
+                baseUrlRankingUsuarios,
+                VerbosHttp.GET,
+                token: token
+            );
+
+            List<UsuarioRankingModel> ranking =
+                new List<UsuarioRankingModel>();
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                ranking = JsonConvert.DeserializeObject<
+                    List<UsuarioRankingModel>>(
+                        ClienteHttpAuxiliar.ObtenerBody(respuesta))
+                    ?? new List<UsuarioRankingModel>();
+            }
+            else
+            {
+                ViewBag.Error = "No se pudo obtener el ranking de usuarios.";
             }
 
             return View(ranking);

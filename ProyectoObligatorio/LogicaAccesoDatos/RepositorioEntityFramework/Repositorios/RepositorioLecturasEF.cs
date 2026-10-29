@@ -80,6 +80,7 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
         public List<Lectura> FindAllCompletadas()
         {
             return _context.Lecturas
+                .Include(l => l.Usuario)
                 .Include(l => l.Historia)
                 .Where(l => l.FechaFin != null)
                 .ToList();

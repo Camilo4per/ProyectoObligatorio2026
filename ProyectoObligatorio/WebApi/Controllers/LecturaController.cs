@@ -19,6 +19,7 @@ namespace ApiWeb.Controllers
         private IAgregarLectura _agregarLecturaCu;
         private IActualizarLectura _actualizarLecturaCu;
         private IObtenerHistorialLecturas _obtenerHistorialLecturasCu;
+        private IObtenerRankingUsuarios _obtenerRankingUsuariosCu;
         private IObtenerPasoLectura _obtenerPasoLecturaCu;
         private IAvanzarLectura _avanzarLecturaCu;
         public LecturaController(
@@ -27,6 +28,7 @@ namespace ApiWeb.Controllers
             IAgregarLectura agregarLectura,
             IActualizarLectura actualizarLectura,
             IObtenerHistorialLecturas obtenerHistorialLecturas,
+            IObtenerRankingUsuarios obtenerRankingUsuarios,
             IObtenerPasoLectura obtenerPasoLectura,
             IAvanzarLectura avanzarLectura
             )
@@ -36,6 +38,7 @@ namespace ApiWeb.Controllers
             _agregarLecturaCu = agregarLectura;
             _actualizarLecturaCu = actualizarLectura;
             _obtenerHistorialLecturasCu = obtenerHistorialLecturas;
+            _obtenerRankingUsuariosCu = obtenerRankingUsuarios;
             _obtenerPasoLecturaCu = obtenerPasoLectura;
             _avanzarLecturaCu = avanzarLectura;
         }
@@ -95,6 +98,24 @@ namespace ApiWeb.Controllers
             catch (LecturaException lex)
             {
                 return BadRequest(lex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        // GET: api/<LecturaController>/RankingUsuarios
+        [HttpGet("RankingUsuarios")]
+        [Authorize(Roles = "Administrador")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public ActionResult<IEnumerable<UsuarioRankingDTO>> RankingUsuarios()
+        {
+            try
+            {
+                return Ok(_obtenerRankingUsuariosCu.Ejecutar());
             }
             catch (Exception ex)
             {

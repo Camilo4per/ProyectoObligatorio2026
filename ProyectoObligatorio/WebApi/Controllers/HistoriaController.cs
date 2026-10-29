@@ -19,18 +19,21 @@ namespace ApiWeb.Controllers
         private IEncontrarHistoriasPublicadas _encontrarHistoriasPublicadasCu;
         private IObtenerHistoriaPorId _obtenerHistoriaPorIdCu;
         private IObtenerRankingHistorias _obtenerRankingHistoriasCu;
+        private IObtenerFinalesPorHistoria _obtenerFinalesPorHistoriaCu;
 
         public HistoriaController(
             IEncontrarTodasLasHistorias encontrarTodasLasHistorias,
             IEncontrarHistoriasPublicadas encontrarHistoriasPublicadas,
             IObtenerHistoriaPorId obtenerHistoriaPorId,
-            IObtenerRankingHistorias obtenerRankingHistorias
+            IObtenerRankingHistorias obtenerRankingHistorias,
+            IObtenerFinalesPorHistoria obtenerFinalesPorHistoria
             )
         {
             _encontrarTodasLasHistoriasCu = encontrarTodasLasHistorias;
             _encontrarHistoriasPublicadasCu = encontrarHistoriasPublicadas;
             _obtenerHistoriaPorIdCu = obtenerHistoriaPorId;
             _obtenerRankingHistoriasCu = obtenerRankingHistorias;
+            _obtenerFinalesPorHistoriaCu = obtenerFinalesPorHistoria;
         }
 
 
@@ -82,6 +85,29 @@ namespace ApiWeb.Controllers
             try
             {
                 return Ok(_obtenerRankingHistoriasCu.Ejecutar());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        // GET api/<HistoriaController>/5/Finales
+        [HttpGet("{id}/Finales")]
+        [Authorize(Roles = "Administrador")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        public ActionResult<FinalesHistoriaDTO> GetFinales(int id)
+        {
+            try
+            {
+                return Ok(_obtenerFinalesPorHistoriaCu.Ejecutar(id));
+            }
+            catch (HistoriaException hex)
+            {
+                return BadRequest(hex.Message);
             }
             catch (Exception ex)
             {

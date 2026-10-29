@@ -29,3 +29,103 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+:root {
+  --color-fondo: #ffffff;
+  --color-superficie: #f8f9fa;
+  --color-texto: #212529;
+  --color-borde: #dee2e6;
+  --color-enlace: #0d6efd;
+  --color-control: #ffffff;
+}
+
+body.tema-claro {
+  --color-fondo: #ffffff;
+  --color-superficie: #f8f9fa;
+  --color-texto: #212529;
+  --color-borde: #dee2e6;
+  --color-enlace: #0d6efd;
+  --color-control: #ffffff;
+}
+
+body.tema-oscuro {
+  --color-fondo: #121212;
+  --color-superficie: #1f1f1f;
+  --color-texto: #f1f1f1;
+  --color-borde: #444444;
+  --color-enlace: #8ab4f8;
+  --color-control: #2b2b2b;
+}
+
+body.tema-claro,
+body.tema-oscuro {
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+body.tema-claro .navbar,
+body.tema-oscuro .navbar {
+  background-color: var(--color-superficie) !important;
+  border-color: var(--color-borde) !important;
+}
+
+body.tema-claro .navbar-brand,
+body.tema-oscuro .navbar-brand,
+body.tema-claro .nav-link,
+body.tema-oscuro .nav-link {
+  color: var(--color-texto) !important;
+}
+
+body.tema-claro .nav-link:hover,
+body.tema-oscuro .nav-link:hover,
+body.tema-claro a:hover,
+body.tema-oscuro a:hover {
+  color: var(--color-enlace) !important;
+}
+
+body.tema-claro a,
+body.tema-oscuro a {
+  color: var(--color-enlace);
+}
+
+body.tema-claro .form-control,
+body.tema-oscuro .form-control,
+body.tema-claro .form-select,
+body.tema-oscuro .form-select {
+  background-color: var(--color-control);
+  color: var(--color-texto);
+  border-color: var(--color-borde);
+}
+
+body.tema-claro .form-control::placeholder,
+body.tema-oscuro .form-control::placeholder {
+  color: var(--color-texto);
+  opacity: 0.65;
+}
+
+body.tema-claro .table,
+body.tema-oscuro .table {
+  color: var(--color-texto);
+  border-color: var(--color-borde);
+}
+
+body.tema-claro footer,
+body.tema-oscuro footer {
+  color: var(--color-texto) !important;
+  border-color: var(--color-borde) !important;
+}
+
+body.tema-claro .text-muted,
+body.tema-oscuro .text-muted {
+  color: var(--color-texto) !important;
+  opacity: 0.75;
+}
+
+body.tema-oscuro .navbar-toggler {
+  border-color: var(--color-borde);
+}
+
+body.tema-oscuro .navbar-toggler-icon {
+  filter: invert(1);
+}

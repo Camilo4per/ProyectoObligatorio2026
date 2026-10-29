@@ -9,6 +9,10 @@ namespace ProyectoSecundario.Controllers
 {
     public class AuthController : Controller
     {
+        private const string ClaveEstiloLectura = "EstiloLectura";
+        private const string EstiloClaro = "Claro";
+        private const string EstiloOscuro = "Oscuro";
+
         private string baseUrl = "http://localhost:5281/api/Usuario/Login";
 
         // GET: /Auth/Login
@@ -51,9 +55,29 @@ namespace ProyectoSecundario.Controllers
         [HttpGet]
         public IActionResult Logout()
         {
-            // Limpia toda la sesión (token, Rol, NombreUsuario e IdUsuario): si sólo se
-            // borraba el token, el layout seguía mostrando la sesión como activa.
-            HttpContext.Session.Clear();
+            HttpContext.Session.Remove("token");
+            HttpContext.Session.Remove("Rol");
+            HttpContext.Session.Remove("NombreUsuario");
+            HttpContext.Session.Remove("IdUsuario");
+
+            return RedirectToAction("Login");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CambiarEstilo(string estilo, string? returnUrl)
+        {
+            string estiloNormalizado = estilo == EstiloOscuro
+                ? EstiloOscuro
+                : EstiloClaro;
+
+            HttpContext.Session.SetString(ClaveEstiloLectura, estiloNormalizado);
+
+            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return LocalRedirect(returnUrl);
+            }
+
             return RedirectToAction("Login");
         }
     }

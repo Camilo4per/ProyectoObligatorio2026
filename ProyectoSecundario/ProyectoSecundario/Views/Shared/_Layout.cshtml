@@ -1,5 +1,16 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@{
+    string estiloLectura = Context.Session.GetString("EstiloLectura") == "Oscuro"
+        ? "Oscuro"
+        : "Claro";
+
+    string claseEstilo = estiloLectura == "Oscuro"
+        ? "tema-oscuro"
+        : "tema-claro";
+
+    string returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+}
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,9 +20,9 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ProyectoSecundario.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body class="@claseEstilo">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ProyectoSecundario</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -26,47 +37,58 @@
                         @if (Context.Session.GetString("Rol") == null)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Login">Login</a>
+                                <a class="nav-link" asp-area="" asp-controller="Auth" asp-action="Login">Login</a>
                             </li>
                         }
 
                         @if (Context.Session.GetString("Rol") != null)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Historia" asp-action="Index">Home</a>
+                                <a class="nav-link" asp-area="" asp-controller="Historia" asp-action="Index">Home</a>
                             </li>
                         }
 
                         @if (Context.Session.GetString("Rol") == "Administrador")
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Historia" asp-action="Ranking">Ranking de historias</a>
+                                <a class="nav-link" asp-area="" asp-controller="Historia" asp-action="Ranking">Ranking de historias</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Historia" asp-action="Finales">Final más alcanzado</a>
+                                <a class="nav-link" asp-area="" asp-controller="Historia" asp-action="Finales">Final más alcanzado</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Historia" asp-action="RankingUsuarios">Ranking de usuarios</a>
+                                <a class="nav-link" asp-area="" asp-controller="Historia" asp-action="RankingUsuarios">Ranking de usuarios</a>
                             </li>
                         }
                         
                         @if (Context.Session.GetString("Rol") == "Usuario")
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Historia" asp-action="Historias">Historias</a>
+                                <a class="nav-link" asp-area="" asp-controller="Historia" asp-action="Historias">Historias</a>
                             </li>   
 
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Lectura" asp-action="Historial">Historial Lecturas</a>
+                                <a class="nav-link" asp-area="" asp-controller="Lectura" asp-action="Historial">Historial Lecturas</a>
                             </li>
                         }
 
                         @if (Context.Session.GetString("Rol") != null)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Logout">Logout</a>
+                                <a class="nav-link" asp-area="" asp-controller="Auth" asp-action="Logout">Logout</a>
                             </li>
                         }
+
+                        <li class="nav-item ms-auto">
+                            <form asp-controller="Auth" asp-action="CambiarEstilo" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="estilo" value="@(estiloLectura == "Claro" ? "Oscuro" : "Claro")" />
+                                <input type="hidden" name="returnUrl" value="@returnUrl" />
+                                <button type="submit" class="nav-link btn btn-link">
+                                    @(estiloLectura == "Claro" ? "Activar modo oscuro" : "Activar modo claro")
+                                </button>
+                            </form>
+                        </li>
                     </ul>
                 </div>
             </div>

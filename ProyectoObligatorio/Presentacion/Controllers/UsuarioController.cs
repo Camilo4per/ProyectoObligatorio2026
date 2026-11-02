@@ -71,14 +71,14 @@ namespace Presentacion.Controllers
             }
         }
 
-
-        //===========================================================//
-        // CRUD: Registro, Detalles, Modificar, Eliminar
-        //===========================================================//
-
         // GET: UsuarioController/Registro
         public ActionResult Registro()
         {
+            if (HttpContext.Session.GetString("Rol") !=  RolesUsuario.Administrador.ToString())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             return View();
         }
 
@@ -87,6 +87,11 @@ namespace Presentacion.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Registro(UsuarioDTO dto)
         {
+            if (HttpContext.Session.GetString("Rol") != RolesUsuario.Administrador.ToString())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             try
             {
                 agregarUsuario.Ejecutar(dto);
@@ -96,56 +101,6 @@ namespace Presentacion.Controllers
             {
                 ViewBag.Error = ex.Message;
                 return View(dto);
-            }
-        }
-
-        // GET: UsuarioController/Detalles/5
-        public ActionResult Detalles(int id)
-        {
-            return View(obtenerUsuarioPorId.Ejecutar(id));
-        }
-
-        // GET: UsuarioController/Modificar/5
-        public ActionResult Modificar(int id)
-        {
-            return View();
-        }
-
-        // POST: UsuarioController/Modificar/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Modificar(int id, UsuarioDTO dto)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Error = ex.Message;
-                return View();
-            }
-        }
-
-        // GET: UsuarioController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: UsuarioController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, UsuarioDTO dto)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Error = ex.Message;
-                return View();
             }
         }
     }

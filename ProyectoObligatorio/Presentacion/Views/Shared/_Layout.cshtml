@@ -28,10 +28,6 @@
                         @if (Context.Session.GetString("Rol") == null)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Registro">Registro</a>
-                            </li>
-
-                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Login">Login</a>
                             </li>
                         }
@@ -40,6 +36,9 @@
                         {
                             @if (Context.Session.GetString("Rol") == "Administrador")
                             {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Registro">Registro</a>
+                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Historia" asp-action="Index">Historias</a>
                                 </li>

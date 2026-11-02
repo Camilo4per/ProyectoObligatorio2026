@@ -1,0 +1,1246 @@
+## :bust_in_silhouette:  (19/10/2026 21:30)
+Explicar el valor de la expresión `respuesta.IsSuccessStatusCode`
+
+___
+
+## :bust_in_silhouette:
+Quiero que me muestres como implementarias el siguiente requerimiento usando cosas parecidas a lo que ya esta echo en el proyecto: RF10 – Final más alcanzado por historia – Rol Administrador Se selecciona una
+historia de una lista y el sistema muestra, para cada uno de sus finales, la cantidad de
+veces que fue alcanzado, indicando cuál es el más frecuente.
+## :speech_balloon: GitHub Copilot
+
+1. No se ha encontrado ningún archivo para "E:\CODIGO\Repos\ObligatorioDW\ProyectoSecundario\ProyectoSecundario\Controllers\UsuarioController.cs". :negative_squared_cross_mark:
+1. Leer copilot-instructions.md, líneas 1 a 100 :white_check_mark:
+1. Leer 20 configuraciones de 'ASP.NET Core Razor Pages controller patterns', 'HttpClient response status code debugging', 'Visual Studio debugger inspect HttpResponseMessage StatusCode' :white_check_mark:
+
+1. Leer UsuarioController.cs, líneas 1 a 200 :white_check_mark:
+1. Leer CategoriaController.cs, líneas 1 a 220 :white_check_mark:
+1. Leer ClienteHttpAuxiliar.cs, líneas 1 a 240 :white_check_mark:
+1. No se ha encontrado ningún archivo para "ProyectoObligatorio". :negative_squared_cross_mark:
+1. Se encontraron 1 resultados para el símbolo EnviarSolicitud :white_check_mark:
+1. Se encontraron 8 resultados para el símbolo EnviarSolicitud :white_check_mark:
+1. Leer UsuarioModel.cs, líneas 1 a 120 :white_check_mark:
+1. Leer UsuarioController.cs, líneas 1 a 100 :white_check_mark:
+
+1. Leer HistoriaController.cs, líneas 1 a 240 :white_check_mark:
+1. Leer LecturaController.cs, líneas 1 a 240 :white_check_mark:
+1. Leer HistoriaModel.cs, líneas 1 a 160 :white_check_mark:
+1. Leer LecturaModel.cs, líneas 1 a 180 :white_check_mark:
+
+1. Leer HistoriaRankingModel.cs, líneas 1 a 100 :white_check_mark:
+1. Leer HistoriaCatalogoModel.cs, líneas 1 a 100 :white_check_mark:
+1. No se encontraron resultados para el símbolo Ranking :white_check_mark:
+1. No se encontraron resultados para el símbolo Historias :white_check_mark:
+
+1. Leer HistoriaController.cs, líneas 1 a 260 :white_check_mark:
+1. No se ha encontrado ningún archivo para "ProyectoObligatorio/LogicaAplicacion". :negative_squared_cross_mark:
+1. Leer Historia.cs, líneas 1 a 180 :white_check_mark:
+1. Leer Lectura.cs, líneas 1 a 180 :white_check_mark:
+
+1. Leer HistoriaController.cs, líneas 1 a 260 :white_check_mark:
+1. No se ha encontrado ningún archivo para "ProyectoObligatorio/Presentacion/Controllers/HistoriaApiController.cs". :negative_squared_cross_mark:
+1. Leer LecturaController.cs, líneas 1 a 260 :white_check_mark:
+1. Leer HistoriaController.cs, líneas 1 a 260 :white_check_mark:
+1. Leer HistoriaController.cs, líneas 1 a 260 :white_check_mark:
+1. Leer CategoriaController.cs, líneas 1 a 180 :white_check_mark:
+1. Leer HistoriaDTO.cs, líneas 1 a 180 :white_check_mark:
+1. Leer CapituloDTO.cs, líneas 1 a 180 :white_check_mark:
+1. Leer HistoriaRankingDTO.cs, líneas 1 a 80 :white_check_mark:
+1. Leer IObtenerRankingHistorias.cs, líneas 1 a 80 :white_check_mark:
+1. No se ha encontrado ningún archivo para "ProyectoObligatorio/LogicaAplicacion/CasosDeUso/Historias/ObtenerRankingHistorias.cs". :negative_squared_cross_mark:
+1. Leer IObtenerHistoriaPorId.cs, líneas 1 a 80 :white_check_mark:
+1. No se ha encontrado ningún archivo para "ProyectoObligatorio/LogicaAplicacion/CasosDeUso/Lecturas/ObtenerRankingHistorias.cs". :negative_squared_cross_mark:
+1. Leer ObtenerRankingHistoriasCU.cs, líneas 1 a 180 :white_check_mark:
+1. No se ha encontrado ningún archivo para "ProyectoObligatorio/LogicaAplicacion/Implementaciones/ObtenerRankingHistorias.cs". :negative_squared_cross_mark:
+1. Leer Program.cs, líneas 1 a 240 :white_check_mark:
+
+1. Leer RepositorioLecturasEF.cs, líneas 1 a 220 :white_check_mark:
+1. Leer IRepositorioLecturas.cs, líneas 1 a 100 :white_check_mark:
+1. Leer Final.cs, líneas 1 a 130 :white_check_mark:
+1. Leer Ranking.cshtml, líneas 1 a 180 :white_check_mark:
+
+1. Leer ObtenerHistoriaPorIdCU.cs, líneas 1 a 120 :white_check_mark:
+1. Leer RepositorioHistoriasEF.cs, líneas 1 a 180 :white_check_mark:
+1. No se ha encontrado ningún archivo para "ProyectoObligatorio/DTOs/DTOs/FinalDTO.cs". :negative_squared_cross_mark:
+1. Leer AvanzarLecturaCU.cs, líneas 1 a 180 :white_check_mark:
+1. Leer CapituloModel.cs, líneas 1 a 100 :white_check_mark:
+La forma más simple, siguiendo los patrones actuales, es reutilizar:
+
+- `HistoriaController` de la API.
+- `HistoriaModel.Capitulos`.
+- `CapituloModel.Tipo == 1` para identificar finales.
+- `CapituloModel.CantLlegaron` para obtener la cantidad.
+- El patrón de consumo HTTP de `HistoriaController.Ranking()`.
+
+El contador ya se actualiza cuando una lectura llega a un final, mediante `final.RegistrarLlegada()`.
+
+## 1. Modelo del reporte en `ProyectoSecundario`
+
+Crear un modelo específico para la pantalla:
+```csharp
+namespace ProyectoSecundario.Models
+{
+    public class FinalFrecuenciaModel
+    {
+        public int IdFinal { get; set; }
+        public string Titulo { get; set; } = string.Empty;
+        public int CantidadVecesAlcanzado { get; set; }
+        public bool EsMasFrecuente { get; set; }
+    }
+}
+```
+```csharp
+namespace ProyectoSecundario.Models
+{
+    public class ReporteFinalesModel
+    {
+        public int? IdHistoriaSeleccionada { get; set; }
+        public string TituloHistoria { get; set; } = string.Empty;
+
+        public List<HistoriaCatalogoModel> Historias { get; set; } =
+            new List<HistoriaCatalogoModel>();
+
+        public List<FinalFrecuenciaModel> Finales { get; set; } =
+            new List<FinalFrecuenciaModel>();
+    }
+}
+```
+
+## 2. Acción en `HistoriaController` de `ProyectoSecundario`
+
+La lista de historias se obtiene usando el endpoint existente:
+```plaintext
+GET /api/Historia
+```
+
+Y los datos completos de la historia se obtienen mediante:
+```plaintext
+GET /api/Historia/{id}
+```
+
+Agregar estas acciones al controlador:
+```csharp
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using ProyectoSecundario.Auxiliar;
+using ProyectoSecundario.Enum;
+using ProyectoSecundario.Models;
+
+namespace ProyectoSecundario.Controllers
+{
+    public class HistoriaController : Controller
+    {
+        private string baseUrlHistorias =
+            "http://localhost:5281/api/Historia";
+
+        [HttpGet]
+        public IActionResult Finales(int? idHistoria)
+        {
+            string? token = HttpContext.Session.GetString("token");
+            string? rol = HttpContext.Session.GetString("Rol");
+
+            if (string.IsNullOrEmpty(token))
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            if (rol != "Administrador")
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            ReporteFinalesModel modelo = new ReporteFinalesModel
+            {
+                IdHistoriaSeleccionada = idHistoria
+            };
+
+            // Obtiene las historias que se mostrarán en el combo.
+            HttpResponseMessage respuestaHistorias =
+                ClienteHttpAuxiliar.EnviarSolicitud(
+                    baseUrlHistorias,
+                    VerbosHttp.GET,
+                    token: token
+                );
+
+            if (!respuestaHistorias.IsSuccessStatusCode)
+            {
+                ViewBag.Error =
+                    "No se pudo obtener la lista de historias.";
+
+                return View(modelo);
+            }
+
+            modelo.Historias =
+                JsonConvert.DeserializeObject<List<HistoriaCatalogoModel>>(
+                    ClienteHttpAuxiliar.ObtenerBody(respuestaHistorias))
+                ?? new List<HistoriaCatalogoModel>();
+
+            // Si el administrador seleccionó una historia,
+            // obtiene sus capítulos y finales.
+            if (idHistoria.HasValue && idHistoria.Value > 0)
+            {
+                HttpResponseMessage respuestaHistoria =
+                    ClienteHttpAuxiliar.EnviarSolicitud(
+                        baseUrlHistorias + "/" + idHistoria.Value,
+                        VerbosHttp.GET,
+                        token: token
+                    );
+
+                if (!respuestaHistoria.IsSuccessStatusCode)
+                {
+                    ViewBag.Error =
+                        "No se pudo obtener la historia seleccionada.";
+
+                    return View(modelo);
+                }
+
+                HistoriaModel? historia =
+                    JsonConvert.DeserializeObject<HistoriaModel>(
+                        ClienteHttpAuxiliar.ObtenerBody(respuestaHistoria));
+
+                if (historia == null)
+                {
+                    ViewBag.Error = "La historia no existe.";
+                    return View(modelo);
+                }
+
+                modelo.TituloHistoria = historia.Titulo;
+
+                List<CapituloModel> finales =
+                    historia.Capitulos?
+                        .Where(c => c.Tipo == 1)
+                        .ToList()
+                    ?? new List<CapituloModel>();
+
+                int mayorCantidad = finales.Any()
+                    ? finales.Max(f => f.CantLlegaron)
+                    : 0;
+
+                modelo.Finales = finales
+                    .Select(final => new FinalFrecuenciaModel
+                    {
+                        IdFinal = final.Id,
+                        Titulo = final.Titulo,
+                        CantidadVecesAlcanzado = final.CantLlegaron,
+
+                        // En caso de empate, se indican todos los
+                        // finales con la cantidad máxima.
+                        EsMasFrecuente =
+                            mayorCantidad > 0 &&
+                            final.CantLlegaron == mayorCantidad
+                    })
+                    .OrderByDescending(f => f.CantidadVecesAlcanzado)
+                    .ThenBy(f => f.Titulo)
+                    .ToList();
+            }
+
+            return View(modelo);
+        }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+    }
+}
+```
+
+> Si el endpoint `GET /api/Historia` devuelve `HistoriaDTO` completos y no `HistoriaCatalogoDTO`, se puede deserializar igualmente a una lista de `HistoriaModel`, o crear un modelo específico para la lista. Lo importante es que existan `Id` y `Titulo`.
+
+## 3. Vista Razor
+
+Crear la vista:
+```razor
+@model ProyectoSecundario.Models.ReporteFinalesModel
+
+@{
+    ViewData["Title"] = "Final más alcanzado";
+}
+
+<h1>Final más alcanzado por historia</h1>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+
+<form asp-action="Finales" method="get" class="mb-4">
+    <div class="form-group">
+        <label asp-for="IdHistoriaSeleccionada">
+            Seleccione una historia
+        </label>
+
+        <select asp-for="IdHistoriaSeleccionada"
+                class="form-control"
+                asp-items="@(new SelectList(
+                    Model.Historias,
+                    "Id",
+                    "Titulo"))">
+            <option value="">-- Seleccione una historia --</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">
+        Consultar
+    </button>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.TituloHistoria))
+{
+    <h2>@Model.TituloHistoria</h2>
+
+    @if (Model.Finales.Any())
+    {
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Final</th>
+                    <th>Veces alcanzado</th>
+                    <th>Resultado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (FinalFrecuenciaModel final in Model.Finales)
+                {
+                    <tr class="@(final.EsMasFrecuente
+                        ? "table-success"
+                        : string.Empty)">
+                        <td>@final.Titulo</td>
+                        <td>@final.CantidadVecesAlcanzado</td>
+                        <td>
+                            @if (final.EsMasFrecuente)
+                            {
+                                <strong>Más frecuente</strong>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            La historia no tiene finales registrados.
+        </div>
+    }
+}
+```
+
+La vista necesita importar `SelectList`. Si todavía no está disponible globalmente, agregar:
+```razor
+@using Microsoft.AspNetCore.Mvc.Rendering
+```
+
+## 4. Enlace desde el menú de administrador
+
+Por ejemplo:
+```razor
+<a asp-controller="Historia"
+   asp-action="Finales"
+   class="nav-link">
+    Final más alcanzado
+</a>
+```
+
+## 5. Seguridad del endpoint
+
+Actualmente el controlador de la API tiene `[Authorize]`, pero el requerimiento es exclusivo del administrador. Para reforzarlo también del lado de la API, conviene agregar autorización de rol al endpoint que devuelve el detalle:
+```csharp
+[HttpGet("{id}")]
+[Authorize(Roles = "Administrador")]
+[ProducesResponseType((int)HttpStatusCode.OK)]
+[ProducesResponseType((int)HttpStatusCode.BadRequest)]
+[ProducesResponseType((int)HttpStatusCode.Forbidden)]
+[ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+public ActionResult<HistoriaDTO> Get(int id)
+{
+    try
+    {
+        return Ok(_obtenerHistoriaPorIdCu.Ejecutar(id));
+    }
+    catch (HistoriaException hex)
+    {
+        return BadRequest(hex.Message);
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, ex.Message);
+    }
+}
+```
+
+La lógica aprovecha el comportamiento existente de `AvanzarLecturaCU`, que incrementa `CantLlegaron` cuando el destino es un `Final`. Por tanto, no es necesario contar nuevamente las lecturas en el nuevo reporte.
+
+___
+
+## :bust_in_silhouette:
+me gustaria que la parte de consultas y eso lo agas en el ProyectoObligatorio y lo expongas como endpoint para consumirlo aca, que la logica quede en el otro proyecto
+## :speech_balloon: GitHub Copilot
+
+1. Memoria detectada :white_check_mark:
+1. Leer IRepositorioFinales.cs, líneas 1 a 100 :white_check_mark:
+1. Leer Final.cs, líneas 1 a 80 :white_check_mark:
+1. Leer HistoriaController.cs, líneas 1 a 120 :white_check_mark:
+1. Leer Program.cs, líneas 35 a 75 :white_check_mark:
+Sí, esa es una mejor separación. La consulta y la regla de cuál es el final más frecuente deben quedar en `ProyectoObligatorio`; `ProyectoSecundario` solamente debe:
+
+1. Mostrar la lista de historias.
+2. Enviar el `idHistoria`.
+3. Consumir el endpoint.
+4. Mostrar el resultado.
+
+La consulta no debería realizarse sobre `HistoriaModel.Capitulos` en `ProyectoSecundario`.
+
+## 1. DTO de respuesta en `ProyectoObligatorio`
+
+Crear un DTO para cada final:
+```csharp
+namespace DTOs.DTOs
+{
+    public class FinalFrecuenciaDTO
+    {
+        public int IdFinal { get; set; }
+        public string Titulo { get; set; } = string.Empty;
+        public int CantidadVecesAlcanzado { get; set; }
+        public bool EsMasFrecuente { get; set; }
+    }
+}
+```
+
+Y otro DTO para el reporte completo:
+```csharp
+namespace DTOs.DTOs
+{
+    public class FinalesHistoriaDTO
+    {
+        public int IdHistoria { get; set; }
+        public string TituloHistoria { get; set; } = string.Empty;
+
+        public List<FinalFrecuenciaDTO> Finales { get; set; } =
+            new List<FinalFrecuenciaDTO>();
+    }
+}
+```
+
+## 2. Interfaz del caso de uso
+
+La lógica queda en un caso de uso de `ProyectoObligatorio`:
+```csharp
+using DTOs.DTOs;
+
+namespace LogicaAplicacion.InterfacesDeCasoDeUso.Historias
+{
+    public interface IObtenerFinalesPorHistoria
+    {
+        FinalesHistoriaDTO Ejecutar(int idHistoria);
+    }
+}
+```
+
+## 3. Implementación de la consulta
+
+Se reutiliza `IRepositorioHistorias.FindById`, que ya carga los capítulos de la historia.
+```csharp
+using Dominio.Entidades;
+using Dominio.Excepciones;
+using Dominio.InterfaceDeRepositorio;
+using DTOs.DTOs;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
+
+namespace LogicaAplicacion.CasosDeUso.Historias
+{
+    public class ObtenerFinalesPorHistoriaCU : IObtenerFinalesPorHistoria
+    {
+        private readonly IRepositorioHistorias repositorioHistorias;
+
+        public ObtenerFinalesPorHistoriaCU(
+            IRepositorioHistorias repositorioHistorias)
+        {
+            this.repositorioHistorias = repositorioHistorias;
+        }
+
+        public FinalesHistoriaDTO Ejecutar(int idHistoria)
+        {
+            if (idHistoria <= 0)
+            {
+                throw new HistoriaException(
+                    "El identificador de la historia no es válido.");
+            }
+
+            Historia historia = repositorioHistorias.FindById(idHistoria);
+
+            List<Final> finales = historia.Capitulos
+                .OfType<Final>()
+                .ToList();
+
+            int mayorCantidad = finales.Any()
+                ? finales.Max(final => final.CantLlegaron.Valor)
+                : 0;
+
+            return new FinalesHistoriaDTO
+            {
+                IdHistoria = historia.Id,
+                TituloHistoria = historia.Titulo.Valor,
+
+                Finales = finales
+                    .Select(final => new FinalFrecuenciaDTO
+                    {
+                        IdFinal = final.Id,
+                        Titulo = final.Titulo.Valor,
+                        CantidadVecesAlcanzado =
+                            final.CantLlegaron.Valor,
+
+                        // Si hay empate, todos los finales con el
+                        // valor máximo se consideran más frecuentes.
+                        EsMasFrecuente =
+                            mayorCantidad > 0 &&
+                            final.CantLlegaron.Valor == mayorCantidad
+                    })
+                    .OrderByDescending(final =>
+                        final.CantidadVecesAlcanzado)
+                    .ThenBy(final => final.Titulo)
+                    .ToList()
+            };
+        }
+    }
+}
+```
+
+La cantidad se obtiene desde `Final.CantLlegaron`, que ya es incrementada en el caso de uso existente cuando la lectura llega a un final:
+```csharp
+if (destino is Final final)
+{
+    lectura.RegistrarFinal(final);
+    _repositorioLecturas.Update(lectura);
+
+    final.RegistrarLlegada();
+    _repositorioFinales.Update(final);
+}
+```
+
+Por lo tanto, no es necesario volver a contar las lecturas en el nuevo caso de uso.
+
+## 4. Registrar el caso de uso en `Program.cs`
+```csharp
+builder.Services.AddScoped<
+    IObtenerFinalesPorHistoria,
+    ObtenerFinalesPorHistoriaCU>();
+```
+
+Los `using` necesarios ya siguen el patrón utilizado por los otros casos de uso:
+```csharp
+using LogicaAplicacion.CasosDeUso.Historias;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Historias;
+```
+
+## 5. Exponer el endpoint
+
+Agregar la dependencia al controlador existente:
+```csharp
+private readonly IObtenerFinalesPorHistoria
+    _obtenerFinalesPorHistoriaCu;
+```
+
+Agregarla al constructor:
+```csharp
+public HistoriaController(
+    IEncontrarTodasLasHistorias encontrarTodasLasHistorias,
+    IEncontrarHistoriasPublicadas encontrarHistoriasPublicadas,
+    IObtenerHistoriaPorId obtenerHistoriaPorId,
+    IObtenerRankingHistorias obtenerRankingHistorias,
+    IObtenerFinalesPorHistoria obtenerFinalesPorHistoria)
+{
+    _encontrarTodasLasHistoriasCu = encontrarTodasLasHistorias;
+    _encontrarHistoriasPublicadasCu = encontrarHistoriasPublicadas;
+    _obtenerHistoriaPorIdCu = obtenerHistoriaPorId;
+    _obtenerRankingHistoriasCu = obtenerRankingHistorias;
+    _obtenerFinalesPorHistoriaCu = obtenerFinalesPorHistoria;
+}
+```
+
+Y agregar el endpoint:
+```csharp
+// GET: api/Historia/5/Finales
+[HttpGet("{id}/Finales")]
+[Authorize(Roles = "Administrador")]
+[ProducesResponseType((int)HttpStatusCode.OK)]
+[ProducesResponseType((int)HttpStatusCode.BadRequest)]
+[ProducesResponseType((int)HttpStatusCode.Forbidden)]
+[ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+public ActionResult<FinalesHistoriaDTO> GetFinales(int id)
+{
+    try
+    {
+        return Ok(_obtenerFinalesPorHistoriaCu.Ejecutar(id));
+    }
+    catch (HistoriaException hex)
+    {
+        return BadRequest(hex.Message);
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, ex.Message);
+    }
+}
+```
+
+El endpoint resultante sería:
+```plaintext
+GET http://localhost:5281/api/Historia/5/Finales
+```
+
+Respuesta esperada:
+```json
+{
+  "idHistoria": 5,
+  "tituloHistoria": "La aventura",
+  "finales": [
+    {
+      "idFinal": 12,
+      "titulo": "Final feliz",
+      "cantidadVecesAlcanzado": 18,
+      "esMasFrecuente": true
+    },
+    {
+      "idFinal": 13,
+      "titulo": "Final triste",
+      "cantidadVecesAlcanzado": 7,
+      "esMasFrecuente": false
+    }
+  ]
+}
+```
+
+## 6. Modelo en `ProyectoSecundario`
+
+En el proyecto secundario solamente se replica la forma de la respuesta:
+```csharp
+namespace ProyectoSecundario.Models
+{
+    public class FinalFrecuenciaModel
+    {
+        public int IdFinal { get; set; }
+        public string Titulo { get; set; } = string.Empty;
+        public int CantidadVecesAlcanzado { get; set; }
+        public bool EsMasFrecuente { get; set; }
+    }
+}
+```
+```csharp
+namespace ProyectoSecundario.Models
+{
+    public class FinalesHistoriaModel
+    {
+        public int IdHistoria { get; set; }
+        public string TituloHistoria { get; set; } = string.Empty;
+
+        public List<FinalFrecuenciaModel> Finales { get; set; } =
+            new List<FinalFrecuenciaModel>();
+    }
+}
+```
+
+## 7. Consumir el endpoint desde `ProyectoSecundario`
+
+La acción del controlador no contiene la consulta ni calcula el máximo. Solo realiza el consumo HTTP:
+```csharp
+private string baseUrlFinales =
+    "http://localhost:5281/api/Historia";
+```
+```csharp
+[HttpGet]
+public IActionResult Finales(int idHistoria)
+{
+    string? token = HttpContext.Session.GetString("token");
+    string? rol = HttpContext.Session.GetString("Rol");
+
+    if (string.IsNullOrEmpty(token))
+    {
+        return RedirectToAction("Login", "Auth");
+    }
+
+    if (rol != "Administrador")
+    {
+        return RedirectToAction(nameof(Index));
+    }
+
+    if (idHistoria <= 0)
+    {
+        ViewBag.Error = "Debe seleccionar una historia.";
+        return View();
+    }
+
+    HttpResponseMessage respuesta =
+        ClienteHttpAuxiliar.EnviarSolicitud(
+            baseUrlFinales + "/" + idHistoria + "/Finales",
+            VerbosHttp.GET,
+            token: token
+        );
+
+    if (!respuesta.IsSuccessStatusCode)
+    {
+        ViewBag.Error =
+            "No se pudo obtener la información de los finales.";
+
+        return View();
+    }
+
+    FinalesHistoriaModel? reporte =
+        JsonConvert.DeserializeObject<FinalesHistoriaModel>(
+            ClienteHttpAuxiliar.ObtenerBody(respuesta));
+
+    if (reporte == null)
+    {
+        ViewBag.Error = "La respuesta del servidor no es válida.";
+        return View();
+    }
+
+    return View(reporte);
+}
+```
+
+De esta forma:
+
+- `ProyectoObligatorio` accede al repositorio.
+- `ProyectoObligatorio` aplica la lógica del requerimiento.
+- `ProyectoObligatorio` determina el final más frecuente.
+- `ProyectoSecundario` solamente consume y presenta el resultado.
+- El endpoint queda protegido con el rol `Administrador`.
+
+___
+
+## :bust_in_silhouette:
+implementa
+## :speech_balloon: GitHub Copilot
+Voy a implementarlo separando responsabilidades: caso de uso y endpoint en `ProyectoObligatorio`, y consumo/presentación en `ProyectoSecundario`, reutilizando los patrones existentes. Primero validaré las estructuras y después compilaré la solución.
+1.  :white_check_mark:
+Empiezo revisando los puntos de integración existentes en ambos proyectos para respetar sus nombres, rutas y estilos actuales.
+
+1. Leer HistoriaController.cs, líneas 1 a 140 :white_check_mark:
+1. Leer Index.cshtml, líneas 1 a 180 :white_check_mark:
+1. Leer Historias.cshtml, líneas 1 a 220 :white_check_mark:
+1. Leer HistoriaMapper.cs, líneas 1 a 180 :white_check_mark:
+1. Leer HistoriaDTO.cs, líneas 1 a 60 :white_check_mark:
+Creo ahora los contratos del reporte en `ProyectoObligatorio`, manteniendo DTOs planos como los existentes.
+ 1. Modifying FinalFrecuenciaDTO.cs
+ 1. Modifying FinalesHistoriaDTO.cs
+Implemento el caso de uso en `ProyectoObligatorio`; la consulta leerá `Final.CantLlegaron` y resolverá allí el máximo y los empates.
+ 1. Modifying IObtenerFinalesPorHistoria.cs
+ 1. Modifying ObtenerFinalesPorHistoriaCU.cs
+Registro el caso de uso en DI y agrego el endpoint administrativo `GET /api/Historia/{id}/Finales`.
+ 1. Modifying Program.cs
+ 1. Modifying HistoriaController.cs
+Creo los modelos mínimos de respuesta en `ProyectoSecundario`; no contendrán lógica de consulta.
+ 1. Modifying FinalFrecuenciaModel.cs
+ 1. Modifying FinalesHistoriaModel.cs
+Integro el consumo HTTP en el controlador secundario y agrego un modelo de pantalla para conservar la lista de historias junto con el reporte seleccionado.
+ 1. Modifying FinalesHistoriaViewModel.cs
+ 1. Modifying HistoriaController.cs
+ 1. Modifying Finales.cshtml
+1. Errores de lectura en ProyectoSecundario/ProyectoSecundario/Controllers/HistoriaController.cs :white_check_mark:
+La integración está hecha. Ahora compilo los proyectos afectados para detectar referencias, rutas o incompatibilidades de tipos.
+
+1. Leer 1 archivo para 'ProyectoObligatorio/WebApi.csproj', 'ProyectoSecundario/ProyectoSecundario.csproj' :white_check_mark:
+1. Error de compilación :negative_squared_cross_mark:
+1. Error de compilación :negative_squared_cross_mark:
+1. Leer 1 proyecto :white_check_mark:
+
+1. Leer 1 archivo para '.csproj' :white_check_mark:
+1. Error de compilación :negative_squared_cross_mark:
+1. Leer 107 archivos en ProyectoSecundario\ProyectoSecundario\ProyectoSecundario.csproj :white_check_mark:
+
+1. Compilación correcta :white_check_mark:
+1. Leer 0 archivos para 'WebApi.csproj', 'ProyectoObligatorio.csproj' :white_check_mark:
+
+1. Comando ejecutado: Get-ChildItem -Path 'C:\Users\camil\Documents\Carpeta Principal\Dev\Repos\ObligatorioDW' -Recurse -Filter *.csproj | Select-Object -ExpandProperty FullName :white_check_mark:
+1. Error de compilación :negative_squared_cross_mark:
+1. Comando ejecutado: dotnet build 'C:\Users\camil\Documents\Carpeta Principal\Dev\Repos\ObligatorioDW\ProyectoObligatorio\WebApi\ApiWeb.csproj' --no-restore :white_check_mark:
+Ambas compilaciones pasan: el proyecto secundario compila correctamente y la API compila correctamente con advertencias preexistentes no relacionadas. Haré una última revisión de navegación y validación de pruebas disponibles.
+
+1. Leer _Layout.cshtml, líneas 1 a 180 :white_check_mark:
+1. No se pudo ejecutar get_tests :negative_squared_cross_mark:
+1. Errores de lectura en ProyectoObligatorio/LogicaAplicacion/CasosDeUso/Historias/ObtenerFinalesPorHistoriaCU.cs :white_check_mark:
+ 1. Modifying _Layout.cshtml
+1. Compilación correcta :white_check_mark:
+Implementado RF10 con la lógica separada correctamente.
+
+### Cambios realizados en `ProyectoObligatorio`
+
+- Creado `FinalFrecuenciaDTO`.
+- Creado `FinalesHistoriaDTO`.
+- Creada la interfaz `IObtenerFinalesPorHistoria`.
+- Creado el caso de uso `ObtenerFinalesPorHistoriaCU`.
+- La lógica:
+  - Obtiene los finales de una historia.
+  - Usa `Final.CantLlegaron`.
+  - Ordena por cantidad descendente.
+  - Marca el final más frecuente.
+  - Soporta empates.
+- Registrado el caso de uso en `Program.cs`.
+- Expuesto el endpoint:
+```
+GET /api/Historia/{id}/Finales
+```
+
+- El endpoint requiere el rol `Administrador`.
+
+### Cambios realizados en `ProyectoSecundario`
+
+- Creados los modelos:
+  - `FinalFrecuenciaModel`
+  - `FinalesHistoriaModel`
+  - `FinalesHistoriaViewModel`
+- Agregada la acción:
+```
+GET /Historia/Finales?idHistoria=5
+```
+
+- El controlador solamente consume el endpoint de `ProyectoObligatorio`.
+- Creada la vista `Views/Historia/Finales.cshtml`.
+- Agregado el enlace **“Final más alcanzado”** al menú de administradores.
+
+### Validación
+
+- `ProyectoSecundario` compila correctamente.
+- `ProyectoObligatorio/WebApi` compila correctamente.
+- No se introdujeron errores de compilación.
+- Las advertencias existentes de nulabilidad/JWT permanecen sin relación con RF10.
+- No hay pruebas configuradas actualmente en Test Explorer.
+
+___
+
+## :bust_in_silhouette:
+Quiero que me muestres como implementarias el siguiente requerimiento usando cosas parecidas a lo que ya esta echo en el proyecto, la parte logica dejala para ProyectoObligatorio con su CU y en ProyectoSecundario solo consumir el endpoint y mostrarlo en una vista accediendo desde el layout: RF11 – Usuario con más historias leídas – Rol Administrador Ranking de usuarios
+según la cantidad de historias distintas que completaron (leyeron hasta un final),
+ordenados de mayor a menor cantidad. 
+
+___
+
+## :bust_in_silhouette:
+Commitea cambios y pushea a github
+## :speech_balloon: GitHub Copilot
+
+1. Memoria detectada :white_check_mark:
+1. Leer ObtenerRankingHistoriasCU.cs, líneas 1 a 100 :white_check_mark:
+1. Leer IObtenerRankingHistorias.cs, líneas 1 a 60 :white_check_mark:
+1. Leer HistoriaController.cs, líneas 1 a 130 :white_check_mark:
+1. Leer HistoriaController.cs, líneas 1 a 130 :white_check_mark:
+1. Leer _Layout.cshtml, líneas 35 a 65 :white_check_mark:
+1. Leer registros de salida (Control de código fuente - GIT) :white_check_mark:
+
+1. Leer LecturaController.cs, líneas 1 a 230 :white_check_mark:
+1. Leer IObtenerRankingHistorias.cs, líneas 1 a 40 :white_check_mark:
+1. Leer AuthController.cs, líneas 1 a 130 :white_check_mark:
+1. Leer _Layout.cshtml, líneas 1 a 100 :white_check_mark:
+No puedo realizar el `commit` ni el `push` desde esta sesión porque no tengo acceso a una terminal ni a herramientas de escritura Git. Tampoco aplicaré cambios simulando que fueron guardados.
+
+La implementación para RF11 quedaría así.
+
+## 1. DTO en `ProyectoObligatorio`
+```csharp
+namespace DTOs.DTOs
+{
+    public class UsuarioRankingDTO
+    {
+        public int IdUsuario { get; set; }
+        public string NombreUsuario { get; set; } = string.Empty;
+        public int CantidadHistoriasCompletadas { get; set; }
+    }
+}
+```
+
+## 2. Caso de uso
+
+El criterio debe ser:
+
+- Solo lecturas completadas: `FechaFin != null`.
+- Agrupar por usuario.
+- Contar historias distintas, no cantidad de lecturas.
+- Ordenar de mayor a menor.
+```csharp
+using DTOs.DTOs;
+
+namespace LogicaAplicacion.InterfacesDeCasoDeUso.Lecturas
+{
+    public interface IObtenerRankingUsuarios
+    {
+        List<UsuarioRankingDTO> Ejecutar();
+    }
+}
+```
+```csharp
+using Dominio.Entidades;
+using Dominio.InterfaceDeRepositorio;
+using DTOs.DTOs;
+using LogicaAplicacion.InterfacesDeCasoDeUso.Lecturas;
+
+namespace LogicaAplicacion.CasosDeUso.Lecturas
+{
+    public class ObtenerRankingUsuariosCU : IObtenerRankingUsuarios
+    {
+        private IRepositorioLecturas repositorio;
+
+        public ObtenerRankingUsuariosCU(IRepositorioLecturas repositorioCu)
+        {
+            repositorio = repositorioCu;
+        }
+
+        public List<UsuarioRankingDTO> Ejecutar()
+        {
+            List<Lectura> lecturasCompletadas =
+                repositorio.FindAllCompletadas();
+
+            return lecturasCompletadas
+                .Where(lectura =>
+                    lectura.Usuario != null &&
+                    lectura.idUsuario.HasValue &&
+                    lectura.idHistoria.HasValue)
+                .GroupBy(lectura => new
+                {
+                    IdUsuario = lectura.idUsuario!.Value,
+                    NombreUsuario = lectura.Usuario.NombreUsuario
+                })
+                .Select(grupo => new UsuarioRankingDTO
+                {
+                    IdUsuario = grupo.Key.IdUsuario,
+                    NombreUsuario = grupo.Key.NombreUsuario,
+
+                    // Una historia cuenta una sola vez por usuario.
+                    CantidadHistoriasCompletadas = grupo
+                        .Select(lectura => lectura.idHistoria!.Value)
+                        .Distinct()
+                        .Count()
+                })
+                .OrderByDescending(usuario =>
+                    usuario.CantidadHistoriasCompletadas)
+                .ThenBy(usuario => usuario.NombreUsuario)
+                .ToList();
+        }
+    }
+}
+```
+
+## 3. Cargar el usuario en el repositorio
+
+El método existente debe incluir `Usuario`; actualmente `FindAllCompletadas()` carga la historia, pero no el usuario.
+```csharp
+public List<Lectura> FindAllCompletadas()
+{
+    return _context.Lecturas
+        .Include(lectura => lectura.Usuario)
+        .Include(lectura => lectura.Historia)
+        .Where(lectura => lectura.FechaFin != null)
+        .ToList();
+}
+```
+
+## 4. Registrar el caso de uso
+```csharp
+builder.Services.AddScoped<
+    IObtenerRankingUsuarios,
+    ObtenerRankingUsuariosCU>();
+```
+
+## 5. Endpoint
+
+Agregar la dependencia a `LecturaController`:
+```csharp
+private IObtenerRankingUsuarios _obtenerRankingUsuariosCu;
+```
+
+En el constructor:
+```csharp
+public LecturaController(
+    IEncontrarTodasLasLecturas encontrarTodasLasLecturas,
+    IObtenerLecturasPorId obtenerLecturasPorId,
+    IAgregarLectura agregarLectura,
+    IActualizarLectura actualizarLectura,
+    IObtenerHistorialLecturas obtenerHistorialLecturas,
+    IObtenerPasoLectura obtenerPasoLectura,
+    IAvanzarLectura avanzarLectura,
+    IObtenerRankingUsuarios obtenerRankingUsuarios)
+{
+    _encontrarTodasLasLecturasCu = encontrarTodasLasLecturas;
+    _obtenerLecturasPorIdCu = obtenerLecturasPorId;
+    _agregarLecturaCu = agregarLectura;
+    _actualizarLecturaCu = actualizarLectura;
+    _obtenerHistorialLecturasCu = obtenerHistorialLecturas;
+    _obtenerPasoLecturaCu = obtenerPasoLectura;
+    _avanzarLecturaCu = avanzarLectura;
+    _obtenerRankingUsuariosCu = obtenerRankingUsuarios;
+}
+```
+
+Endpoint protegido para administradores:
+```csharp
+// GET: api/Lectura/RankingUsuarios
+[HttpGet("RankingUsuarios")]
+[Authorize(Roles = "Administrador")]
+[ProducesResponseType((int)HttpStatusCode.OK)]
+[ProducesResponseType((int)HttpStatusCode.Forbidden)]
+[ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+public ActionResult<IEnumerable<UsuarioRankingDTO>> RankingUsuarios()
+{
+    try
+    {
+        return Ok(_obtenerRankingUsuariosCu.Ejecutar());
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, ex.Message);
+    }
+}
+```
+
+La URL resultante será:
+```plaintext
+GET http://localhost:5281/api/Lectura/RankingUsuarios
+```
+
+## 6. Modelo en `ProyectoSecundario`
+```csharp
+namespace ProyectoSecundario.Models
+{
+    public class UsuarioRankingModel
+    {
+        public int IdUsuario { get; set; }
+        public string NombreUsuario { get; set; } = string.Empty;
+        public int CantidadHistoriasCompletadas { get; set; }
+    }
+}
+```
+
+## 7. Consumo desde `HistoriaController`
+```csharp
+private string baseUrlRankingUsuarios =
+    "http://localhost:5281/api/Lectura/RankingUsuarios";
+
+public IActionResult RankingUsuarios()
+{
+    string? token = HttpContext.Session.GetString("token");
+    string? rol = HttpContext.Session.GetString("Rol");
+
+    if (string.IsNullOrEmpty(token))
+    {
+        return RedirectToAction("Login", "Auth");
+    }
+
+    if (rol != "Administrador")
+    {
+        return RedirectToAction(nameof(Index));
+    }
+
+    HttpResponseMessage respuesta =
+        ClienteHttpAuxiliar.EnviarSolicitud(
+            baseUrlRankingUsuarios,
+            VerbosHttp.GET,
+            token: token
+        );
+
+    List<UsuarioRankingModel> ranking =
+        new List<UsuarioRankingModel>();
+
+    if (respuesta.IsSuccessStatusCode)
+    {
+        ranking =
+            JsonConvert.DeserializeObject<List<UsuarioRankingModel>>(
+                ClienteHttpAuxiliar.ObtenerBody(respuesta))
+            ?? new List<UsuarioRankingModel>();
+    }
+    else
+    {
+        ViewBag.Error =
+            "No se pudo obtener el ranking de usuarios.";
+    }
+
+    return View(ranking);
+}
+```
+
+## 8. Vista
+```razor
+@model IEnumerable<ProyectoSecundario.Models.UsuarioRankingModel>
+
+@{
+    ViewData["Title"] = "Ranking de usuarios";
+}
+
+<h1>Usuarios con más historias leídas</h1>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+else if (Model.Any())
+{
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Posición</th>
+                <th>Usuario</th>
+                <th>Historias completadas</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int posicion = 1;
+            }
+
+            @foreach (UsuarioRankingModel usuario in Model)
+            {
+                <tr>
+                    <td>@posicion</td>
+                    <td>@usuario.NombreUsuario</td>
+                    <td>@usuario.CantidadHistoriasCompletadas</td>
+                </tr>
+
+                posicion++;
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">
+        No existen usuarios con historias completadas.
+    </div>
+}
+```
+
+## 9. Acceso desde el layout
+```razor
+@if (Context.Session.GetString("Rol") == "Administrador")
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark"
+           asp-controller="Historia"
+           asp-action="Ranking">
+            Ranking de historias
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link text-dark"
+           asp-controller="Historia"
+           asp-action="Finales">
+            Final más alcanzado
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link text-dark"
+           asp-controller="Historia"
+           asp-action="RankingUsuarios">
+            Ranking de usuarios
+        </a>
+    </li>
+}
+```
+
+Para hacer el `commit` y `push` después de aplicar estos cambios:
+```powershell
+git add .
+git commit -m "Implementa RF11 ranking de usuarios por historias completadas"
+git push origin master
+```
+
+No puedo ejecutar esos comandos ni aplicar los archivos desde la sesión actual.
+
+___
+
+## :bust_in_silhouette:
+implementa
+## :speech_balloon: GitHub Copilot
+Implementaré RF11 siguiendo la misma separación que RF09/RF10: caso de uso y endpoint en `ProyectoObligatorio`, consumo y vista en `ProyectoSecundario`, acceso desde el layout y validación mediante compilación.
+1.  :white_check_mark:
+Los puntos de integración coinciden con el ranking existente: `IRepositorioLecturas`, casos de uso bajo `Lecturas`, `LecturaController` para la API y `HistoriaController`/layout para la presentación secundaria. Creo ahora el contrato del ranking.
+ 1. Modifying UsuarioRankingDTO.cs
+Creo el contrato y el caso de uso; el conteo usará `Distinct()` sobre `idHistoria`, por lo que varias lecturas completadas de la misma historia contarán una sola vez.
+ 1. Modifying IObtenerRankingUsuarios.cs
+ 1. Modifying ObtenerRankingUsuariosCU.cs
+Ajusto la consulta del repositorio para cargar el usuario necesario y registro el nuevo caso de uso en la inyección de dependencias.
+ 1. Modifying RepositorioLecturasEF.cs
+ 1. Modifying Program.cs
+Agrego el endpoint protegido `GET /api/Lectura/RankingUsuarios` siguiendo el formato de los endpoints de ranking existentes.
+ 1. Modifying LecturaController.cs
+Creo el modelo de consumo y agrego en `ProyectoSecundario` una acción que solo llama al endpoint y deserializa el ranking.
+ 1. Modifying UsuarioRankingModel.cs
+ 1. Modifying HistoriaController.cs
+Creo la vista del ranking y agrego su acceso en el menú visible únicamente para administradores.
+ 1. Modifying RankingUsuarios.cshtml
+ 1. Modifying _Layout.cshtml
+La funcionalidad está integrada. Compilo la API y el proyecto secundario para validar constructor, DI, DTOs, endpoint y Razor.
+
+1. Errores de lectura en ProyectoSecundario/ProyectoSecundario/Controllers/HistoriaController.cs :white_check_mark:
+1. Compilación correcta :white_check_mark:
+1. Error de compilación :negative_squared_cross_mark:
+1. Comando ejecutado: dotnet build 'C:\Users\camil\Documents\Carpeta Principal\Dev\Repos\ObligatorioDW\ProyectoObligatorio\WebApi\ApiWeb.csproj' --no-restore :white_check_mark:
+La compilación del secundario pasa y la API también compila correctamente; las advertencias reportadas son preexistentes de nulabilidad/JWT. Finalizo la implementación.
+RF11 quedó implementado.
+
+### `ProyectoObligatorio`
+
+- Creado `UsuarioRankingDTO`.
+- Creada la interfaz `IObtenerRankingUsuarios`.
+- Creado `ObtenerRankingUsuariosCU`.
+- El caso de uso:
+  - Considera únicamente lecturas con `FechaFin`.
+  - Agrupa por usuario.
+  - Cuenta historias distintas usando `Distinct()`.
+  - Ordena de mayor a menor.
+- `FindAllCompletadas()` ahora incluye `Usuario`.
+- Registrado el caso de uso en `Program.cs`.
+- Expuesto el endpoint:
+```plaintext
+GET /api/Lectura/RankingUsuarios
+```
+
+El endpoint requiere el rol `Administrador`.
+
+### `ProyectoSecundario`
+
+- Creado `UsuarioRankingModel`.
+- Agregada la acción `Historia/RankingUsuarios`.
+- Consume el endpoint mediante `ClienteHttpAuxiliar`.
+- Creada la vista:
+```plaintext
+Views/Historia/RankingUsuarios.cshtml
+```
+
+- Agregado el enlace **Ranking de usuarios** al layout administrativo.
+
+### Validación
+
+- `ProyectoSecundario` compila correctamente.
+- `ApiWeb` compila correctamente.
+- No se introdujeron errores de compilación.
+- Permanecen únicamente advertencias preexistentes de nulabilidad y configuración JWT.
+
+___
+
+## :bust_in_silhouette:
+Quiero que el texto de Activar modo oscuro aparezca a la derecha del todo del navbar
+## :speech_balloon: GitHub Copilot
+Voy a revisar el layout y los estilos actuales del interruptor para moverlo al extremo derecho sin alterar su funcionamiento.
+
+1. Leer _Layout.cshtml, líneas 1 a 140 :white_check_mark:
+1. Leer site.css, líneas 1 a 240 :white_check_mark:
+1. Leer site.js, líneas 1 a 180 :white_check_mark:
+ 1. Modifying _Layout.cshtml
+El control ahora usa `ms-auto`, por lo que ocupa el margen disponible y queda alineado a la derecha del navbar. Compruebo que la vista siga compilando.
+
+1. Errores de lectura en ProyectoSecundario/ProyectoSecundario/Views/Shared/_Layout.cshtml :white_check_mark:
+1. Compilación correcta :white_check_mark:
+Hecho. El texto **“Activar modo oscuro”** ahora aparece alineado al extremo derecho del navbar mediante la clase Bootstrap `ms-auto`.
+
+Archivo modificado:
+```plaintext
+ProyectoSecundario/ProyectoSecundario/Views/Shared/_Layout.cshtml
+```
+
+La compilación del proyecto continúa correcta.

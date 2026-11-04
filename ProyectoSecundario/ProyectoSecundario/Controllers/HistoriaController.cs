@@ -8,11 +8,7 @@ namespace ProyectoSecundario.Controllers
 {
     public class HistoriaController : Controller
     {
-        private string baseUrlCatalogo = "http://localhost:5281/api/Historia/Catalogo";
-        private string baseUrlCategorias = "http://localhost:5281/api/Categoria";
-        private string baseUrlRanking = "http://localhost:5281/api/Historia/Ranking";
-        private string baseUrlHistorias = "http://localhost:5281/api/Historia";
-        private string baseUrlRankingUsuarios = "http://localhost:5281/api/Lectura/RankingUsuarios";
+        private const string baseUrl = "http://localhost:5281/api";
 
         // GET: /Historia/Finales?idHistoria=5
         [HttpGet]
@@ -38,7 +34,7 @@ namespace ProyectoSecundario.Controllers
 
             HttpResponseMessage respuestaHistorias =
                 ClienteHttpAuxiliar.EnviarSolicitud(
-                    baseUrlHistorias,
+                    $"{baseUrl}/Historia",
                     VerbosHttp.GET,
                     token: token
                 );
@@ -58,7 +54,7 @@ namespace ProyectoSecundario.Controllers
             {
                 HttpResponseMessage respuesta =
                     ClienteHttpAuxiliar.EnviarSolicitud(
-                        baseUrlHistorias + "/" + idHistoria.Value + "/Finales",
+                        $"{baseUrl}/Historia/{idHistoria.Value}/Finales",
                         VerbosHttp.GET,
                         token: token
                     );
@@ -94,7 +90,7 @@ namespace ProyectoSecundario.Controllers
             }
 
             HttpResponseMessage respuesta = ClienteHttpAuxiliar.EnviarSolicitud(
-                baseUrlRanking,
+                $"{baseUrl}/Historia/Ranking",
                 VerbosHttp.GET,
                 token: token
             );
@@ -133,7 +129,7 @@ namespace ProyectoSecundario.Controllers
             }
 
             HttpResponseMessage respuesta = ClienteHttpAuxiliar.EnviarSolicitud(
-                baseUrlRankingUsuarios,
+                $"{baseUrl}/Lectura/RankingUsuarios",
                 VerbosHttp.GET,
                 token: token
             );
@@ -185,7 +181,7 @@ namespace ProyectoSecundario.Controllers
             };
 
             HttpResponseMessage respuestaCategorias = ClienteHttpAuxiliar.EnviarSolicitud(
-                baseUrlCategorias,
+                $"{baseUrl}/Categoria",
                 VerbosHttp.GET,
                 token: token
             );
@@ -196,8 +192,8 @@ namespace ProyectoSecundario.Controllers
             }
 
             string urlCatalogo = idCategoria.HasValue && idCategoria.Value > 0
-                ? baseUrlCatalogo + "?idCategoria=" + idCategoria.Value
-                : baseUrlCatalogo;
+                ? $"{baseUrl}/Historia/Catalogo?idCategoria={idCategoria.Value}"
+                : $"{baseUrl}/Historia/Catalogo";
 
             HttpResponseMessage respuestaCatalogo = ClienteHttpAuxiliar.EnviarSolicitud(
                 urlCatalogo,

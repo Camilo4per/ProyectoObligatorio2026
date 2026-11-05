@@ -14,12 +14,11 @@ namespace LogicaAplicacion.CasosDeUso.Lecturas
         {
             repositorio = repo;
         }
-        public LecturaDTO Ejecutar(int id, int idUsuario, bool esAdmin)
+        public LecturaDTO Ejecutar(int id, int idUsuario)
         {
             Lectura lectura = repositorio.FindById(id);
 
-            // El dueño de una lectura (o un administrador) es el único que puede consultarla.
-            if (!esAdmin && lectura.idUsuario != idUsuario)
+            if (lectura.idUsuario != idUsuario)
                 throw new LecturaException("La lectura no pertenece al usuario autenticado.");
 
             return LecturaMapper.ToDTO(lectura);

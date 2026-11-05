@@ -4,6 +4,6 @@ namespace LogicaAplicacion.InterfacesDeCasoDeUso.Lecturas
 {
     public interface IActualizarLectura
     {
-        public void Ejecutar(int id, LecturaDTO dto, bool esAdmin);
+        public void Ejecutar(int id, LecturaDTO dto);
     }
 }

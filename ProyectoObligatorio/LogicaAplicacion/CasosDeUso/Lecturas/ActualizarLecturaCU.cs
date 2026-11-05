@@ -22,7 +22,7 @@ namespace LogicaAplicacion.CasosDeUso.Lecturas
             _repositorioFinales = repoFinales;
         }
 
-        public void Ejecutar(int id, LecturaDTO dto, bool esAdmin)
+        public void Ejecutar(int id, LecturaDTO dto)
         {
             if (dto == null)
                 throw new LecturaException("Los datos de la lectura no pueden ser nulos.");
@@ -37,8 +37,8 @@ namespace LogicaAplicacion.CasosDeUso.Lecturas
             // 2. Regla de dominio: una lectura ya finalizada es inmutable.
             existente.ValidarModificacion();
 
-            // 3. Solo el dueño de la lectura (o un administrador) puede modificarla.
-            if (!esAdmin && (!dto.idUsuario.HasValue || existente.idUsuario != dto.idUsuario.Value))
+            // 3. Solo el dueño de la lectura puede modificarla.
+            if (!dto.idUsuario.HasValue || existente.idUsuario != dto.idUsuario.Value)
                 throw new LecturaException("La lectura no pertenece al usuario autenticado.");
 
             if (!existente.idHistoria.HasValue)

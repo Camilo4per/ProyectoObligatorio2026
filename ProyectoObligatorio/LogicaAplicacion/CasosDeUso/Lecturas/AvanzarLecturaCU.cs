@@ -23,7 +23,7 @@ namespace LogicaAplicacion.CasosDeUso.Lecturas
             _repositorioFinales = repoFinales;
         }
 
-        public PasoLecturaDTO Ejecutar(int idLectura, AvanzarLecturaDTO dto, bool esAdmin)
+        public PasoLecturaDTO Ejecutar(int idLectura, AvanzarLecturaDTO dto)
         {
             if (dto == null)
                 throw new LecturaException("Los datos del avance no pueden ser nulos.");
@@ -32,7 +32,7 @@ namespace LogicaAplicacion.CasosDeUso.Lecturas
 
             Lectura lectura = _repositorioLecturas.FindById(idLectura);
 
-            if (!esAdmin && lectura.idUsuario != dto.idUsuario)
+            if (lectura.idUsuario != dto.idUsuario)
                 throw new LecturaException("La lectura no pertenece al usuario autenticado.");
 
             // Una lectura finalizada es inmutable: para otro camino hay que iniciar una nueva.

@@ -20,11 +20,11 @@ namespace LogicaAplicacion.CasosDeUso.Lecturas
             _repositorioHistorias = repoHistorias;
         }
 
-        public PasoLecturaDTO Ejecutar(int idLectura, int idCapitulo, int idUsuario, bool esAdmin)
+        public PasoLecturaDTO Ejecutar(int idLectura, int idCapitulo, int idUsuario)
         {
             Lectura lectura = _repositorioLecturas.FindById(idLectura);
 
-            if (!esAdmin && lectura.idUsuario != idUsuario)
+            if (lectura.idUsuario != idUsuario)
                 throw new LecturaException("La lectura no pertenece al usuario autenticado.");
 
             if (!lectura.idHistoria.HasValue)

@@ -71,7 +71,7 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                return Ok(_obtenerLecturasPorIdCu.Ejecutar(id, idUsuario, User.IsInRole("Administrador")));
+                return Ok(_obtenerLecturasPorIdCu.Ejecutar(id, idUsuario));
             }
             catch (LecturaException lex)
             {
@@ -160,7 +160,7 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                return Ok(_obtenerPasoLecturaCu.Ejecutar(id, idCapitulo, idUsuario, User.IsInRole("Administrador")));
+                return Ok(_obtenerPasoLecturaCu.Ejecutar(id, idCapitulo, idUsuario));
             }
             catch (LecturaException lex)
             {
@@ -181,7 +181,7 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                return Ok(_avanzarLecturaCu.Ejecutar(id, dto, User.IsInRole("Administrador")));
+                return Ok(_avanzarLecturaCu.Ejecutar(id, dto));
             }
             catch (LecturaException lex)
             {
@@ -206,7 +206,7 @@ namespace ApiWeb.Controllers
                 {
                     return BadRequest("El ID en la URL no coincide con el ID en el cuerpo de la solicitud.");
                 }
-                _actualizarLecturaCu.Ejecutar(id, dto, User.IsInRole("Administrador"));
+                _actualizarLecturaCu.Ejecutar(id, dto);
                 return NoContent();
             }
             catch (LecturaException lex)

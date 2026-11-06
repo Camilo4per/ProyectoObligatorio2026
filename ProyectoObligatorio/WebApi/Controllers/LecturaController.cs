@@ -93,7 +93,7 @@ namespace ApiWeb.Controllers
             try
             {
                 LecturaIniciadaDTO creada = _agregarLecturaCu.Ejecutar(dto);
-                return CreatedAtAction(nameof(Get), new { id = creada.IdLectura, idUsuario = dto.idUsuario }, creada);
+                return Created((string?)null, creada);
             }
             catch (LecturaException lex)
             {
@@ -136,10 +136,7 @@ namespace ApiWeb.Controllers
         {
             try
             {
-                return Ok(_obtenerHistorialLecturasCu.Ejecutar(
-                    idUsuario,
-                    mes,
-                    anio));
+                return Ok(_obtenerHistorialLecturasCu.Ejecutar(idUsuario, mes, anio));
             }
             catch (LecturaException lex)
             {
@@ -195,19 +192,15 @@ namespace ApiWeb.Controllers
 
         // PUT api/<LecturaController>/5
         [HttpPut("{id}")]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public ActionResult Put(int id, [FromBody] LecturaDTO dto)
         {
             try
             {
-                if (dto == null || id != dto.Id)
-                {
-                    return BadRequest("El ID en la URL no coincide con el ID en el cuerpo de la solicitud.");
-                }
                 _actualizarLecturaCu.Ejecutar(id, dto);
-                return NoContent();
+                return Ok();
             }
             catch (LecturaException lex)
             {

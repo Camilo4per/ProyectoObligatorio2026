@@ -8,7 +8,7 @@ namespace ProyectoSecundario.Controllers
 {
     public class HistoriaController : Controller
     {
-        private const string baseUrl = "http://localhost:5281/api";
+        private const string baseUrl = "http://apiwebm3c.somee.com/api";
 
         // GET: /Historia/Finales?idHistoria=5
         [HttpGet]

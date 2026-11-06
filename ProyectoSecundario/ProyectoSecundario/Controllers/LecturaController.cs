@@ -8,7 +8,7 @@ namespace ProyectoSecundario.Controllers
 {
     public class LecturaController : Controller
     {
-        private string baseUrlLectura = "http://localhost:5281/api/Lectura";
+        private string baseUrlLectura = "http://apiwebm3c.somee.com/api/Lectura";
 
         // GET: /Lectura/Historial?mes=10&anio=2026
         [HttpGet]

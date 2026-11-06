@@ -21,7 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
 builder.Services.AddDbContext<DominioContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("ObligatorioDB"))
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("ObligatorioBDM3C"))
     );
 
 //INICIALIZAMOS LOS REPOSITORIOS

@@ -16,6 +16,8 @@ using LogicaAplicacion.InterfacesDeCasoDeUso.Usuarios;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,11 +27,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(
+    opciones =>
+    {
+        opciones.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
+        {
+            Description = "Autorizacion estandar mediante esquema Bearer",
+            In = ParameterLocation.Header,
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey
+        });
+
+        opciones.OperationFilter<SecurityRequirementsOperationFilter>();
+    }
+);
 
 //REGISTRAMOS EL CONTEXTO DE LA BASE DE DATOS
 builder.Services.AddDbContext<DominioContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("ObligatorioDB"))
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("ObligatorioBDM3C"))
     );
 
 //INICIALIZAMOS LOS REPOSITORIOS

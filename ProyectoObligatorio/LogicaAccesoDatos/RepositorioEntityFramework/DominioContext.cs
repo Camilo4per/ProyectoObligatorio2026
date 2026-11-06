@@ -23,7 +23,7 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Configura la cadena de conexión a la base de datos
-            optionsBuilder.UseSqlServer(@"SERVER=(localdb)\MsSqlLocalDb;DATABASE=ObligatorioDB;Integrated Security=true;");
+            optionsBuilder.UseSqlServer(@"SERVER=(localdb)\MsSqlLocalDb;DATABASE=ObligatorioBDM3C;Integrated Security=true;");
         }
         */
 

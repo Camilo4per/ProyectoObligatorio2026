@@ -13,7 +13,7 @@ namespace ProyectoSecundario.Controllers
         private const string EstiloClaro = "Claro";
         private const string EstiloOscuro = "Oscuro";
 
-        private string baseUrl = "http://localhost:5281/api/Usuario/Login";
+        private string baseUrl = "http://apiwebm3c.somee.com/api/Usuario/Login";
 
         // GET: /Auth/Login
         public IActionResult Login()

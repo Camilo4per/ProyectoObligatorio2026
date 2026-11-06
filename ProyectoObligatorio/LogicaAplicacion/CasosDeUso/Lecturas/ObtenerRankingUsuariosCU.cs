@@ -24,11 +24,13 @@ namespace LogicaAplicacion.CasosDeUso.Lecturas
                     lectura.Usuario != null &&
                     lectura.idUsuario.HasValue &&
                     lectura.idHistoria.HasValue)
+                // Agrupo por idUsuario y NombreUsuario
                 .GroupBy(lectura => new
                 {
                     IdUsuario = lectura.idUsuario!.Value,
                     NombreUsuario = lectura.Usuario.NombreUsuario
                 })
+                // Proyecta cada grupo en un DTO del ranking.
                 .Select(grupo => new UsuarioRankingDTO
                 {
                     IdUsuario = grupo.Key.IdUsuario,
@@ -38,8 +40,7 @@ namespace LogicaAplicacion.CasosDeUso.Lecturas
                         .Distinct()
                         .Count()
                 })
-                .OrderByDescending(usuario =>
-                    usuario.CantidadHistoriasCompletadas)
+                .OrderByDescending(usuario => usuario.CantidadHistoriasCompletadas)
                 .ThenBy(usuario => usuario.NombreUsuario)
                 .ToList();
         }

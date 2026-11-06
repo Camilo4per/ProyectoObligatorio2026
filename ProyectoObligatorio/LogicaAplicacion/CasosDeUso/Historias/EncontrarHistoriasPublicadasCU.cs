@@ -17,7 +17,7 @@ namespace LogicaAplicacion.CasosDeUso.Historias
         public List<HistoriaCatalogoDTO> Ejecutar(int? idCategoria)
         {
             return repositorio.FindPublicadas(idCategoria)
-                .Select(HistoriaMapper.ToCatalogoDTO)
+                .Select(historia => HistoriaMapper.ToCatalogoDTO(historia))
                 .OrderBy(h => h.Titulo)
                 .ToList();
         }

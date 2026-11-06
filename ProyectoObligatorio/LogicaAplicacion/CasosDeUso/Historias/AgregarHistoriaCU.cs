@@ -29,8 +29,7 @@ namespace LogicaAplicacion.CasosDeUso.Historias
         {
             dto.Estado = (int) EstadoHistoria.Borrador;
 
-            if (dto.CapituloInicial == null)
-                throw new HistoriaException("La historia debe crearse con un capítulo inicial");
+            if (dto.CapituloInicial == null) throw new HistoriaException("La historia debe crearse con un capítulo inicial");
             dto.CapituloInicial.Tipo = (int) TipoCapitulo.Intermedio;
             dto.CapituloInicial.Opciones = null;
             dto.Capitulos = new List<CapituloDTO> { dto.CapituloInicial };

@@ -4,64 +4,67 @@ using DTOs.DTOs;
 
 namespace DTOs.Mappers
 {
-    public class HistoriaMapper
+    public static class HistoriaMapper
     {
         public static Historia FromDTO(HistoriaDTO dto)
         {
-            // Mapeo el capítulo inicial UNA sola vez: en el modelo el inicial también
-            // vive dentro de Capitulos, así que esta instancia se reutiliza abajo.
+            // Convierte el capítulo inicial una sola vez.
+            // La misma instancia se reutiliza dentro de la lista de capítulos
+            // para evitar crear dos objetos representando al mismo capítulo.
             Capitulo inicial = CapituloMapper.FromDTO(dto.CapituloInicial);
 
-            // dto.Capitulos debe contener el CapituloInicial.
-            // Si un elemento de la lista coincide con el inicial, reutilizo el
-            // capítulo ya mapeado en vez de crear una copia duplicada del mismo capítulo.
-            List<Capitulo> capitulos = dto.Capitulos
-                .Select(c => (c == dto.CapituloInicial || (c.Id != 0 && dto.CapituloInicial != null && c.Id == dto.CapituloInicial.Id)) ? inicial : CapituloMapper.FromDTO(c))
+            // Convierte todos los capítulos del DTO a entidades de dominio.
+            // Si un capítulo corresponde al inicial, reutiliza la instancia
+            // creada anteriormente en lugar de mapearlo nuevamente.
+            List<Capitulo> capitulos = (dto.Capitulos ?? new List<CapituloDTO>())
+                .Select(capitulo =>
+                    EsCapituloInicial(capitulo, dto.CapituloInicial)
+                        ? inicial
+                        : CapituloMapper.FromDTO(capitulo))
                 .ToList();
 
-            // Garantiza que el capítulo inicial esté en la lista de capítulos:
-            // si el form no lo incluyó dentro de Capitulos, lo agrego como primer capítulo.
+            // Garantiza que el capítulo inicial también esté dentro de la lista.
             if (!capitulos.Contains(inicial))
+            {
                 capitulos.Insert(0, inicial);
+            }
 
             return new Historia
             {
                 Id = dto.Id,
                 Titulo = new TituloHistoria(dto.Titulo),
                 Sinopsis = new Sinopsis(dto.Sinopsis),
-                Categorias = dto.Categorias.Select(CategoriaMapper.FromDTO).ToList(),
+                Categorias = (dto.Categorias ?? new List<CategoriaDTO>())
+                    .Select(CategoriaMapper.FromDTO)
+                    .ToList(),
                 CapituloInicial = inicial,
                 Capitulos = capitulos,
-                Estado = (EstadoHistoria) dto.Estado
+                Estado = (EstadoHistoria)dto.Estado
             };
         }
 
         public static HistoriaDTO ToDTO(Historia historia)
         {
-            // Mapeo el inicial una sola vez y lo reutilizo en Capitulos (espejo de FromDTO):
-            // así el round-trip ToDTO -> FromDTO del Edit no duplica el capítulo inicial.
-            CapituloDTO inicial = CapituloMapper.ToDTO(historia.CapituloInicial);
+            CapituloDTO inicial =
+                CapituloMapper.ToDTO(historia.CapituloInicial);
 
             return new HistoriaDTO
             {
                 Id = historia.Id,
                 Titulo = historia.Titulo.Valor,
                 Sinopsis = historia.Sinopsis.Valor,
-                // Categorías como DTOs planos (solo datos, sin referencias de dominio).
-                Categorias = historia.Categorias.Select(CategoriaMapper.ToDTO).ToList(),
+                Categorias = historia.Categorias
+                    .Select(c => CategoriaMapper.ToDTO(c))
+                    .ToList(),
                 CapituloInicial = inicial,
                 idCapituloInicial = historia.idCapituloInicial,
-                // Reutilizo la misma instancia DTO del inicial dentro de Capitulos.
-                // Funciona porque EF asigna la misma instancia de entidad a ambas navegaciones
-                // (relationship fixup) cuando el inicial está en la lista por Id.
                 Capitulos = historia.Capitulos
-                    .Select(c => (c == historia.CapituloInicial || (c.Id != 0 && historia.idCapituloInicial.HasValue && c.Id == historia.idCapituloInicial.Value)) ? inicial : CapituloMapper.ToDTO(c))
+                    .Select(capitulo => EsCapituloInicial(capitulo, historia) ? inicial : CapituloMapper.ToDTO(capitulo))
                     .ToList(),
-                Estado = (int) historia.Estado
+                Estado = (int)historia.Estado
             };
         }
 
-        // Proyección para el catálogo del lector: sólo datos de presentación.
         public static HistoriaCatalogoDTO ToCatalogoDTO(Historia historia)
         {
             return new HistoriaCatalogoDTO
@@ -69,8 +72,31 @@ namespace DTOs.Mappers
                 Id = historia.Id,
                 Titulo = historia.Titulo.Valor,
                 Sinopsis = historia.Sinopsis.Valor,
-                Categorias = historia.Categorias.Select(CategoriaMapper.ToDTO).ToList()
+                Categorias = historia.Categorias
+                    .Select(c => CategoriaMapper.ToDTO(c))
+                    .ToList()
             };
+        }
+
+        // Para el FromDTO
+        private static bool EsCapituloInicial(
+            CapituloDTO capitulo,
+            CapituloDTO inicial)
+        {
+            return capitulo == inicial ||
+                   (capitulo.Id != 0 &&
+                    inicial != null &&
+                    capitulo.Id == inicial.Id);
+        }
+        // Para el ToDTO
+        private static bool EsCapituloInicial(
+            Capitulo capitulo,
+            Historia historia)
+        {
+            return capitulo == historia.CapituloInicial ||
+                   (capitulo.Id != 0 &&
+                    historia.idCapituloInicial.HasValue &&
+                    capitulo.Id == historia.idCapituloInicial.Value);
         }
     }
 }

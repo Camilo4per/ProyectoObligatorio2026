@@ -145,16 +145,11 @@ namespace Presentacion.Controllers
             {
                 ViewBag.Error = ex.Message;
                 ViewBag.Categorias = encontrarTodasCategorias.Ejecutar();
-                try
-                {
-                    HistoriaDTO existente = obtenerHistoriaPorId.Ejecutar(id);
-                    dto.Capitulos = existente.Capitulos;
-                    if (dto.CapituloInicial == null) dto.CapituloInicial = existente.CapituloInicial;
-                }
-                catch
-                {
-                    // Ignora si no se pudo recargar
-                }
+
+                HistoriaDTO existente = obtenerHistoriaPorId.Ejecutar(id);
+                dto.Capitulos = existente.Capitulos;
+                if (dto.CapituloInicial == null) dto.CapituloInicial = existente.CapituloInicial;
+
                 return View(dto);
             }
         }

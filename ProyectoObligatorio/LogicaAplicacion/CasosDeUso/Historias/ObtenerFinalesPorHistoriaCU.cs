@@ -40,8 +40,7 @@ namespace LogicaAplicacion.CasosDeUso.Historias
                         IdFinal = final.Id,
                         Titulo = final.Titulo.Valor,
                         CantidadVecesAlcanzado = final.CantLlegaron.Valor,
-                        EsMasFrecuente = mayorCantidad > 0 &&
-                            final.CantLlegaron.Valor == mayorCantidad
+                        EsMasFrecuente = mayorCantidad > 0 && final.CantLlegaron.Valor == mayorCantidad
                     })
                     .OrderByDescending(final => final.CantidadVecesAlcanzado)
                     .ThenBy(final => final.Titulo)

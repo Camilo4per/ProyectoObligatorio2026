@@ -28,25 +28,57 @@ namespace LogicaAplicacion.CasosDeUso.Historias
 
         public void Ejecutar(HistoriaDTO dto, int? idUsuarioAdmin = null)
         {
-            if (dto == null)
-                throw new HistoriaException("Los datos de la historia no pueden ser nulos.");
-            if (dto.Estado != (int)EstadoHistoria.Borrador && dto.Estado != (int)EstadoHistoria.Publicada)
-                throw new HistoriaException("El estado de la historia es inválido.");
+            ValidarDatos(dto);
 
-            HistoriaDTO completo = HistoriaMapper.ToDTO(repositorioHistorias.FindById(dto.Id));
-            int estadoAnterior = completo.Estado;
+            HistoriaDTO actual = HistoriaMapper.ToDTO(repositorioHistorias.FindById(dto.Id));
 
-            // Una historia publicada es de sólo lectura: se permite Publicada -> Borrador
-            // (despublicar), pero no cambiar el contenido mientras siga publicada.
-            bool siguePublicada = estadoAnterior == (int)EstadoHistoria.Publicada
-                && dto.Estado == (int)EstadoHistoria.Publicada;
-
-            if (siguePublicada && HayCambiosDeContenido(dto, completo))
+            if (NoSePuedeModificar(dto, actual))
             {
                 throw new HistoriaException(
                     "Una historia publicada no se puede modificar. Vuelva a ponerla en borrador para editarla.");
             }
 
+            ActualizarCapituloInicial(dto, actual);
+            ActualizarDatos(dto, actual);
+
+            repositorioHistorias.Update(HistoriaMapper.FromDTO(actual));
+
+            RegistrarAuditoriaSiCorresponde(dto, actual.Estado, idUsuarioAdmin);
+        }
+
+        private void ValidarDatos(HistoriaDTO dto)
+        {
+            if (dto == null)
+                throw new HistoriaException(
+                    "Los datos de la historia no pueden ser nulos.");
+
+            if (dto.Estado != (int)EstadoHistoria.Borrador &&
+                dto.Estado != (int)EstadoHistoria.Publicada)
+            {
+                throw new HistoriaException("El estado de la historia es inválido.");
+            }
+        }
+
+        private bool NoSePuedeModificar(HistoriaDTO nuevo, HistoriaDTO actual)
+        {
+            bool siguePublicada =
+                actual.Estado == (int)EstadoHistoria.Publicada &&
+                nuevo.Estado == (int)EstadoHistoria.Publicada;
+
+            return siguePublicada && HayCambiosDeContenido(nuevo, actual);
+        }
+
+        private void ActualizarDatos(HistoriaDTO nuevo, HistoriaDTO actual)
+        {
+            actual.Titulo = nuevo.Titulo;
+            actual.Sinopsis = nuevo.Sinopsis;
+            actual.Estado = nuevo.Estado;
+            actual.CategoriaIds = nuevo.CategoriaIds;
+            actual.Categorias = ResolverCategorias(nuevo.CategoriaIds);
+        }
+
+        private void ActualizarCapituloInicial(HistoriaDTO dto, HistoriaDTO completo)
+        {
             if (dto.CapituloInicial != null && completo.CapituloInicial != null)
             {
                 bool yaTieneOtrosCapitulos = completo.Capitulos != null && completo.Capitulos.Count > 1;
@@ -55,8 +87,7 @@ namespace LogicaAplicacion.CasosDeUso.Historias
 
                 if (yaTieneOtrosCapitulos && (cambioTitulo || cambioTexto))
                 {
-                    throw new HistoriaException(
-                        "El capítulo inicial no se puede modificar porque la historia ya posee otros capítulos agregados.");
+                    throw new HistoriaException("El capítulo inicial no se puede modificar porque la historia ya posee otros capítulos agregados.");
                 }
 
                 if (!yaTieneOtrosCapitulos)
@@ -69,23 +100,6 @@ namespace LogicaAplicacion.CasosDeUso.Historias
                         completo.Capitulos[0].Texto = dto.CapituloInicial.Texto;
                     }
                 }
-            }
-
-            completo.Titulo = dto.Titulo;
-            completo.Sinopsis = dto.Sinopsis;
-            completo.Estado = dto.Estado;
-            completo.CategoriaIds = dto.CategoriaIds;
-            completo.Categorias = ResolverCategorias(dto.CategoriaIds);
-
-            repositorioHistorias.Update(HistoriaMapper.FromDTO(completo));
-
-            if (idUsuarioAdmin.HasValue && idUsuarioAdmin.Value > 0)
-            {
-                string accion = (dto.Estado == (int)EstadoHistoria.Publicada && estadoAnterior != (int)EstadoHistoria.Publicada)
-                    ? "Publicación de Historia"
-                    : "Modificación de Historia";
-
-                _registrarAuditoria.Ejecutar(accion, dto.Id, idUsuarioAdmin.Value);
             }
         }
 
@@ -117,6 +131,18 @@ namespace LogicaAplicacion.CasosDeUso.Historias
                 }
             }
             return resultado;
+        }
+
+        private void RegistrarAuditoriaSiCorresponde(HistoriaDTO dto, int estadoAnterior, int? idUsuarioAdmin)
+        {
+            if (idUsuarioAdmin.HasValue && idUsuarioAdmin.Value > 0)
+            {
+                string accion = (dto.Estado == (int)EstadoHistoria.Publicada && estadoAnterior != (int)EstadoHistoria.Publicada)
+                    ? "Publicación de Historia"
+                    : "Modificación de Historia";
+
+                _registrarAuditoria.Ejecutar(accion, dto.Id, idUsuarioAdmin.Value);
+            }
         }
     }
 }

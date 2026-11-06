@@ -21,11 +21,13 @@ namespace LogicaAplicacion.CasosDeUso.Lecturas
 
             return lecturasCompletadas
                 .Where(l => l.Historia != null)
+                // GroupBy para agrupar las lecturas por idHistoria y Titulo
                 .GroupBy(l => new
                 {
-                    IdHistoria = l.idHistoria ?? l.Historia.Id,
+                    IdHistoria = l.idHistoria!.Value,
                     Titulo = l.Historia.Titulo.Valor
                 })
+                // Select del GroupBy para crear un objeto HistoriaRankingDTO con la información necesaria
                 .Select(grupo => new HistoriaRankingDTO
                 {
                     IdHistoria = grupo.Key.IdHistoria,

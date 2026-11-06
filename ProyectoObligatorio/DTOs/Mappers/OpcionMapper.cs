@@ -5,7 +5,6 @@ namespace DTOs.Mappers
 {
     public class OpcionMapper
     {
-        // Aca uso operadores ternarios para manejar el caso en que CapDestino sea un Final o un Intermedio, ya que ambos tienen diferentes estructuras y propiedades.
         public static Opcion FromDTO(OpcionDTO dto)
         {
             return new Opcion

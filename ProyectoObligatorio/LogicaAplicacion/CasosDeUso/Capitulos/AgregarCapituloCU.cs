@@ -46,7 +46,7 @@ namespace LogicaAplicacion.CasosDeUso.Capitulos
                 throw new OpcionException("Texto requerido");
             }
 
-            // 1. Obtener historia y verificar su existencia
+            // Obtener historia y verificar su existencia
             Historia historia = _repoHistorias.FindById(nuevoCapituloDto.idHistoria.Value);
             if (historia == null)
             {
@@ -57,8 +57,7 @@ namespace LogicaAplicacion.CasosDeUso.Capitulos
             // publicada pero inválida (por ejemplo un intermedio nuevo sin opciones).
             if (historia.Estado == EstadoHistoria.Publicada)
             {
-                throw new HistoriaException(
-                    "No se pueden agregar capítulos a una historia publicada. Vuelva a ponerla en borrador para editarla.");
+                throw new HistoriaException("No se pueden agregar capítulos a una historia publicada. Vuelva a ponerla en borrador para editarla.");
             }
 
             // 2. Verificar que el capítulo antecedente exista en la historia y sea intermedio
@@ -66,11 +65,6 @@ namespace LogicaAplicacion.CasosDeUso.Capitulos
             if (capituloAntecedente == null)
             {
                 throw new CapituloException("El capítulo antecedente no pertenece a la historia indicada.");
-            }
-
-            if (capituloAntecedente is Final)
-            {
-                throw new CapituloException("Solamente se podrán agregar capítulos a continuación de capítulos de tipo intermedio (no finales).");
             }
 
             if (!(capituloAntecedente is Intermedio))
@@ -91,10 +85,6 @@ namespace LogicaAplicacion.CasosDeUso.Capitulos
             else if (nuevoCapitulo is Final nuevoFinal)
             {
                 _repoFinales.Add(nuevoFinal);
-            }
-            else
-            {
-                throw new CapituloException("Tipo de capítulo no reconocido.");
             }
 
             // 5. Cargar el capítulo intermedio antecedente para agregarle la nueva opción

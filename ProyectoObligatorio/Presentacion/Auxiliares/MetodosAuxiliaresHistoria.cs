@@ -13,11 +13,7 @@ namespace Presentacion.Auxiliares
             return MostrarCapitulo(historia.CapituloInicial, historia.Capitulos, 0, capitulosVisitados);
         }
 
-        private static string MostrarCapitulo(
-            CapituloDTO capitulo,
-            List<CapituloDTO> capitulos,
-            int nivel,
-            List<int> capitulosVisitados)
+        private static string MostrarCapitulo(CapituloDTO capitulo, List<CapituloDTO> capitulos, int nivel, List<int> capitulosVisitados)
         {
             // Construye el texto del capítulo actual.
             string arbol = "";
@@ -56,27 +52,10 @@ namespace Presentacion.Auxiliares
                     arbol += Espaciar(nivel + 1) + "Opción: " + opcion.Texto + "\n";
 
                     CapituloDTO? destino = opcion.CapDestino;
-                    if (destino == null && opcion.idCapDestino.HasValue)
-                    {
-                        destino = capitulos.FirstOrDefault(c => c.Id == opcion.idCapDestino.Value);
-                    }
-
-                    if (destino != null)
-                    {
-                        arbol += MostrarCapitulo(destino, capitulos, nivel + 2, capitulosVisitados);
-                    }
-                    else
-                    {
-                        arbol += Espaciar(nivel + 2) + "(Capítulo no encontrado)" + "\n";
-                    }
+                    arbol += MostrarCapitulo(destino, capitulos, nivel + 2, capitulosVisitados);
                 }
             }
 
-            if (capitulo.Id > 0)
-            {
-                // Permite reutilizar el capítulo en otra rama.
-                capitulosVisitados.Remove(capitulo.Id);
-            }
             return arbol;
         }
 

@@ -61,7 +61,6 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
             return _context.Usuarios.ToList();
         }
 
-        // Sinplificar ?? a if
         public Usuario FindById(int id)
         {
             // Evalúa el resultado de la izquierda. Si es distinto de null, lo retorna directamente.

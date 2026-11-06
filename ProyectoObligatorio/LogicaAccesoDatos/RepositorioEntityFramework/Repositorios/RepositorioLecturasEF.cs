@@ -50,16 +50,22 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public void Update(Lectura nueva)
         {
-            if (nueva == null) { throw new LecturaException("La lectura esta vacia"); }
+            if (nueva == null)
+            {
+                throw new LecturaException("La lectura está vacía");
+            }
+
             nueva.Validar();
 
-            // Solo se actualizan las columnas modificables de la lectura (final alcanzado y
-            // fecha de fin). Es tracker-free a proposito: si se usara Update(grafo) se volverian
-            // a marcar Usuario, Historia y sus capitulos como Modified y EF intentaria
-            // volver a guardarlos.
-            _context.Lecturas.Where(l => l.Id == nueva.Id).ExecuteUpdate(s => s
-                .SetProperty(l => l.idFinal, nueva.idFinal)
-                .SetProperty(l => l.FechaFin, nueva.FechaFin));
+            Lectura existente = _context.Lecturas.Find(nueva.Id)
+                ?? throw new LecturaException("Lectura inexistente");
+
+            existente.idFinal = nueva.idFinal;
+            existente.FechaFin = nueva.FechaFin;
+
+            // Entity Framework detecta los cambios de la entidad rastreada
+            // y genera el UPDATE correspondiente.
+            _context.SaveChanges();
         }
 
         public List<Lectura> FindAll()
@@ -92,13 +98,20 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
             DateTime hasta = desde.AddMonths(1);
 
             return _context.Lecturas
-                .AsNoTracking()
-                .Include(l => l.Historia)
-                .Include(l => l.FinalAlcanzado)
-                .Where(l => l.idUsuario == idUsuario &&
-                            l.FechaInicio >= desde &&
-                            l.FechaInicio < hasta)
-                .OrderByDescending(l => l.FechaInicio)
+                // Carga la historia asociada a cada lectura.
+                .Include(lectura => lectura.Historia)
+
+                // Carga el capítulo final alcanzado, si existe.
+                .Include(lectura => lectura.FinalAlcanzado)
+
+                // Filtra las lecturas del usuario dentro del mes indicado.
+                .Where(lectura =>
+                    lectura.idUsuario == idUsuario &&
+                    lectura.FechaInicio >= desde &&
+                    lectura.FechaInicio < hasta)
+
+                // Muestra primero las lecturas más recientes.
+                .OrderByDescending(lectura => lectura.FechaInicio)
                 .ToList();
         }
 

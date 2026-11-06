@@ -33,26 +33,31 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
 
         public void Remove(int id)
         {
-            _context.Capitulos
-                .Where(c => c.Id == id)
+            _context.Intermedios
+                .Where(i => i.Id == id)
                 .ExecuteDelete();
             _context.SaveChanges();
         }
 
         public void Update(Intermedio nuevo)
         {
-            if (nuevo == null) { throw new IntermedioException("El capitulo intermedio esta vacio"); }
-            nuevo.Validar();
-            if (_context.Entry(nuevo).State == EntityState.Detached)
+            if (nuevo == null)
             {
-                _context.Intermedios.Update(nuevo);
+                throw new IntermedioException(
+                    "El capítulo intermedio está vacío");
             }
+
+            nuevo.Validar();
+
+            _context.Intermedios.Update(nuevo);
             _context.SaveChanges();
         }
 
         public List<Intermedio> FindAll()
         {
-            return _context.Intermedios.Include(i => i.Opciones).ToList();
+            return _context.Intermedios
+                .Include(i => i.Opciones)
+                .ToList();
         }
 
         public Intermedio FindById(int id)

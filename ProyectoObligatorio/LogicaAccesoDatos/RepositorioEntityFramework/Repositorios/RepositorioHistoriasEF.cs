@@ -14,32 +14,38 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
             _context = context;
         }
 
-        public void Add(Historia nuevo)
+        public void Add(Historia unaHistoria)
         {
-            if (nuevo == null) { throw new HistoriaException("La historia esta vacia"); }
-            nuevo.Validar();
-            ExisteHistoria(nuevo);
-            AdjuntarCategorias(nuevo);
+            if (unaHistoria == null) { throw new HistoriaException("La historia esta vacia"); }
+            unaHistoria.Validar();
+            ExisteHistoria(unaHistoria);
+            AdjuntarCategorias(unaHistoria);
 
             // Historia.Id y Capitulo.Id los genera la BD, y las FKs idCapituloInicial
             // y idHistoria se apuntan entre sí: en un solo SaveChanges no hay orden de
             // INSERT posible (dependencia circular). Guardo la historia con sus capitulos
             // sin el FK al inicial, y en un segundo SaveChanges seteo idCapituloInicial
             // con el Id ya generado.
-            Capitulo inicial = nuevo.CapituloInicial;
-            nuevo.CapituloInicial = null!;
+            Capitulo inicial = unaHistoria.CapituloInicial;
+            unaHistoria.CapituloInicial = null!;
 
             try
             {
-                _context.Historias.Add(nuevo);
+                _context.Historias.Add(unaHistoria);
                 _context.SaveChanges();
             }
             finally
             {
-                nuevo.CapituloInicial = inicial;
+                // Se restaura siempre la referencia original, incluso si SaveChanges falla.
+                unaHistoria.CapituloInicial = inicial;
             }
 
-            nuevo.idCapituloInicial = inicial.Id;
+            // Ahora que el capítulo tiene su ID generado, se puede establecer la FK
+            // de la historia hacia su capítulo inicial.
+            unaHistoria.idCapituloInicial = inicial.Id;
+
+            // La historia continúa siendo rastreada por el DbContext.
+            // Por eso SaveChanges detecta el cambio y ejecuta el UPDATE correspondiente.
             _context.SaveChanges();
         }
 
@@ -130,15 +136,13 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
         }
 
         // Catálogo del lector: sólo publicadas, con las categorías para el filtro.
-        // El IQueryable no sale del repositorio: se materializa con ToList().
         public List<Historia> FindPublicadas(int? idCategoria)
         {
             return _context.Historias
-                .AsNoTracking()
                 .Include(h => h.Categorias)
-                .Where(h => h.Estado == EstadoHistoria.Publicada)
-                .Where(h => !idCategoria.HasValue || idCategoria.Value <= 0
-                            || h.Categorias.Any(c => c.Id == idCategoria.Value))
+                .Where(h => h.Estado == EstadoHistoria.Publicada && (
+                    !idCategoria.HasValue || idCategoria.Value <= 0 || h.Categorias.Any(c => c.Id == idCategoria.Value))
+                    )
                 .ToList();
         }
 

@@ -74,7 +74,6 @@ builder.Services.AddScoped<IObtenerUsuarioPorId, ObtenerUsuarioPorIdCU>();
 builder.Services.AddScoped<ILoginCU, LoginCU>();
 
 builder.Services.AddScoped<IAgregarLectura, AgregarLecturaCU>();
-builder.Services.AddScoped<IActualizarLectura, ActualizarLecturaCU>();
 builder.Services.AddScoped<IObtenerLecturasPorId, ObtenerLecturasPorIdCU>();
 builder.Services.AddScoped<IEncontrarTodasLasLecturas, EncontrarTodasLasLecturasCU>();
 builder.Services.AddScoped<IObtenerHistorialLecturas, ObtenerHistorialLecturasCU>();

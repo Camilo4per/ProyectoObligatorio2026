@@ -149,17 +149,12 @@ namespace LogicaAccesoDatos.RepositorioEntityFramework.Repositorios
         public Historia FindById(int id)
         {
             Historia historia = _context.Historias
-                .Include(h => h.Capitulos)
                 .Include(h => h.Categorias)
                 .Include(h => h.CapituloInicial)
-                .Where(h => h.Id == id)
-                .FirstOrDefault()
+                .Include(h => h.Capitulos)
+                    .ThenInclude(c => (c as Intermedio)!.Opciones)
+                .FirstOrDefault(h => h.Id == id)
                 ?? throw new HistoriaException("Historia inexistente");
-
-            _context.Intermedios
-                .Where(i => i.idHistoria == id)
-                .Include(i => i.Opciones)
-                .ToList();
 
             return historia;
         }

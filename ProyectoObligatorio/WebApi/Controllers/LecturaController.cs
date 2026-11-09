@@ -17,7 +17,6 @@ namespace ApiWeb.Controllers
         private IEncontrarTodasLasLecturas _encontrarTodasLasLecturasCu;
         private IObtenerLecturasPorId _obtenerLecturasPorIdCu;
         private IAgregarLectura _agregarLecturaCu;
-        private IActualizarLectura _actualizarLecturaCu;
         private IObtenerHistorialLecturas _obtenerHistorialLecturasCu;
         private IObtenerRankingUsuarios _obtenerRankingUsuariosCu;
         private IObtenerPasoLectura _obtenerPasoLecturaCu;
@@ -26,7 +25,6 @@ namespace ApiWeb.Controllers
             IEncontrarTodasLasLecturas encontrarTodasLasLecturas,
             IObtenerLecturasPorId obtenerLecturasPorId,
             IAgregarLectura agregarLectura,
-            IActualizarLectura actualizarLectura,
             IObtenerHistorialLecturas obtenerHistorialLecturas,
             IObtenerRankingUsuarios obtenerRankingUsuarios,
             IObtenerPasoLectura obtenerPasoLectura,
@@ -36,7 +34,6 @@ namespace ApiWeb.Controllers
             _encontrarTodasLasLecturasCu = encontrarTodasLasLecturas;
             _obtenerLecturasPorIdCu = obtenerLecturasPorId;
             _agregarLecturaCu = agregarLectura;
-            _actualizarLecturaCu = actualizarLectura;
             _obtenerHistorialLecturasCu = obtenerHistorialLecturas;
             _obtenerRankingUsuariosCu = obtenerRankingUsuarios;
             _obtenerPasoLecturaCu = obtenerPasoLectura;
@@ -45,11 +42,10 @@ namespace ApiWeb.Controllers
 
         // GET: api/<LecturaController>
         [HttpGet]
-        [Authorize(Roles = "Administrador")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
-        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public ActionResult<IEnumerable<LecturaDTO>> Get()
         {
             try
@@ -67,6 +63,7 @@ namespace ApiWeb.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public ActionResult<LecturaDTO> Get(int id, [FromQuery] int idUsuario)
         {
             try
@@ -88,12 +85,13 @@ namespace ApiWeb.Controllers
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public ActionResult Post([FromBody] IniciarLecturaDTO dto)
         {
             try
             {
                 LecturaIniciadaDTO creada = _agregarLecturaCu.Ejecutar(dto);
-                return Created((string?)null, creada);
+                return Created("api/Lectura", creada);
             }
             catch (LecturaException lex)
             {
@@ -107,10 +105,10 @@ namespace ApiWeb.Controllers
 
         // GET: api/<LecturaController>/RankingUsuarios
         [HttpGet("RankingUsuarios")]
-        [Authorize(Roles = "Administrador")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public ActionResult<IEnumerable<UsuarioRankingDTO>> RankingUsuarios()
         {
             try
@@ -125,10 +123,10 @@ namespace ApiWeb.Controllers
 
         // GET api/<LecturaController>/Historial?idUsuario=3&mes=10&anio=2026
         [HttpGet("Historial")]
-        [Authorize(Roles = "Usuario")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public ActionResult<IEnumerable<HistorialLecturaDTO>> Historial(
             [FromQuery] int idUsuario,
             [FromQuery] int mes,
@@ -153,6 +151,7 @@ namespace ApiWeb.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public ActionResult<PasoLecturaDTO> GetCapitulo(int id, int idCapitulo, [FromQuery] int idUsuario)
         {
             try
@@ -174,33 +173,12 @@ namespace ApiWeb.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public ActionResult<PasoLecturaDTO> Avanzar(int id, [FromBody] AvanzarLecturaDTO dto)
         {
             try
             {
                 return Ok(_avanzarLecturaCu.Ejecutar(id, dto));
-            }
-            catch (LecturaException lex)
-            {
-                return BadRequest(lex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-
-        // PUT api/<LecturaController>/5
-        [HttpPut("{id}")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-        public ActionResult Put(int id, [FromBody] LecturaDTO dto)
-        {
-            try
-            {
-                _actualizarLecturaCu.Ejecutar(id, dto);
-                return Ok();
             }
             catch (LecturaException lex)
             {

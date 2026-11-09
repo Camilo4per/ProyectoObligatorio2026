@@ -51,7 +51,7 @@ else
                         <h5 class="card-title">@historia.Titulo</h5>
                         <p class="card-text">@historia.Sinopsis</p>
                         <p>
-                            @foreach (CategoriaModel categoria in historia.Categorias ?? new List<CategoriaModel>())
+                            @foreach (CategoriaModel categoria in historia.Categorias)
                             {
                                 <span class="badge bg-secondary">@categoria.Nombre</span>
                             }

@@ -34,15 +34,12 @@ namespace LogicaAplicacion.CasosDeUso.Lecturas
             if (dto.idUsuario <= 0)
                 throw new LecturaException("El usuario indicado es inválido.");
 
-            int idHistoria = dto.idHistoria;
-            int idUsuario = dto.idUsuario;
-
             // Se cargan las entidades YA trackeadas por el contexto: construir el grafo
             // desde el DTO haría que EF intente insertar un usuario/historia nuevos.
             Historia historia;
             try
             {
-                historia = _repositorioHistorias.FindById(idHistoria);
+                historia = _repositorioHistorias.FindById(dto.idHistoria);
             }
             catch (HistoriaException)
             {
@@ -55,7 +52,7 @@ namespace LogicaAplicacion.CasosDeUso.Lecturas
             Usuario usuario;
             try
             {
-                usuario = _repositorioUsuarios.FindById(idUsuario);
+                usuario = _repositorioUsuarios.FindById(dto.idUsuario);
             }
             catch (UsuarioException)
             {

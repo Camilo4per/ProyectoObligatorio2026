@@ -78,13 +78,17 @@ namespace ApiWeb.Controllers
         [HttpGet("Ranking")]
         [Authorize(Roles = "Administrador")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public ActionResult<IEnumerable<HistoriaRankingDTO>> GetRanking()
         {
             try
             {
                 return Ok(_obtenerRankingHistoriasCu.Ejecutar());
+            }
+            catch (HistoriaException hex)
+            {
+                return BadRequest(hex.Message);
             }
             catch (Exception ex)
             {
@@ -97,7 +101,6 @@ namespace ApiWeb.Controllers
         [Authorize(Roles = "Administrador")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         public ActionResult<FinalesHistoriaDTO> GetFinales(int id)
         {

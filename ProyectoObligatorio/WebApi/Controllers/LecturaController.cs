@@ -106,7 +106,7 @@ namespace ApiWeb.Controllers
         // GET: api/<LecturaController>/RankingUsuarios
         [HttpGet("RankingUsuarios")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
         public ActionResult<IEnumerable<UsuarioRankingDTO>> RankingUsuarios()
@@ -114,6 +114,10 @@ namespace ApiWeb.Controllers
             try
             {
                 return Ok(_obtenerRankingUsuariosCu.Ejecutar());
+            }
+            catch (LecturaException lex)
+            {
+                return BadRequest(lex.Message);
             }
             catch (Exception ex)
             {

@@ -9,10 +9,6 @@ namespace ProyectoSecundario.Controllers
 {
     public class AuthController : Controller
     {
-        private const string ClaveEstiloLectura = "EstiloLectura";
-        private const string EstiloClaro = "Claro";
-        private const string EstiloOscuro = "Oscuro";
-
         private string baseUrl = "http://apiwebm3c.somee.com/api/Usuario/Login";
 
         // GET: /Auth/Login
@@ -70,12 +66,10 @@ namespace ProyectoSecundario.Controllers
                 return RedirectToAction("Login", "Auth");
             }
 
-            string estiloNormalizado = estilo == EstiloOscuro
-                ? EstiloOscuro
-                : EstiloClaro;
+            // Cambia el estilo de lectura en la sesión
+            HttpContext.Session.SetString("EstiloLectura", estilo == "Oscuro" ? "Oscuro" : "Claro");
 
-            HttpContext.Session.SetString(ClaveEstiloLectura, estiloNormalizado);
-
+            // Redirige al usuario al lugar donde estaba antes de cambiar el estilo
             if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
                 return LocalRedirect(returnUrl);

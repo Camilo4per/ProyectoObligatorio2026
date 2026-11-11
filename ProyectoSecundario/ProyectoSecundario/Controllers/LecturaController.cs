@@ -25,10 +25,7 @@ namespace ProyectoSecundario.Controllers
             int mesSeleccionado = mes ?? DateTime.Now.Month;
             int anioSeleccionado = anio ?? DateTime.Now.Year;
 
-            string url = baseUrlLectura + "/Historial"
-                + "?idUsuario=" + idUsuario.Value
-                + "&mes=" + mesSeleccionado
-                + "&anio=" + anioSeleccionado;
+            string url = $"{baseUrlLectura}/Historial?idUsuario={idUsuario.Value}&mes={mesSeleccionado}&anio={anioSeleccionado}";
 
             HttpResponseMessage respuesta = ClienteHttpAuxiliar.EnviarSolicitud(
                 url,
@@ -36,8 +33,7 @@ namespace ProyectoSecundario.Controllers
                 token: token
             );
 
-            List<HistorialLecturaModel> historial =
-                new List<HistorialLecturaModel>();
+            List<HistorialLecturaModel> historial = new List<HistorialLecturaModel>();
 
             if (respuesta.IsSuccessStatusCode)
             {
@@ -48,8 +44,7 @@ namespace ProyectoSecundario.Controllers
             }
             else
             {
-                ViewBag.Error =
-                    "No se pudo obtener el historial de lecturas.";
+                ViewBag.Error = "No se pudo obtener el historial de lecturas.";
             }
 
             ViewBag.Mes = mesSeleccionado;
@@ -128,8 +123,7 @@ namespace ProyectoSecundario.Controllers
                 return RedirectToAction("Index", "Historia", new { error = ViewBag.Error });
             }
 
-            string url = baseUrlLectura + "/" + idLectura + "/Capitulo/" + idCapitulo
-                         + "?idUsuario=" + idUsuario.Value;
+            string url = $"{baseUrlLectura}/{idLectura}/Capitulo/{idCapitulo}?idUsuario={idUsuario.Value}";
 
             HttpResponseMessage respuesta = ClienteHttpAuxiliar.EnviarSolicitud(
                 url,
@@ -150,7 +144,12 @@ namespace ProyectoSecundario.Controllers
                 return RedirectToAction("Index", "Historia", new { error = ViewBag.Error });
             }
 
-            return paso.Capitulo.Tipo == 1 ? View("Final", paso) : View("Capitulo", paso);
+            if (paso.Capitulo.Tipo == 1)
+            {
+                return View("Final", paso);
+            }
+
+            return View("Capitulo", paso);
         }
 
         // POST: /Lectura/Avanzar

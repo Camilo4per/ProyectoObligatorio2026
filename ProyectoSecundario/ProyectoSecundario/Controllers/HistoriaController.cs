@@ -50,7 +50,7 @@ namespace ProyectoSecundario.Controllers
                     ClienteHttpAuxiliar.ObtenerBody(respuestaHistorias))
                 ?? new List<HistoriaModel>();
 
-            if (idHistoria.HasValue && idHistoria.Value > 0)
+            if (idHistoria.HasValue)
             {
                 HttpResponseMessage respuesta =
                     ClienteHttpAuxiliar.EnviarSolicitud(
@@ -65,6 +65,7 @@ namespace ProyectoSecundario.Controllers
                     return View(modelo);
                 }
 
+                // El modelo.Reporte contendrá los finales de la historia seleccionada
                 modelo.Reporte =
                     JsonConvert.DeserializeObject<FinalesHistoriaModel>(
                         ClienteHttpAuxiliar.ObtenerBody(respuesta));
@@ -95,8 +96,7 @@ namespace ProyectoSecundario.Controllers
                 token: token
             );
 
-            List<HistoriaRankingModel> ranking =
-                new List<HistoriaRankingModel>();
+            List<HistoriaRankingModel> ranking = new List<HistoriaRankingModel>();
 
             if (respuesta.IsSuccessStatusCode)
             {
@@ -112,7 +112,7 @@ namespace ProyectoSecundario.Controllers
             return View(ranking);
         }
 
-        // GET: /Historia/RankingUsuarios
+        // GET: /Lectura/RankingUsuarios
         public IActionResult RankingUsuarios()
         {
             string? token = HttpContext.Session.GetString("token");
@@ -134,8 +134,7 @@ namespace ProyectoSecundario.Controllers
                 token: token
             );
 
-            List<UsuarioRankingModel> ranking =
-                new List<UsuarioRankingModel>();
+            List<UsuarioRankingModel> ranking = new List<UsuarioRankingModel>();
 
             if (respuesta.IsSuccessStatusCode)
             {
@@ -158,18 +157,15 @@ namespace ProyectoSecundario.Controllers
         }
 
         // GET: /Historia/Historias?idCategoria=2
-        public IActionResult Historias(int? idCategoria, string? error = null)
+        public IActionResult Historias(int? idCategoria)
         {
             if (HttpContext.Session.GetString("Rol") != "Usuario")
             {
                 return RedirectToAction(nameof(Index));
             }
 
-            if (!string.IsNullOrEmpty(error))
-            {
-                ViewBag.Error = error;
-            }
             string? token = HttpContext.Session.GetString("token");
+
             if (string.IsNullOrEmpty(token))
             {
                 return RedirectToAction("Login", "Auth");
@@ -191,9 +187,16 @@ namespace ProyectoSecundario.Controllers
                     ClienteHttpAuxiliar.ObtenerBody(respuestaCategorias)) ?? new List<CategoriaModel>();
             }
 
-            string urlCatalogo = idCategoria.HasValue && idCategoria.Value > 0
-                ? $"{baseUrl}/Historia/Catalogo?idCategoria={idCategoria.Value}"
-                : $"{baseUrl}/Historia/Catalogo";
+            string urlCatalogo;
+
+            if (idCategoria.HasValue)
+            {
+                urlCatalogo = $"{baseUrl}/Historia/Catalogo?idCategoria={idCategoria.Value}";
+            }
+            else
+            {
+                urlCatalogo = $"{baseUrl}/Historia/Catalogo";
+            }
 
             HttpResponseMessage respuestaCatalogo = ClienteHttpAuxiliar.EnviarSolicitud(
                 urlCatalogo,

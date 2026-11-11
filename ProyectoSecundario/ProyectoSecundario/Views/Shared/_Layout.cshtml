@@ -1,12 +1,15 @@
 ﻿@{
+    // Obtiene el estilo de lectura desde la sesión, si no está establecido, se asume "Claro"
     string estiloLectura = Context.Session.GetString("EstiloLectura") == "Oscuro"
         ? "Oscuro"
         : "Claro";
 
+    // Determina la clase CSS correspondiente al estilo de lectura
     string claseEstilo = estiloLectura == "Oscuro"
         ? "tema-oscuro"
         : "tema-claro";
 
+    // Construye la URL de retorno para mantener al usuario en la misma página después de cambiar el estilo
     string returnUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
 }
 <!DOCTYPE html>

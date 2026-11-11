@@ -55,10 +55,7 @@ namespace ProyectoSecundario.Controllers
         [HttpGet]
         public IActionResult Logout()
         {
-            HttpContext.Session.Remove("token");
-            HttpContext.Session.Remove("Rol");
-            HttpContext.Session.Remove("NombreUsuario");
-            HttpContext.Session.Remove("IdUsuario");
+            HttpContext.Session.Clear();
 
             return RedirectToAction("Login");
         }
@@ -67,6 +64,12 @@ namespace ProyectoSecundario.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CambiarEstilo(string estilo, string? returnUrl)
         {
+            // Solo los usuarios autenticados con rol Usuario pueden cambiar el estilo
+            if (HttpContext.Session.GetString("Rol") != "Usuario")
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
             string estiloNormalizado = estilo == EstiloOscuro
                 ? EstiloOscuro
                 : EstiloClaro;

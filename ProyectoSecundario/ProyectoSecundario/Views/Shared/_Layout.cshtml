@@ -79,16 +79,19 @@
                             </li>
                         }
 
-                        <li class="nav-item ms-auto">
-                            <form asp-controller="Auth" asp-action="CambiarEstilo" method="post" class="d-inline">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="estilo" value="@(estiloLectura == "Claro" ? "Oscuro" : "Claro")" />
-                                <input type="hidden" name="returnUrl" value="@returnUrl" />
-                                <button type="submit" class="nav-link btn btn-link">
-                                    @(estiloLectura == "Claro" ? "Activar modo oscuro" : "Activar modo claro")
-                                </button>
-                            </form>
-                        </li>
+                        @if (Context.Session.GetString("Rol") == "Usuario")
+                        {
+                            <li class="nav-item ms-auto">
+                                <form asp-controller="Auth" asp-action="CambiarEstilo" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="estilo" value="@(estiloLectura == "Claro" ? "Oscuro" : "Claro")" />
+                                    <input type="hidden" name="returnUrl" value="@returnUrl" />
+                                    <button type="submit" class="nav-link btn btn-link">
+                                        @(estiloLectura == "Claro" ? "Activar modo oscuro" : "Activar modo claro")
+                                    </button>
+                                </form>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
